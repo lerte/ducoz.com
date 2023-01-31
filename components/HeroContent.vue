@@ -11,7 +11,9 @@
         <h1 class="my-4 text-5xl font-bold leading-tight">
           跨境流量解决方案服务商
         </h1>
-        <p class="leading-normal text-2xl mb-8">基于流量，提高营销创造力</p>
+        <p class="w-full leading-normal text-2xl mb-8">
+          基于流量，提高营销创造力
+        </p>
 
         <button
           class="mx-auto lg:mx-0 hover:underline bg-danger text-white font-bold rounded-lg my-6 py-4 px-8 shadow-lg"
