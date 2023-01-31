@@ -12,7 +12,7 @@ module.exports = {
       warning: '#FFC20E',
       info: '#4e72b8',
       light: '#999D9C',
-      dark: '#130COE'
+      dark: '#130c0e'
     }
   },
   plugins: [require('@tailwindcss/typography')]
