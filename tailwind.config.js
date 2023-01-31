@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [],
+  content: ['./layouts/**/*.vue', './components/**/*.vue', './pages/**/*.vue'],
   theme: {
     extend: {
       colors: {
@@ -15,5 +15,5 @@ module.exports = {
       }
     }
   },
-  plugins: []
+  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
 }
