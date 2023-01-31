@@ -34,7 +34,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['three']
+    transpile: ['three'],
+    babel: {
+      compact: true
+    }
   },
   // Stopping nuxt.js from rebuilding on changes of irrelevant files
   // (Possibly caused by https://github.com/nuxt-community/tailwindcss-module/issues/359)
