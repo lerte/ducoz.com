@@ -14,7 +14,7 @@
         class="max-w-7xl mx-auto grid-cols-1 sm:grid sm:grid-cols-2 lg:gap-40 md:gap-20 sm:gap-10 gap-0 relative"
       >
         <Business
-          name="跨境平台服务"
+          name="平台电商服务"
           :items="[
             '亚马逊店铺买卖',
             '亚马逊店铺买卖',
