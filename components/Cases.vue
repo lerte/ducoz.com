@@ -12,7 +12,9 @@
         <div class="h-1 mx-auto bg-secondary w-64 my-0 py-0 rounded-t"></div>
       </div>
     </div>
-    <div class="container mx-auto grid grid-cols-6 gap-4">
+    <div
+      class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+    >
       <div v-for="(cs, index) in cases" :key="index" class="mx-auto">
         <img :src="cs.img" />
       </div>
