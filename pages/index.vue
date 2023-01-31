@@ -3,6 +3,7 @@
     <Hero />
     <Businesses />
     <About />
+    <News />
     <Cases />
     <Contact />
   </div>

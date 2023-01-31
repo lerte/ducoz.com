@@ -1,5 +1,5 @@
 <template>
-  <section class="bg-white border-b py-8">
+  <section class="bg-gray-100 border-b py-8">
     <div class="container max-w-5xl mx-auto m-8">
       <h1
         class="w-full my-2 text-5xl font-bold leading-tight text-center text-primary"
@@ -25,6 +25,13 @@
       >
         <img src="@/assets/img/connected-world.svg?inline" alt slot="svg" />
       </AboutLeft>
+      <AboutRight
+        headline=""
+        content="深圳市多泽科技有限公司成立于2019年，创始团队核心成员曾就职于腾讯、Meta、字节跳动、华为云等互联网公司。
+深耕于跨境行业均有8年以上从业经验，服务企业过千家。"
+      >
+        <img src="@/assets/img/travel-booking.svg?inline" alt slot="svg" />
+      </AboutRight>
     </div>
   </section>
 </template>
