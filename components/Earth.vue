@@ -5,7 +5,7 @@
 <script>
 import { Scene, WebGLRenderer, PMREMGenerator, PerspectiveCamera } from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment'
 
 export default {
@@ -17,7 +17,7 @@ export default {
     scene: null,
     camera: null,
     renderer: null,
-    controls: null,
+    // controls: null,
     mesh: null
   }),
   mounted() {
@@ -31,7 +31,11 @@ export default {
       this.height = this.container.offsetHeight
       const aspect = this.width / this.height
       this.camera = new PerspectiveCamera(75, aspect, 0.1, 1000)
-      this.camera.position.set(0, 0, 3.5)
+      this.camera.position.set(
+        -3.29362652781052,
+        -3.2940674785692496,
+        201.2736616916079
+      )
       this.camera.updateProjectionMatrix()
       this.scene = new Scene()
 
@@ -55,8 +59,8 @@ export default {
         0.04
       ).texture
 
-      this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-      this.controls.enablePan = false
+      // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+      // this.controls.enablePan = false
 
       window.addEventListener('resize', this.onWindowResize, false)
     },
@@ -69,8 +73,9 @@ export default {
     render() {
       requestAnimationFrame(this.render)
       this.camera.updateProjectionMatrix()
-      this.controls.update()
+      // this.controls.update()
       if (this.mesh) {
+        this.mesh.rotation.x += 0.01
         this.mesh.rotation.y += 0.01
         this.mesh.rotation.z += 0.01
       }
