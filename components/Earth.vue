@@ -3,8 +3,14 @@
 </template>
 
 <script>
-import { Scene, WebGLRenderer, PMREMGenerator, PerspectiveCamera } from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
+import {
+  Scene,
+  WebGLRenderer,
+  PMREMGenerator,
+  PerspectiveCamera,
+  AmbientLight
+} from 'three'
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment'
 
@@ -44,6 +50,9 @@ export default {
         this.mesh = object
         this.scene.add(this.mesh)
       })
+
+      const ambientLight = new AmbientLight(0xffffff, 0.6)
+      this.scene.add(ambientLight)
 
       this.renderer = new WebGLRenderer({ antialias: true, alpha: true })
       this.renderer.setClearColor(0xffffff, 0)
