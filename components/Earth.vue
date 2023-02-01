@@ -76,8 +76,9 @@ export default {
     onWindowResize() {
       this.width = this.container.offsetWidth
       this.height = this.container.offsetHeight
-      this.camera.updateProjectionMatrix()
       this.renderer.setSize(this.width, this.height)
+      this.camera.aspect = this.width / this.height
+      this.camera.updateProjectionMatrix()
     },
     render() {
       requestAnimationFrame(this.render)
