@@ -42,7 +42,7 @@ export default {
       return data
     },
     async updateUser(data) {
-      const { data: user, errors } = await altogic.db
+      const { data: user, errors } = await this.altogic.db
         .model('users')
         .object(this.user._id)
         .update(data)

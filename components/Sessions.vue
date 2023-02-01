@@ -1,38 +1,3 @@
-<script>
-export default {
-  data() {
-    return {
-      sessions: [],
-      token: this.altogic.auth.getSession()?.token
-    }
-  },
-  computed: {
-    sessionToken() {
-      return this.$store.state.sessionToken
-    }
-  },
-  methods: {
-    async logoutSession(session) {
-      const { errors } = await altogic.auth.signOut(session.token)
-      if (!errors) {
-        this.sessions = this.sessions.filter((s) => s.token !== session.token)
-      }
-    }
-  },
-  async created() {
-    const token =
-      this.$store.state.sessionToken ?? altogic.auth.getSession()?.token
-    const { sessions } = await altogic.auth.getAllSessions()
-    this.sessions = sessions?.map((session) => {
-      return {
-        ...session,
-        isCurrent: session.token === token
-      }
-    })
-  }
-}
-</script>
-
 <template>
   <div class="border p-4 space-y-4 text-white">
     <p class="text-3xl">所有会话</p>
@@ -65,3 +30,41 @@ export default {
     </ul>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      token: null,
+      sessions: []
+    }
+  },
+  computed: {
+    sessionToken() {
+      return this.$store.state.sessionToken
+    }
+  },
+  methods: {
+    async logoutSession(session) {
+      const { errors } = await this.altogic.auth.signOut(session.token)
+      if (!errors) {
+        this.sessions = this.sessions.filter((s) => s.token !== session.token)
+      }
+    }
+  },
+  async created() {
+    const token =
+      this.$store.state.sessionToken ?? this.altogic.auth.getSession()?.token
+    if (this.altogic) {
+      const { sessions } = await this.altogic.auth.getAllSessions()
+      this.token = token
+      this.sessions = sessions?.map((session) => {
+        return {
+          ...session,
+          isCurrent: session.token === token
+        }
+      })
+    }
+  }
+}
+</script>
