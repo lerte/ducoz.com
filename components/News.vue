@@ -23,16 +23,16 @@
           >
             <div class="w-16 text-xs leading-5 text-left top-1">
               <span class="text-lg border-b">
-                {{ news[0].updatedAt | getYear }}
+                {{ news[0]?.updatedAt | getYear }}
               </span>
               <span class="text-[13px] block ml-1">
-                {{ news[0].updatedAt | getDate }}
+                {{ news[0]?.updatedAt | getDate }}
               </span>
             </div>
             <div
               class="h-6 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis"
             >
-              {{ news[0].title }}
+              {{ news[0]?.title }}
             </div>
           </div>
         </nuxt-link>
@@ -45,14 +45,14 @@
             <a :href="item.id" class="flex items-center font-medium">
               <div class="w-16 text-xs leading-5 text-left">
                 <span class="text-lg border-b">
-                  {{ item.updatedAt | getYear }}
+                  {{ item?.updatedAt | getYear }}
                 </span>
                 <span class="text-[13px] block ml-1">
-                  {{ item.updatedAt | getDate }}
+                  {{ item?.updatedAt | getDate }}
                 </span>
               </div>
               <span>
-                {{ item.title }}
+                {{ item?.title }}
               </span>
             </a>
           </li>
