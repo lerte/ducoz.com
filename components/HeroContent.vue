@@ -12,13 +12,13 @@
           跨境流量解决方案服务商
         </h1>
         <p class="w-full leading-normal text-2xl mb-8">
-          基于流量，提高营销创造力
+          基于流量 提升营销创造力
         </p>
 
         <button
           class="mx-auto lg:mx-0 bg-danger text-white font-bold rounded-lg my-6 py-4 px-8 shadow-lg"
         >
-          中国人不骗人，让每个跨境人都挣钱
+          中国人不骗中国人，让每个跨境人都挣钱
         </button>
       </div>
       <!--Right Col-->
