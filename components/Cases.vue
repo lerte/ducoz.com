@@ -1,6 +1,6 @@
 <template>
   <section class="bg-[#f8fafc] py-8">
-    <div class="container mx-auto flex flex-wrap pt-4 pb-12">
+    <div class="container mx-auto flex flex-wrap pt-4">
       <h1
         class="w-full my-2 text-5xl font-bold leading-tight text-center text-primary"
       >

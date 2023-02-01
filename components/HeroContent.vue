@@ -16,7 +16,7 @@
         </p>
 
         <button
-          class="mx-auto lg:mx-0 hover:underline bg-danger text-white font-bold rounded-lg my-6 py-4 px-8 shadow-lg"
+          class="mx-auto lg:mx-0 bg-danger text-white font-bold rounded-lg my-6 py-4 px-8 shadow-lg"
         >
           中国人不骗人，让每个跨境人都挣钱
         </button>

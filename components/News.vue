@@ -1,6 +1,6 @@
 <template>
-  <section class="bg-white py-8">
-    <div class="container mx-auto flex flex-wrap pt-4 pb-12">
+  <section class="bg-white p-4">
+    <div class="container mx-auto flex flex-wrap">
       <h1
         class="w-full my-2 text-5xl font-bold leading-tight text-center text-primary"
       >
@@ -12,14 +12,14 @@
         <div class="h-1 mx-auto bg-secondary w-64 my-0 py-0 rounded-t"></div>
       </div>
 
-      <div class="container block sm:flex items-center">
-        <nuxt-link
-          class="block basis-1/2 mx-4 sm:p-5 sm:h-full bg-[#f3f4f6]"
-          to="/"
-        >
-          <img class="object-cover" src="https://picsum.photos/768/320" />
+      <div class="container block sm:flex items-center bg-[#f3f4f6]">
+        <nuxt-link class="block basis-1/2 sm:p-4 sm:h-full" to="/">
+          <img
+            class="object-cover h-[calc(100%_-_80px)]"
+            src="https://picsum.photos/960/400"
+          />
           <div
-            class="flex items-center px-4 py-4 font-bold bg-primary text-white hover:bg-secondary"
+            class="flex items-center p-4 font-bold bg-primary text-white hover:bg-secondary"
           >
             <div class="w-16 text-xs leading-5 text-left top-1">
               <span class="text-lg border-b">2023</span>
@@ -32,13 +32,13 @@
             </div>
           </div>
         </nuxt-link>
-        <ul class="basis-1/2 px-4 sm:pl-4 sm:h-full bg-[#f3f4f6]">
+        <ul class="basis-1/2 sm:p-4 sm:h-full space-y-4">
           <li
             :key="index"
             v-for="(item, index) in news"
-            class="my-2 px-4 py-4 bg-white hover:bg-secondary text-dark hover:text-white"
+            class="p-4 bg-white hover:bg-secondary text-dark hover:text-white"
           >
-            <nuxt-link :to="item.link" class="flex items-center">
+            <nuxt-link :to="item.link" class="flex items-center font-medium">
               <div class="w-16 text-xs leading-5 text-left">
                 <span class="text-lg border-b">2023</span>
                 <span class="text-[13px] block ml-1">Jan-27</span>

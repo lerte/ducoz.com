@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <main>
     <Hero />
     <Businesses />
     <About />
     <News />
     <Cases />
     <Contact />
-  </div>
+  </main>
 </template>
 
 <script>

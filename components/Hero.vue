@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section class="leading-normal tracking-normal text-white">
     <hero-content />
     <div class="relative -mt-12 lg:-mt-24">
       <svg
@@ -40,7 +40,7 @@
         </g>
       </svg>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

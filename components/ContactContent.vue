@@ -13,13 +13,13 @@
       ></div>
     </div>
 
-    <h3 class="my-4 text-xl leading-tight">
+    <h3 class="my-4 px-4 text-xl leading-tight">
       若您有合作意向，请您为我们留言或者使用以下方式联系我们，我们将尽快
       给您回复，并且为您对接专业的商务洽谈专员，谢谢！
     </h3>
 
     <button
-      class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg"
+      class="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg"
     >
       马上联系
     </button>

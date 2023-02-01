@@ -1,6 +1,6 @@
 <template>
   <footer class="bg-white">
-    <div class="container mx-auto px-8">
+    <div class="container mx-auto px-4 sm:px-0">
       <div class="w-full flex flex-col md:flex-row py-6">
         <div class="flex-1 mb-6">
           <logo color="primary" />
@@ -16,7 +16,7 @@
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline hover:underline text-gray-800 hover:text-warning"
+                class="no-underline text-gray-800 hover:text-primary"
               >
                 {{ nav.title }}
               </nuxt-link>
@@ -34,7 +34,7 @@
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline hover:underline text-gray-800 hover:text-warning"
+                class="no-underline text-gray-800 hover:text-primary"
               >
                 {{ nav.title }}
               </nuxt-link>
@@ -51,7 +51,7 @@
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline hover:underline text-gray-800 hover:text-warning"
+                class="no-underline text-gray-800 hover:text-primary"
               >
                 {{ nav.title }}
               </nuxt-link>
@@ -68,7 +68,7 @@
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline hover:underline text-gray-800 hover:text-warning"
+                class="no-underline text-gray-800 hover:text-primary"
               >
                 {{ nav.title }}
               </nuxt-link>
@@ -85,7 +85,7 @@
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline hover:underline text-gray-800 hover:text-warning"
+                class="no-underline text-gray-800 hover:text-primary"
               >
                 {{ nav.title }}
               </nuxt-link>

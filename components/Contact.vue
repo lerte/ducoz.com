@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <section class="text-white">
     <img src="@/assets/img/wave-top.svg?inline" alt />
     <ContactContent />
-  </div>
+  </section>
 </template>
 
 <script>

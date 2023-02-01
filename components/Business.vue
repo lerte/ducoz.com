@@ -49,7 +49,7 @@
       </div>
       <div class="flex items-center justify-center">
         <button
-          class="mx-auto lg:mx-0 hover:underline gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg"
+          class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg"
         >
           了解更多...
         </button>

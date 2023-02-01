@@ -1,5 +1,5 @@
 <template>
-  <div class="leading-normal tracking-normal text-white gradient">
+  <div class="gradient">
     <Header />
     <nuxt />
     <Footer />
