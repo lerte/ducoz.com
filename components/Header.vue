@@ -36,16 +36,20 @@
             </nuxt-link>
           </li>
         </ul>
-        <button
-          class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
-        >
-          注册账号
-        </button>
-        <button
-          class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
-        >
-          登录账号
-        </button>
+        <NuxtLink to="/register">
+          <button
+            class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
+          >
+            注册账号
+          </button>
+        </NuxtLink>
+        <NuxtLink to="/login">
+          <button
+            class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
+          >
+            登录账号
+          </button>
+        </NuxtLink>
       </div>
     </div>
   </nav>

@@ -43,7 +43,7 @@ export default {
       @submit.prevent="loginHandler"
       class="flex flex-col gap-2 w-full md:w-96"
     >
-      <h1 class="self-start text-3xl font-bold">Login to your account</h1>
+      <h1 class="self-start text-3xl font-bold text-white">登录到您的账号🥳</h1>
 
       <div v-if="errors" class="bg-red-600 text-white text-[13px] p-2">
         <p v-for="(error, index) in errors.items" :key="index">
@@ -64,15 +64,15 @@ export default {
         required
       />
       <div class="flex justify-between gap-4">
-        <NuxtLink class="text-indigo-600" to="/register"
-          >Don't have an account? Register now</NuxtLink
-        >
+        <NuxtLink class="text-white" to="/register">
+          还没有账号？立即注册
+        </NuxtLink>
         <button
-          :disabled="loading"
           type="submit"
-          class="border py-2 px-3 border-gray-500 hover:bg-gray-500 hover:text-white transition shrink-0"
+          :disabled="loading"
+          class="px-4 py-2 font-semibold text-sm bg-white rounded-sm text-primary shadow-sm hover:text-secondary"
         >
-          Login
+          登录
         </button>
       </div>
     </form>

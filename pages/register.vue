@@ -54,11 +54,10 @@ export default {
       @submit.prevent="registerHandler"
       class="flex flex-col gap-2 w-full md:w-96"
     >
-      <h1 class="self-start text-3xl font-bold">Create an account</h1>
+      <h1 class="self-start text-3xl font-bold text-white">创建账号🎉</h1>
 
       <div v-if="isNeedToVerify" class="bg-green-500 text-white p-2">
-        Your account has been created. Please check your email to verify your
-        account.
+        您的账号已经创建过，请检查您的邮箱，激活账号
       </div>
 
       <div v-if="errors" class="bg-red-600 text-white text-[13px] p-2">
@@ -67,30 +66,23 @@ export default {
         </p>
       </div>
 
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Type your email"
-        required
-      />
-      <input v-model="name" type="text" placeholder="Type your name" required />
+      <input v-model="email" type="email" placeholder="输入您的邮箱" required />
+      <input v-model="name" type="text" placeholder="输入您的名称" required />
       <input
         v-model="password"
         type="password"
         autocomplete="new-password"
-        placeholder="Type your password"
+        placeholder="输入您的密码"
         required
       />
       <div class="flex justify-between gap-4">
-        <NuxtLink class="text-indigo-600" to="/login"
-          >Already have an account?</NuxtLink
-        >
+        <NuxtLink class="text-white" to="/login"> 已有账号，点击登录 </NuxtLink>
         <button
           type="submit"
           :disabled="loading"
-          class="border py-2 px-3 border-gray-500 hover:bg-gray-500 hover:text-white transition shrink-0"
+          class="px-4 py-2 font-semibold text-sm bg-white rounded-sm text-primary shadow-sm hover:text-secondary"
         >
-          Register
+          注册
         </button>
       </div>
     </form>
