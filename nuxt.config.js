@@ -1,4 +1,8 @@
 export default {
+  env: {
+    ENV_URL: process.env.ENV_URL,
+    CLIENT_KEY: process.env.CLIENT_KEY
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: '多泽跨境',
@@ -18,7 +22,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['@/plugins/altogic'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -26,7 +30,9 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    // https://go.nuxtjs.dev/vuetify
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules

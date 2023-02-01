@@ -1,7 +1,12 @@
 import express from 'express'
-import altogic from '../libs/altogic'
+import { createClient } from 'altogic'
 import cookieParser from 'cookie-parser'
+
 const app = express()
+
+const altogic = createClient(process.env.ENV_URL, process.env.CLIENT_KEY, {
+  signInRedirect: '/login'
+})
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())

@@ -1,6 +1,4 @@
 <script>
-import altogic from '../libs/altogic'
-
 export default {
   data() {
     return {
@@ -37,7 +35,7 @@ export default {
       }
     },
     async updateProfilePicture(file) {
-      const { data, errors } = await altogic.storage
+      const { data, errors } = await this.altogic.storage
         .bucket('root')
         .upload(`user_${this.user._id}`, file)
       if (errors) throw new Error("Couldn't upload file")

@@ -1,6 +1,4 @@
 <script>
-import altogic from '~/libs/altogic'
-
 export default {
   data() {
     return {
@@ -27,7 +25,7 @@ export default {
       this.loading = true
       this.errors = null
 
-      const { data, errors: apiErrors } = await altogic.db
+      const { data, errors: apiErrors } = await this.altogic.db
         .model('users')
         .object(this.user._id)
         .update({ name: this.username })

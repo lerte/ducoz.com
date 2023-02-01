@@ -1,10 +1,9 @@
 <script>
-import altogic from '../libs/altogic'
 export default {
   data() {
     return {
       sessions: [],
-      token: altogic.auth.getSession()?.token
+      token: this.altogic.auth.getSession()?.token
     }
   },
   computed: {
