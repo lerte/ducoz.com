@@ -1,7 +1,7 @@
 <template>
   <section class="container mx-auto text-center py-6 mb-12">
     <h1
-      class="w-full my-2 text-5xl font-bold leading-tight text-center text-white"
+      class="w-full my-2 text-4xl md:text-5xl font-bold leading-tight text-center text-white"
     >
       联系我们
       <br />
@@ -14,8 +14,7 @@
     </div>
 
     <h3 class="my-4 px-4 text-xl leading-tight">
-      若您有合作意向，请您为我们留言或者使用以下方式联系我们，我们将尽快
-      给您回复，并且为您对接专业的商务洽谈专员，谢谢！
+      若您有合作意向请点击下方联系按钮与我们联系，我们将尽快给您回复并且为您对接专业的商务洽谈专员，谢谢！
     </h3>
 
     <button

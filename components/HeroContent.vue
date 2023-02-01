@@ -8,7 +8,7 @@
         class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
       >
         <p class="uppercase tracking-loose w-full">Traffic service provider</p>
-        <h1 class="my-4 text-5xl font-bold leading-tight">
+        <h1 class="my-4 text-4xl md:text-5xl font-bold leading-tight">
           跨境流量解决方案服务商
         </h1>
         <p class="w-full leading-normal text-2xl mb-8">

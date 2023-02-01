@@ -2,7 +2,7 @@
   <section class="bg-[#f8fafc] py-8">
     <div class="container mx-auto flex flex-wrap pt-4">
       <h1
-        class="w-full my-2 text-5xl font-bold leading-tight text-center text-primary"
+        class="w-full my-2 text-4xl md:text-5xl font-bold leading-tight text-center text-primary"
       >
         合作伙伴
         <br />

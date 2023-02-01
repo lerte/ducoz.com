@@ -6,86 +6,17 @@
           <logo color="primary" />
         </div>
 
-        <div class="flex-1">
-          <p class="text-dark font-bold text-lg md:mb-6">多泽跨境&reg;</p>
+        <div class="flex-1" v-for="(menu, index) in menus" :key="index">
+          <p class="text-dark font-bold text-lg md:mb-6">{{ menu.title }}</p>
           <ul class="list-reset mb-6">
             <li
               :key="index"
-              v-for="(nav, index) in menu"
+              v-for="(nav, index) in menu.children"
               class="mt-2 inline-block mr-2 md:block md:mr-0"
             >
               <nuxt-link
                 :to="nav.to"
-                class="no-underline text-gray-800 hover:text-primary"
-              >
-                {{ nav.title }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-
-        <div class="flex-1">
-          <p class="text-dark font-bold text-lg md:mb-6">Duoze ads&reg;</p>
-          <ul class="list-reset mb-6">
-            <li
-              :key="index"
-              v-for="(nav, index) in menu"
-              class="mt-2 inline-block mr-2 md:block md:mr-0"
-            >
-              <nuxt-link
-                :to="nav.to"
-                class="no-underline text-gray-800 hover:text-primary"
-              >
-                {{ nav.title }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1">
-          <p class="text-dark font-bold text-lg md:mb-6">商务合作</p>
-          <ul class="list-reset mb-6">
-            <li
-              :key="index"
-              v-for="(nav, index) in menu"
-              class="mt-2 inline-block mr-2 md:block md:mr-0"
-            >
-              <nuxt-link
-                :to="nav.to"
-                class="no-underline text-gray-800 hover:text-primary"
-              >
-                {{ nav.title }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1">
-          <p class="text-dark font-bold text-lg md:mb-6">支持</p>
-          <ul class="list-reset mb-6">
-            <li
-              :key="index"
-              v-for="(nav, index) in menu"
-              class="mt-2 inline-block mr-2 md:block md:mr-0"
-            >
-              <nuxt-link
-                :to="nav.to"
-                class="no-underline text-gray-800 hover:text-primary"
-              >
-                {{ nav.title }}
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-        <div class="flex-1">
-          <p class="text-dark font-bold text-lg md:mb-6">社交媒体</p>
-          <ul class="list-reset mb-6">
-            <li
-              :key="index"
-              v-for="(nav, index) in menu"
-              class="mt-2 inline-block mr-2 md:block md:mr-0"
-            >
-              <nuxt-link
-                :to="nav.to"
-                class="no-underline text-gray-800 hover:text-primary"
+                class="no-underline text-gray-800 hover:bg-primary hover:text-white"
               >
                 {{ nav.title }}
               </nuxt-link>
@@ -124,13 +55,52 @@
 export default {
   name: 'Footer',
   data: () => ({
-    menu: [
-      { title: '首页', to: '/' },
-      { title: '电商出海', to: 'sea' },
-      { title: '海外私域', to: 'oversea' },
-      { title: '跨境社区', to: 'community' },
-      { title: '关于我们', to: 'about' },
-      { title: '联系我们', to: 'contact' }
+    menus: [
+      {
+        title: '多泽跨境®',
+        children: [
+          { title: '店铺转让协议', to: '/' },
+          { title: '账号交易服务免责声明', to: '/' },
+          { title: '平台服务常见问题', to: '/' },
+          { title: '商标转让协议', to: '/' }
+        ]
+      },
+      {
+        title: 'Duoze ads®',
+        children: [
+          { title: '广告开户服务协议条款', to: '/' },
+          { title: '广告代投服务协议条款', to: '/' },
+          { title: '独立站服务常见问题', to: '/' }
+        ]
+      },
+      {
+        title: '商务合作',
+        children: [
+          { title: '新媒体', to: '/' },
+          { title: '代理政策', to: '/' },
+          { title: '推广政策', to: '/' },
+          { title: '广告合作', to: '/' }
+        ]
+      },
+      {
+        title: '支持',
+        children: [
+          { title: '会员权益介绍', to: '/' },
+          { title: '跨境社区行为规范', to: '/' },
+          { title: '在线客服', to: '/' },
+          { title: '投诉反馈', to: '/' }
+        ]
+      },
+      {
+        title: '社交媒体',
+        children: [
+          { title: '微信', to: '/' },
+          { title: 'Telegram', to: '/' },
+          { title: '抖音', to: '/' },
+          { title: '微信视频号', to: '/' },
+          { title: '微信公众号', to: '/' }
+        ]
+      }
     ],
     icons: [
       {

@@ -2,7 +2,7 @@
   <section class="bg-white p-4">
     <div class="container mx-auto text-gray-800">
       <h1
-        class="w-full my-2 text-5xl font-bold leading-tight text-center text-primary"
+        class="w-full my-2 text-4xl md:text-5xl font-bold leading-tight text-center text-primary"
       >
         主营业务<br />
         MAIN BUSINESS
@@ -17,9 +17,9 @@
           name="平台电商服务"
           :items="[
             '测评Amazon|Walmart|eBay',
-            '店铺预定交易',
-            '查邮箱',
-            '删差评',
+            '店铺预定及转让',
+            '精准查邮箱',
+            '高效删差评',
             '测评黑名单库查询',
             '平台账号交易',
             '站外折扣推广',

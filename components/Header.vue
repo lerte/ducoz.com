@@ -27,10 +27,11 @@
         class="w-full flex-grow lg:flex lg:items-center lg:w-auto mt-2 lg:mt-0 lg:bg-transparent text-black p-4 lg:p-0 z-20"
       >
         <ul class="list-reset lg:flex justify-end flex-1 items-center">
-          <li class="mr-3" v-for="(nav, index) in menu" :key="index">
+          <li class="mr-3 text-white" v-for="(nav, index) in menu" :key="index">
             <nuxt-link
               :to="nav.to"
-              class="inline-block py-2 px-4 text-white font-bold no-underline"
+              exact-active-class="bg-white text-primary"
+              class="block py-2 px-4 font-bold hover:bg-white hover:text-primary"
             >
               {{ nav.title }}
             </nuxt-link>
@@ -39,13 +40,13 @@
         <span v-if="user">
           <NuxtLink
             to="/profile"
-            class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
+            class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm mr-3"
           >
             {{ user?.name }}
           </NuxtLink>
           <a
             href="/api/logout"
-            class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
+            class="px-4 py-2 font-semibold bg-success rounded-sm text-white shadow-sm"
           >
             退出登录
           </a>
@@ -53,14 +54,14 @@
         <span v-else>
           <NuxtLink to="/register">
             <button
-              class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
+              class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm mr-3"
             >
               注册账号
             </button>
           </NuxtLink>
           <NuxtLink to="/login">
             <button
-              class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
+              class="px-4 py-2 font-semibold bg-success rounded-sm text-white shadow-sm"
             >
               登录账号
             </button>
