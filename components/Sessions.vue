@@ -15,9 +15,7 @@
           </span>
         </div>
         <div class="flex items-center gap-2">
-          <span>{{
-            new Date(session.creationDtm).toLocaleDateString('en-US')
-          }}</span>
+          <span>{{ new Date(session.creationDtm).toLocaleDateString() }}</span>
           <button
             v-if="!session?.isCurrent"
             @click="logoutSession(session)"
