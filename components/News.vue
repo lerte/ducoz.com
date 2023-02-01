@@ -22,13 +22,17 @@
             class="flex items-center p-4 font-bold bg-primary text-white hover:bg-secondary"
           >
             <div class="w-16 text-xs leading-5 text-left top-1">
-              <span class="text-lg border-b">2023</span>
-              <span class="text-[13px] block ml-1">Jan-27</span>
+              <span class="text-lg border-b">
+                {{ news[0].updatedAt | getYear }}
+              </span>
+              <span class="text-[13px] block ml-1">
+                {{ news[0].updatedAt | getDate }}
+              </span>
             </div>
             <div
               class="h-6 text-[13px] overflow-hidden whitespace-nowrap text-ellipsis"
             >
-              NTD物流与上海海事大学签署战略合作框架协议
+              {{ news[0].title }}
             </div>
           </div>
         </nuxt-link>
@@ -38,15 +42,19 @@
             v-for="(item, index) in news"
             class="p-4 bg-white hover:bg-secondary text-dark hover:text-white"
           >
-            <nuxt-link :to="item.link" class="flex items-center font-medium">
+            <a :href="item.id" class="flex items-center font-medium">
               <div class="w-16 text-xs leading-5 text-left">
-                <span class="text-lg border-b">2023</span>
-                <span class="text-[13px] block ml-1">Jan-27</span>
+                <span class="text-lg border-b">
+                  {{ item.updatedAt | getYear }}
+                </span>
+                <span class="text-[13px] block ml-1">
+                  {{ item.updatedAt | getDate }}
+                </span>
               </div>
               <span>
                 {{ item.title }}
               </span>
-            </nuxt-link>
+            </a>
           </li>
         </ul>
       </div>
@@ -55,36 +63,27 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 export default {
   name: 'News',
   data: () => ({
-    news: [
-      {
-        date: '2023-01-31',
-        title: '标题标题标题标题标题标题标题标题标题',
-        link: '/'
-      },
-      {
-        date: '2023-01-31',
-        title: '标题标题标题标题标题标题标题标题标题',
-        link: '/'
-      },
-      {
-        date: '2023-01-31',
-        title: '标题标题标题标题标题标题标题标题标题',
-        link: '/'
-      },
-      {
-        date: '2023-01-31',
-        title: '标题标题标题标题标题标题标题标题标题',
-        link: '/'
-      },
-      {
-        date: '2023-01-31',
-        title: '标题标题标题标题标题标题标题标题标题',
-        link: '/'
-      }
-    ]
-  })
+    news: []
+  }),
+  async fetch() {
+    const response = await fetch(
+      'https://ducoz.c1-asia-se.altogic.com/e:63d940c9a1ac9f2d382d6552/news'
+    )
+    const { result } = await response.json()
+    this.news = result
+  },
+  filters: {
+    getYear(datetime) {
+      return dayjs(datetime).get('year')
+    },
+    getDate(datetime) {
+      return dayjs(datetime).format('MM-DD')
+    }
+  }
 }
 </script>
