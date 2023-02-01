@@ -16,7 +16,7 @@
       class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
     >
       <div v-for="(cs, index) in cases" :key="index" class="mx-auto">
-        <img :src="cs.img" />
+        <img :src="cs.img" class="hover:scale-125 ease-in-out duration-300" />
       </div>
     </div>
   </section>
