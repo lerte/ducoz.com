@@ -58,8 +58,10 @@ export default {
       />
     </div>
     <div class="space-y-4" v-else>
-      <h1 class="text-3xl">Hello, {{ user?.name }}</h1>
-      <button @click="openChangeMode" class="border p-2">Change name</button>
+      <h1 class="text-3xl text-white">您好, {{ user?.name }}</h1>
+      <button @click="openChangeMode" class="border p-2 text-white">
+        修改名称
+      </button>
     </div>
     <div v-if="errors">
       {{ errors }}

@@ -49,7 +49,7 @@ export default {
 }
 </script>
 <template>
-  <section class="flex flex-col items-center justify-center h-96 gap-4 px-2">
+  <main class="flex flex-col items-center justify-center h-96 gap-4 px-4">
     <form
       @submit.prevent="registerHandler"
       class="flex flex-col gap-2 w-full md:w-96"
@@ -86,5 +86,5 @@ export default {
         </button>
       </div>
     </form>
-  </section>
+  </main>
 </template>

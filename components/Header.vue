@@ -1,5 +1,5 @@
 <template>
-  <nav :class="headerClassList" class="fixed w-full z-10 top-0 backdrop-blur">
+  <nav :class="headerClassList" class="fixed w-full z-10 top-0">
     <div
       class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2"
     >
@@ -36,26 +36,43 @@
             </nuxt-link>
           </li>
         </ul>
-        <NuxtLink to="/register">
-          <button
+        <span v-if="user">
+          <NuxtLink
+            to="/profile"
             class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
           >
-            注册账号
-          </button>
-        </NuxtLink>
-        <NuxtLink to="/login">
-          <button
+            {{ user?.name }}
+          </NuxtLink>
+          <a
+            href="/api/logout"
             class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
           >
-            登录账号
-          </button>
-        </NuxtLink>
+            退出登录
+          </a>
+        </span>
+        <span v-else>
+          <NuxtLink to="/register">
+            <button
+              class="px-4 py-2 font-semibold text-sm bg-secondary rounded-sm text-white shadow-sm mr-3"
+            >
+              注册账号
+            </button>
+          </NuxtLink>
+          <NuxtLink to="/login">
+            <button
+              class="px-4 py-2 font-semibold text-sm bg-success rounded-sm text-white shadow-sm"
+            >
+              登录账号
+            </button>
+          </NuxtLink>
+        </span>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'Header',
   data: () => ({
@@ -71,6 +88,9 @@ export default {
     ]
   }),
   computed: {
+    ...mapState({
+      user: (state) => state.user
+    }),
     isSticky() {
       return this.scrollY > 10
     },

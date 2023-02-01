@@ -38,7 +38,7 @@ export default {
 }
 </script>
 <template>
-  <section class="flex flex-col items-center justify-center h-96 gap-4 px-2">
+  <main class="flex flex-col items-center justify-center h-96 gap-4 px-4">
     <form
       @submit.prevent="loginHandler"
       class="flex flex-col gap-2 w-full md:w-96"
@@ -51,16 +51,11 @@ export default {
         </p>
       </div>
 
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Type your email"
-        required
-      />
+      <input v-model="email" type="email" placeholder="输入您的邮箱" required />
       <input
         v-model="password"
         type="password"
-        placeholder="Type your password"
+        placeholder="输入您的密码"
         required
       />
       <div class="flex justify-between gap-4">
@@ -76,5 +71,5 @@ export default {
         </button>
       </div>
     </form>
-  </section>
+  </main>
 </template>

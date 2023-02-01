@@ -35,8 +35,8 @@ export default {
 </script>
 
 <template>
-  <div class="border p-4 space-y-4">
-    <p class="text-3xl">All Sessions</p>
+  <div class="border p-4 space-y-4 text-white">
+    <p class="text-3xl">所有会话</p>
     <ul class="flex flex-col gap-2">
       <li
         :key="session.token"
@@ -44,11 +44,11 @@ export default {
         v-for="session in sessions"
       >
         <div>
-          <span v-if="session?.isCurrent"> Current Session </span>
+          <span v-if="session?.isCurrent"> 当前会话 </span>
           <span v-else>
-            <strong>Device name: </strong
-            >{{ session?.userAgent?.device?.family }}</span
-          >
+            <strong>设备名称: </strong>
+            {{ session?.userAgent?.device?.family }}
+          </span>
         </div>
         <div class="flex items-center gap-2">
           <span>{{

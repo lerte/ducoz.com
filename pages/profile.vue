@@ -12,16 +12,11 @@ export default {
 }
 </script>
 <template>
-  <div>
-    <section
-      class="h-screen py-4 space-y-4 flex flex-col text-center items-center"
-    >
-      <Avatar />
-      <UserInfo />
-      <Sessions />
-      <a href="/api/logout" class="bg-gray-400 rounded py-2 px-3 text-white">
-        Logout
-      </a>
-    </section>
-  </div>
+  <main
+    class="h-full py-16 px-4 space-y-4 flex flex-col text-center items-center justify-center"
+  >
+    <Avatar />
+    <UserInfo />
+    <Sessions />
+  </main>
 </template>

@@ -56,7 +56,7 @@ export default {
 </script>
 
 <template>
-  <div>
+  <section>
     <figure class="flex flex-col gap-4 items-center justify-center py-2">
       <picture class="border rounded-full w-24 h-24 overflow-hidden">
         <img
@@ -68,8 +68,8 @@ export default {
     </figure>
     <div class="flex flex-col gap-4 justify-center items-center">
       <label class="border p-2 cursor-pointer">
-        <span v-if="loading">Uploading...</span>
-        <span v-else>Change Avatar</span>
+        <span v-if="loading">上传中...</span>
+        <span v-else class="text-white">修改头像</span>
         <input
           :disabled="loading"
           class="hidden"
@@ -82,5 +82,5 @@ export default {
         {{ errors }}
       </div>
     </div>
-  </div>
+  </section>
 </template>
