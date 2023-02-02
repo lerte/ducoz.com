@@ -7,7 +7,7 @@ export default {
   head: {
     title: '多泽跨境',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'zh-CN'
     },
     meta: [
       { charset: 'utf-8' },
@@ -17,7 +17,10 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.jpg' }]
   },
-
+  loading: {
+    color: '#102B6A', // 主色调
+    height: '4px'
+  },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
@@ -34,6 +37,12 @@ export default {
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify'
   ],
+  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
+  vuetify: {
+    defaultAssets: {
+      icons: false
+    }
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [],

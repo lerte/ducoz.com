@@ -30,39 +30,31 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  data() {
-    return {
-      token: null,
-      sessions: []
-    }
-  },
+  data: () => ({
+    sessions: []
+  }),
   computed: {
-    sessionToken() {
-      return this.$store.state.sessionToken
-    }
+    ...mapState(['sessionToken'])
   },
   methods: {
     async logoutSession(session) {
-      const { errors } = await this.altogic.auth.signOut(session.token)
+      const { errors } = await this.$altogic.auth.signOut(session.token)
       if (!errors) {
         this.sessions = this.sessions.filter((s) => s.token !== session.token)
       }
     }
   },
   async created() {
-    const token =
-      this.$store.state.sessionToken ?? this.altogic.auth.getSession()?.token
-    if (this.altogic) {
-      const { sessions } = await this.altogic.auth.getAllSessions()
-      this.token = token
-      this.sessions = sessions?.map((session) => {
-        return {
-          ...session,
-          isCurrent: session.token === token
-        }
-      })
-    }
+    const { sessions } = await this.$altogic.auth.getAllSessions()
+    this.sessions = sessions?.map((session) => {
+      return {
+        ...session,
+        isCurrent: session.token === this.sessionToken
+      }
+    })
   }
 }
 </script>

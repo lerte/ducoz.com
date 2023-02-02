@@ -35,14 +35,14 @@ export default {
       }
     },
     async updateProfilePicture(file) {
-      const { data, errors } = await this.altogic.storage
+      const { data, errors } = await this.$altogic.storage
         .bucket('root')
         .upload(`user_${this.user._id}`, file)
       if (errors) throw new Error("Couldn't upload file")
       return data
     },
     async updateUser(data) {
-      const { data: user, errors } = await this.altogic.db
+      const { data: user, errors } = await this.$altogic.db
         .model('users')
         .object(this.user._id)
         .update(data)

@@ -13,7 +13,7 @@ export default {
     async loginHandler() {
       this.loading = true
       this.errors = null
-      const { errors: apiErrors } = await this.altogic.auth.sendMagicLinkEmail(
+      const { errors: apiErrors } = await this.$altogic.auth.sendMagicLinkEmail(
         this.email
       )
       this.loading = false

@@ -1,16 +1,23 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 import { createClient } from 'altogic'
 import cookieParser from 'cookie-parser'
 
 const app = express()
-
-const altogic = createClient(process.env.ENV_URL, process.env.CLIENT_KEY, {
+const { ENV_URL, CLIENT_KEY } = process.env
+const altogic = createClient(ENV_URL, CLIENT_KEY, {
   signInRedirect: '/login'
 })
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
+
+app.get('/', async (req, res) => {
+  return res.json('Talk is cheap. Show me your code.')
+})
 
 app.post('/login', async (req, res) => {
   const { email, password } = req.body
