@@ -124,7 +124,7 @@ export default {
       } else {
         this.$store.commit('setUser', user)
         this.$store.commit('setSession', session)
-        await this.$router.push('/admin/')
+        await this.$router.push('/admin')
       }
     }
   }
