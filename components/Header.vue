@@ -8,17 +8,26 @@
       </div>
       <div class="block lg:hidden pr-4">
         <button
-          class="flex items-center p-1 text-white hover:text-light"
           @click.prevent.stop="onToggleClick"
+          class="group flex items-center p-1 hover:bg-white"
         >
-          <svg
-            class="fill-current h-6 w-6"
-            viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            :class="isOpen ? 'rotate-90' : ''"
+            class="w-8 h-8 flex flex-col justify-evenly items-center transition-transform"
           >
-            <title>菜单</title>
-            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-          </svg>
+            <div
+              :class="isOpen ? 'rotate-45 translate-y-[5px]' : ''"
+              class="h-0.5 w-5 bg-white group-hover:bg-primary"
+            ></div>
+            <div
+              :class="isOpen ? 'hidden' : ''"
+              class="h-0.5 w-5 bg-white group-hover:bg-primary"
+            ></div>
+            <div
+              :class="isOpen ? '-rotate-45 -translate-y-[5px]' : ''"
+              class="h-0.5 w-5 bg-white group-hover:bg-primary"
+            ></div>
+          </div>
         </button>
       </div>
 
