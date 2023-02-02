@@ -88,7 +88,7 @@ export default {
   layout: 'login',
   middleware: ['guest'],
   head: () => ({
-    title: '后台登录'
+    title: '多泽跨境 | 后台登录'
   }),
   data: () => ({
     timestamp: 0,

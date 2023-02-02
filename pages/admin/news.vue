@@ -1,15 +1,16 @@
 <template>
   <v-container>
     <v-data-table
-      :headers="headers"
-      :items="list"
       show-select
+      :items="list"
+      item-key="_id"
+      :headers="headers"
+      :loading="loading"
       v-model="selected"
+      class="elevation-1"
+      @click:row="editItem"
       :options.sync="options"
       :server-items-length="totalCount"
-      :loading="loading"
-      item-key="id"
-      class="elevation-1"
       :footer-props="require('@/assets/json/footer-props.json')"
     >
       <template #top>
@@ -20,119 +21,65 @@
           <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
             <v-icon left> mdi-delete </v-icon>删除
           </v-btn>
-          <v-dialog persistent v-model="dialog" max-width="960" scrollable>
+          <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>添加信息
+                <v-icon left> mdi-plus </v-icon>添加新闻
               </v-btn>
             </template>
             <v-card>
-              <v-toolbar>
-                <span class="headline">{{ formTitle }}信息</span>
+              <v-toolbar dense>
+                <span class="headline">{{ formTitle }}新闻</span>
                 <v-spacer></v-spacer>
-                <v-icon @click="dialog = false">mdi-close</v-icon>
+                <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
                 <v-container>
                   <v-form ref="form" v-model="valid">
+                    <v-file-input
+                      v-model="file"
+                      class="d-none"
+                      ref="uploadFile"
+                      accept="image/*"
+                      @change="fileChange"
+                    />
                     <v-row>
-                      <v-col cols="3">
+                      <v-col cols="6">
                         <v-text-field
                           dense
-                          chips
                           outlined
                           clearable
-                          small-chips
-                          label="环境名称"
-                          v-model="listItem.env_name"
-                        >
-                        </v-text-field>
+                          hide-details
+                          label="图片地址"
+                          v-model="listItem.cover"
+                        />
                       </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="环境账号"
-                          v-model="listItem.env_account"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="环境密码"
-                          v-model="listItem.env_password"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="环境序号"
-                          v-model="listItem.env_serial"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="账号昵称"
-                          v-model="listItem.account_nick"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="平台"
-                          v-model="listItem.platform"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="账号"
-                          :rules="[rules.required]"
-                          v-model="listItem.account"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="3">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="密码"
-                          :rules="[rules.required]"
-                          v-model="listItem.password"
-                        >
-                        </v-text-field>
+                      <v-col cols="6">
+                        <v-tooltip top>
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              block
+                              v-on="on"
+                              v-bind="attrs"
+                              color="primary"
+                              :disabled="uploading"
+                              @click="uploadFile"
+                            >
+                              <v-icon left v-if="listItem.cover">
+                                mdi-image
+                              </v-icon>
+                              上传封面
+                            </v-btn>
+                          </template>
+                          <v-img
+                            max-height="320"
+                            max-width="320"
+                            v-if="listItem.cover"
+                            :src="listItem.cover"
+                            :lazy-src="listItem.cover"
+                          />
+                          <span v-else>请上传图片</span>
+                        </v-tooltip>
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
@@ -140,179 +87,22 @@
                           chips
                           outlined
                           clearable
-                          small-chips
-                          label="证件地址"
-                          v-model="listItem.id_address"
-                        >
-                        </v-text-field>
+                          hide-details
+                          label="标题"
+                          :rules="[rules.required]"
+                          v-model="listItem.title"
+                        />
                       </v-col>
                       <v-col cols="12">
-                        <v-text-field
-                          dense
-                          chips
+                        <v-textarea
                           outlined
-                          clearable
-                          small-chips
-                          label="双重验证"
-                          v-model="listItem.authenticator"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="4">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="商务管理平台ID"
-                          v-model="listItem.bm_id"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="4">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="商务管理平台ID绑定邮箱"
-                          v-model="listItem.bm_email"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="4">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="个人绑定手机"
-                          v-model="listItem.personal_mobile"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="公司验证信息"
-                          v-model="listItem.company_info"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="公司验证地址"
-                          v-model="listItem.company_address"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="公司验证电话"
-                          v-model="listItem.company_phone"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="公司验证网站"
-                          v-model="listItem.company_website"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="绑定IP信息"
-                          v-model="listItem.bind_ip"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="绑定IP到期时间"
-                          v-model="listItem.bind_ip_expire"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="广告账户名称"
-                          v-model="listItem.ad_account"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="广告账号状态"
-                          v-model="listItem.ad_account_status"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="商务管理平台状态"
-                          v-model="listItem.bm_status"
-                        >
-                        </v-text-field>
-                      </v-col>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          small-chips
-                          label="申述进度"
-                          v-model="listItem.appeal_state"
-                        >
-                        </v-text-field>
+                          auto-grow
+                          hide-details
+                          label="内容"
+                          row-height="15"
+                          :rules="[rules.required]"
+                          v-model="listItem.content"
+                        />
                       </v-col>
                     </v-row>
                   </v-form>
@@ -330,14 +120,14 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
-              <v-card-title class="text-h5">{{
-                `你确定要删除这${listItem.length || ''}条信息吗?`
-              }}</v-card-title>
+              <v-card-title class="text-h5">
+                {{ `你确定要删除这${listItem.length || ''}条信息吗?` }}
+              </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="secondary" @click="dialogDelete = false"
-                  >取消</v-btn
-                >
+                <v-btn color="secondary" @click="dialogDelete = false">
+                  取消
+                </v-btn>
                 <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -347,10 +137,27 @@
         <v-divider></v-divider>
       </template>
 
-      <template v-for="header in headers" #[`item.${header.value}`]="{ item }">
-        <span @click="$copy(item[header.value])" :key="header.value">{{
-          item[header.value]
-        }}</span>
+      <template #[`item._id`]="{ item }">
+        <span @click="$copy(item._id)">
+          {{ item._id }}
+        </span>
+      </template>
+
+      <template #[`item.cover`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-img
+              height="80"
+              width="80"
+              v-on="on"
+              v-bind="attrs"
+              @click="$copy(item.cover)"
+              :src="item.cover"
+            />
+          </template>
+          <v-img max-height="600" max-width="600" :src="item.cover" />
+          <p class="text-center">点击即可复制地址</p>
+        </v-tooltip>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -385,6 +192,7 @@ export default {
   layout: 'admin',
   data: () => ({
     loading: true,
+    uploading: false,
     totalCount: 0,
     selected: [],
     options: {
@@ -393,142 +201,36 @@ export default {
     },
     headers: [
       {
-        text: '环境名称',
-        value: 'env_name',
+        text: 'Id',
+        value: '_id',
         sortable: false,
         searchable: true
       },
       {
-        text: '环境账号',
-        value: 'env_account',
+        text: '封面',
+        value: 'cover',
+        sortable: false
+      },
+      {
+        text: '标题',
+        value: 'title',
         sortable: false,
         searchable: true
       },
       {
-        text: '环境密码',
-        value: 'env_password',
-        sortable: false,
-        searchable: true
+        text: '内容',
+        value: 'content',
+        sortable: false
       },
       {
-        text: '环境序列',
-        value: 'env_serial',
-        sortable: false,
-        searchable: true
+        text: '创建时间',
+        value: 'createdAt',
+        sortable: false
       },
       {
-        text: '账号昵称',
-        value: 'account_nick',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '平台',
-        value: 'platform',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '账号',
-        value: 'account',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '密码',
-        value: 'password',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '证件地址',
-        value: 'id_adress',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '双重验证',
-        value: 'authenticator',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '商务管理平台ID',
-        value: 'bm_id',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '商务管理平台ID绑定邮箱',
-        value: 'bm_email',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '个人绑定手机',
-        value: 'personal_phone',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '公司验证信息',
-        value: 'company_info',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '公司验证地址',
-        value: 'company_address',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '公司验证电话',
-        value: 'company_phone',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '公司验证网站',
-        value: 'company_website',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '绑定IP信息',
-        value: 'bind_ip',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '绑定IP到期时间',
-        value: 'bind_ip_expire',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '广告账号名称',
-        value: 'ad_account',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '广告账号状态',
-        value: 'ad_account_status',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '商务管理平台状态',
-        value: 'bm_status',
-        sortable: false,
-        searchable: true
-      },
-      {
-        text: '申述进度',
-        value: 'appeal_state',
-        sortable: false,
-        searchable: true
+        text: '更新时间',
+        value: 'updatedAt',
+        sortable: false
       },
       { text: '操作', value: 'actions' }
     ],
@@ -536,6 +238,7 @@ export default {
     dialog: false,
     dialogDelete: false,
     valid: false,
+    file: null,
     rules: {
       required: (value) => !!value || '必填项.'
     },
@@ -586,13 +289,27 @@ export default {
         params.set('page', 1)
         this.options.page = 1
       }
-      const { count, rows } = await this.$http.$get(
+      const { countInfo, result } = await this.$http.$get(
         `https://ducoz.c1-asia-se.altogic.com/e:63d940c9a1ac9f2d382d6552/news`
       )
-      this.totalCount = count
-      this.list = rows
+      this.totalCount = countInfo.count
+      this.list = result
       this.loading = false
       this.$store.commit('SET_SEARCHING', false)
+    },
+    uploadFile() {
+      this.$nextTick(() => {
+        this.$refs.uploadFile.$refs.input.click()
+      })
+    },
+    async fileChange() {
+      this.uploading = true
+      this.$notifier.showMessage({
+        content: '文件上传中...',
+        color: 'secondary'
+      })
+      this.$set(this.listItem, 'cover', 'todo')
+      this.uploading = false
     },
     async submit() {
       if (this.editedIndex > -1) {
@@ -626,9 +343,19 @@ export default {
     async addItem() {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
-      await this.$post('/api/info', params)
-      await this.getList()
-      this.closeAdd()
+      const { errors } = await this.$altogic.db
+        .model('news')
+        .object()
+        .create(params)
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        await this.getList()
+        this.closeAdd()
+      }
     },
     editItem(item) {
       this.editedIndex = this.list.indexOf(item)
@@ -647,31 +374,61 @@ export default {
           this.dialogDelete = true
         } else {
           this.$notifier.showMessage({
-            content: '请选择要删除的字典',
-            color: 'error'
+            color: 'error',
+            content: '请选择要删除的字典'
           })
         }
       }
     },
     async deleteItemConfirm() {
-      const options = {}
       if (this.listItem.length) {
-        const ids = this.listItem.map((item) => item.id)
-        options['ids'] = ids.join(',')
+        // 删除多个
+        for (let item of this.listItem) {
+          const { errors } = await this.$altogic.db
+            .model('news')
+            .object(item._id)
+            .delete()
+          if (errors) {
+            this.$notifier.showMessage({
+              content: errors,
+              color: 'error'
+            })
+          }
+        }
       } else {
-        options['ids'] = this.listItem.id
+        // 删除单个
+        const { errors } = await this.$altogic.db
+          .model('news')
+          .object(this.listItem._id)
+          .delete()
+        if (errors) {
+          this.$notifier.showMessage({
+            content: errors,
+            color: 'error'
+          })
+        }
       }
-      await this.$del(`/api/info/${options.ids}`)
       await this.getList()
       this.closeDelete()
     },
     async updateItem() {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
+      const id = params['_id']
       delete params['id']
-      await this.$put(`/api/info/${this.listItem.id}`, params)
-      await this.getList()
-      this.closeAdd()
+      const { errors } = await this.$altogic.db
+        .model('news')
+        .object(id)
+        .update(params)
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        await this.getList()
+        this.closeAdd()
+      }
     }
   }
 }

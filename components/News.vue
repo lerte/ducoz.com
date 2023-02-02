@@ -13,10 +13,13 @@
       </div>
 
       <div class="container block sm:flex items-center bg-[#f3f4f6]">
-        <nuxt-link class="block basis-1/2 sm:p-4 sm:h-full" to="/">
+        <NuxtLink
+          class="block basis-1/2 sm:p-4 sm:h-full"
+          :to="`/news/${news[0]?._id}`"
+        >
           <img
             class="object-cover h-[calc(100%_-_80px)]"
-            src="https://picsum.photos/960/400"
+            :src="news[0]?.cover ?? 'https://picsum.photos/960/400'"
           />
           <div
             class="flex items-center p-4 font-bold bg-primary text-white hover:bg-secondary"
@@ -35,14 +38,17 @@
               {{ news[0]?.title }}
             </div>
           </div>
-        </nuxt-link>
+        </NuxtLink>
         <ul class="basis-1/2 sm:p-4 sm:h-full space-y-4">
           <li
             :key="index"
-            v-for="(item, index) in news"
+            v-for="(item, index) in news.slice(1)"
             class="p-4 bg-white hover:bg-secondary text-dark hover:text-white"
           >
-            <a :href="item.id" class="flex items-center font-medium">
+            <NuxtLink
+              :to="`/news/${item?._id}`"
+              class="flex items-center font-medium"
+            >
               <div class="w-16 text-xs leading-5 text-left">
                 <span class="text-lg border-b">
                   {{ item?.updatedAt | getYear }}
@@ -54,7 +60,7 @@
               <span>
                 {{ item?.title }}
               </span>
-            </a>
+            </NuxtLink>
           </li>
         </ul>
       </div>
@@ -71,11 +77,20 @@ export default {
     news: []
   }),
   async fetch() {
-    const response = await fetch(
-      'https://ducoz.c1-asia-se.altogic.com/e:63d940c9a1ac9f2d382d6552/news'
-    )
-    const { result } = await response.json()
-    this.news = result
+    const { data, errors } = await this.$altogic.db
+      .model('news')
+      .sort('updatedAt', 'desc')
+      .limit(6)
+      .page(1)
+      .get()
+    if (errors) {
+      this.$notifier.showMessage({
+        content: errors,
+        color: 'error'
+      })
+    } else {
+      this.news = data
+    }
   },
   filters: {
     getYear(datetime) {

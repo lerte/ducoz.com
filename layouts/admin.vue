@@ -61,12 +61,8 @@
             <v-icon>mdi-account</v-icon>
           </v-btn>
         </template>
-        <v-btn to="/api/logout"> <v-icon>mdi-logout</v-icon>退出登录 </v-btn>
-        <a
-          href="/api/logout"
-          class="px-4 py-2 font-semibold bg-success rounded-sm text-white shadow-sm"
-        >
-          <v-icon>mdi-logout</v-icon>退出登录
+        <a href="/api/logout">
+          <v-btn> <v-icon>mdi-logout</v-icon>退出登录 </v-btn>
         </a>
       </v-menu>
     </v-app-bar>
@@ -98,6 +94,9 @@ import { mapState } from 'vuex'
 export default {
   name: 'AdminLayout',
   middleware: ['auth'],
+  head: () => ({
+    title: '多泽跨境 | 管理后台'
+  }),
   data: () => ({
     clipped: true,
     drawer: true,
