@@ -2,13 +2,16 @@
   <footer class="bg-white">
     <div class="container mx-auto px-4 sm:px-0">
       <div class="w-full flex flex-col md:flex-row py-6">
-        <div class="flex-1 mb-6">
+        <div>
           <FooterLogo />
         </div>
-
-        <div class="flex-1" v-for="(menu, index) in menus" :key="index">
+        <div
+          class="flex-1 text-left sm:text-center md:text-left"
+          v-for="(menu, index) in menus"
+          :key="index"
+        >
           <p class="text-dark font-bold text-lg md:mb-6">{{ menu.title }}</p>
-          <ul class="list-reset mb-6">
+          <ul>
             <li
               :key="index"
               v-for="(nav, index) in menu.children"
@@ -30,7 +33,9 @@
       <div
         class="flex justify-between text-dark py-10 flex-wrap md:flex-nowrap space-y-2 sm:space-y-0"
       >
-        <ul class="sm:flex-1 flex space-x-6 sm:space-x-4 mx-auto">
+        <ul
+          class="sm:flex-1 flex space-x-6 sm:space-x-4 justify-center sm:justify-start"
+        >
           <li>
             <Dropdowns />
           </li>
@@ -38,7 +43,7 @@
           <li>隐私策略</li>
           <li>网站地图</li>
         </ul>
-        <ul class="flex space-x-6 sm:space-x-4 mx-auto">
+        <ul class="flex space-x-6 sm:space-x-4 justify-center sm:justify-end">
           <li
             :key="index"
             :title="icon.title"
