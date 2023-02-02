@@ -2,7 +2,11 @@ export const state = () => ({
   user: null,
   session: null,
   allSessions: [],
-  sessionToken: null
+  sessionToken: null,
+  searchText: '', // 搜索关键字
+  searchItem: '', // 搜索的类目
+  searchItems: [], // 选择搜索的类目
+  searching: false // 正则搜索
 })
 
 export const mutations = {
@@ -16,6 +20,22 @@ export const mutations = {
   },
   setSessionToken(state, token) {
     state.sessionToken = token
+  },
+  SET_USER(state, payload) {
+    state.user = payload
+  },
+  SET_SEARCHING(state, payload) {
+    state.searching = payload
+  },
+  SET_SEARCH_TEXT(state, payload) {
+    state.searchText = payload
+  },
+  SET_SEARCH_ITEM(state, payload) {
+    state.searchItem = payload
+    state.searchText = ''
+  },
+  SET_SEARCH_ITEMS(state, payload) {
+    state.searchItems = payload
   }
 }
 

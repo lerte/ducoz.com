@@ -19,6 +19,7 @@ app.get('/', async (req, res) => {
   return res.json('Talk is cheap. Show me your code.')
 })
 
+// 邮箱登录
 app.post('/login', async (req, res) => {
   const { email, password } = req.body
 
@@ -39,6 +40,26 @@ app.post('/login', async (req, res) => {
     user
   })
 })
+
+// 手机号登录
+app.post('/signin', async (req, res) => {
+  const { phone, password } = req.body
+  const { errors, session, user } = await altogic.auth.signInWithPhone(
+    phone,
+    password
+  )
+  if (errors) {
+    return res.json({ errors })
+  }
+  altogic.auth.setSession(session)
+  altogic.auth.setSessionCookie(session.token, req, res)
+  return res.json({
+    session,
+    user
+  })
+})
+
+// 账号注册
 app.post('/register', async (req, res) => {
   const { email, password, ...rest } = req.body
   const { user, errors, session } = await altogic.auth.signUpWithEmail(

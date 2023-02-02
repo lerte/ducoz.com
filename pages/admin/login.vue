@@ -27,7 +27,7 @@
                 outlined
                 clearable
                 label="手机号"
-                v-model="login.username"
+                v-model="phone"
                 prepend-inner-icon="mdi-cellphone"
                 @keyup.enter.native="userLogin"
               />
@@ -37,11 +37,11 @@
                 outlined
                 clearable
                 label="密码"
-                v-model="login.password"
+                v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 prepend-inner-icon="mdi-lock"
-                @keyup.enter.native="userLogin"
+                @keyup.enter.native="loginHandler"
                 @click:append="showPassword = !showPassword"
               />
             </v-flex>
@@ -52,15 +52,15 @@
                 large
                 block
                 color="primary"
-                @click.native="userLogin"
-                >登录</v-btn
-              >
+                @click.native="loginHandler"
+                >登录
+              </v-btn>
               <v-alert
                 class="mt-3"
-                :value="Boolean(message)"
+                :value="Boolean(errors)"
                 type="info"
                 transition="scale-transition"
-                v-text="message"
+                v-text="errors"
               />
             </v-flex>
           </v-layout>
@@ -86,50 +86,46 @@
 export default {
   name: 'login',
   layout: 'login',
+  middleware: ['guest'],
   head: () => ({
-    title: '登录'
+    title: '后台登录'
   }),
   data: () => ({
     timestamp: 0,
-    message: null,
+    errors: null,
     loading: false,
     showPassword: false,
-    login: {
-      username: null,
-      password: null
-    }
+    phone: null,
+    password: null
   }),
   computed: {
     disabled() {
-      return !this.login.username || !this.login.password
+      return !this.phone || !this.password
     }
   },
   methods: {
-    async userLogin() {
+    async loginHandler() {
       this.loading = true
-      const response = await this.$post('/api/auth/login', {
-        mobile: this.login.username,
-        userPwd: this.login.password
+      this.errors = null
+      const response = await fetch('/api/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          phone: this.phone,
+          password: this.password
+        })
       })
-      if (response.code == 0) {
-        this.$notifier.showMessage({
-          content: '登录成功',
-          color: 'primary'
-        })
-        this.$store.commit('SET_USER', response.user)
-        if (this.$route.query && this.$route.query.to) {
-          this.$router.push(this.$route.query.to)
-        } else {
-          this.$router.push('/')
-        }
-      } else {
-        // 账号或密码错误
-        this.$notifier.showMessage({
-          content: '账号或密码错误',
-          color: 'error'
-        })
-      }
+      const { user, session, errors: apiErrors } = await response.json()
       this.loading = false
+      if (apiErrors) {
+        this.errors = apiErrors
+      } else {
+        this.$store.commit('setUser', user)
+        this.$store.commit('setSession', session)
+        await this.$router.push('/admin/')
+      }
     }
   }
 }

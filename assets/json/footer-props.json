@@ -1,0 +1,9 @@
+{
+  "showFirstLastPage": true,
+  "firstIcon": "mdi-arrow-left",
+  "lastIcon": "mdi-arrow-right",
+  "prevIcon": "mdi-minus",
+  "nextIcon": "mdi-plus",
+  "items-per-page-text": "每页",
+  "items-per-page-options": [10, 20, 50]
+}

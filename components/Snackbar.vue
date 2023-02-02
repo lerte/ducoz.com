@@ -9,14 +9,12 @@
 
 <script>
 export default {
-  data() {
-    return {
-      show: false,
-      message: '',
-      color: ''
-    }
-  },
-
+  name: 'snackbar',
+  data: () => ({
+    show: false,
+    message: '',
+    color: ''
+  }),
   created() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'snackbar/showMessage') {

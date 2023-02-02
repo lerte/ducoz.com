@@ -1,7 +1,4 @@
-<template></template>
-
 <script>
-export default {
-  middleware: ['auth']
-}
+import News from '~/pages/admin/news'
+export default News
 </script>
