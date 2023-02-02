@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 sm:px-0">
       <div class="w-full flex flex-col md:flex-row py-6">
         <div class="flex-1 mb-6">
-          <logo color="primary" />
+          <FooterLogo />
         </div>
 
         <div class="flex-1" v-for="(menu, index) in menus" :key="index">
