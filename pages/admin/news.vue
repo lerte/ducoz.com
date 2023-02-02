@@ -138,7 +138,7 @@
       </template>
 
       <template #[`item._id`]="{ item }">
-        <span @click="$copy(item._id)">
+        <span @click.stop="$copy(item._id)">
           {{ item._id }}
         </span>
       </template>
@@ -151,7 +151,7 @@
               width="80"
               v-on="on"
               v-bind="attrs"
-              @click="$copy(item.cover)"
+              @click.stop="$copy(item.cover)"
               :src="item.cover"
             />
           </template>
@@ -167,7 +167,7 @@
           class="mr-2"
           min-width="0"
           color="primary"
-          @click="editItem(item)"
+          @click.stop="editItem(item)"
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
@@ -176,7 +176,7 @@
           x-small
           min-width="0"
           color="error"
-          @click="deleteItem(item)"
+          @click.stop="deleteItem(item)"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
@@ -216,11 +216,6 @@ export default {
         value: 'title',
         sortable: false,
         searchable: true
-      },
-      {
-        text: '内容',
-        value: 'content',
-        sortable: false
       },
       {
         text: '创建时间',
