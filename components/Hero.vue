@@ -1,6 +1,6 @@
 <template>
   <section class="leading-normal tracking-normal text-white">
-    <hero-content />
+    <HeroContent />
     <div class="relative -mt-12 lg:-mt-24">
       <svg
         viewBox="0 0 1428 174"

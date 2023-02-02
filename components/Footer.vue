@@ -31,7 +31,7 @@
     <div class="container mx-auto">
       <hr class="h-px border border-dark" />
       <div
-        class="flex justify-between text-dark py-10 flex-wrap md:flex-nowrap space-y-2 sm:space-y-0"
+        class="flex-1 sm:flex justify-between text-dark py-10 flex-wrap md:flex-nowrap space-y-2 sm:space-y-0"
       >
         <ul
           class="sm:flex-1 flex space-x-6 sm:space-x-4 justify-center sm:justify-start"

@@ -16,7 +16,7 @@
         <Business
           name="平台电商服务"
           :items="[
-            '测评Amazon|Walmart|eBay',
+            '海外电商平台测评',
             '店铺预定及转让',
             '精准查邮箱',
             '高效删差评',
