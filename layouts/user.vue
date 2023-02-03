@@ -62,30 +62,6 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-text-field
-        solo
-        dense
-        clearable
-        hide-details
-        label="搜索"
-        v-model="searchText"
-        append-icon="mdi-magnify"
-        @click:append="doSearching"
-        @keyup.enter.native="doSearching"
-      >
-        <template v-slot:prepend-inner>
-          <v-select
-            solo
-            dense
-            hide-details
-            label="搜索条件"
-            class="inner-select"
-            v-model="searchItem"
-            :items="searchItems.filter((i) => i.searchable == true)"
-          />
-        </template>
-      </v-text-field>
-      <v-spacer />
       <NuxtLink to="/">
         <v-btn fab text>
           <v-icon>mdi-home</v-icon>
@@ -129,18 +105,18 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'AdminLayout',
+  name: 'UserLayout',
   middleware: ['auth'],
   head: () => ({
-    title: '多泽跨境 | 管理后台'
+    title: '多泽跨境 | 工作台'
   }),
   data: () => ({
-    title: '管理后台',
+    title: '工作台',
     clipped: true,
     drawer: true,
     fixed: false,
     miniVariant: false,
-    items: require('@/assets/json/sidebar.json')
+    items: require('@/assets/json/sidebar-user.json')
   }),
   computed: {
     ...mapState(['searchItems', 'sessionToken']),

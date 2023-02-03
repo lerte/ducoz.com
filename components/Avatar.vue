@@ -1,11 +1,40 @@
+<template>
+  <section>
+    <figure class="flex flex-col gap-4 items-center justify-center py-2">
+      <picture class="border rounded-full w-24 h-24 overflow-hidden">
+        <img
+          class="object-cover w-full h-full"
+          :src="userPicture"
+          :alt="user?.name"
+        />
+      </picture>
+    </figure>
+    <div class="flex flex-col gap-4 justify-center items-center">
+      <label class="border p-2 cursor-pointer">
+        <span v-if="loading">上传中...</span>
+        <span v-else>修改头像</span>
+        <input
+          :disabled="loading"
+          class="hidden"
+          type="file"
+          accept="image/*"
+          @change="changeHandler"
+        />
+      </label>
+      <div class="bg-red-500 p-2 text-white" v-if="errors">
+        {{ errors }}
+      </div>
+    </div>
+  </section>
+</template>
+
 <script>
 export default {
-  data() {
-    return {
-      loading: false,
-      errors: null
-    }
-  },
+  name: 'Avatar',
+  data: () => ({
+    loading: false,
+    errors: null
+  }),
   computed: {
     user() {
       return this.$store.state.user
@@ -52,33 +81,3 @@ export default {
   }
 }
 </script>
-
-<template>
-  <section>
-    <figure class="flex flex-col gap-4 items-center justify-center py-2">
-      <picture class="border rounded-full w-24 h-24 overflow-hidden">
-        <img
-          class="object-cover w-full h-full"
-          :src="userPicture"
-          :alt="user?.name"
-        />
-      </picture>
-    </figure>
-    <div class="flex flex-col gap-4 justify-center items-center">
-      <label class="border p-2 cursor-pointer">
-        <span v-if="loading">上传中...</span>
-        <span v-else class="text-white">修改头像</span>
-        <input
-          :disabled="loading"
-          class="hidden"
-          type="file"
-          accept="image/*"
-          @change="changeHandler"
-        />
-      </label>
-      <div class="bg-red-500 p-2 text-white" v-if="errors">
-        {{ errors }}
-      </div>
-    </div>
-  </section>
-</template>

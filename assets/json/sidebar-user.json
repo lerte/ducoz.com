@@ -1,0 +1,12 @@
+[
+  {
+    "icon": "mdi-account",
+    "title": "用户中心",
+    "to": "/user/profile"
+  },
+  {
+    "icon": "mdi-email",
+    "title": "查邮管理",
+    "to": "/user/checkmail"
+  }
+]

@@ -1,27 +1,3 @@
-<script>
-export default {
-  middleware: ['guest'],
-  data() {
-    return {
-      errors: null
-    }
-  },
-  async fetch() {
-    const { access_token } = this.$route.query
-    const res = await fetch(`/api/verify-user?access_token=${access_token}`)
-    const { session, user, errors: apiErrors } = await res.json()
-    if (apiErrors) {
-      this.errors = apiErrors
-      return
-    }
-    this.$store.commit('setUser', user)
-    this.$store.commit('setSession', session)
-    await this.$router.push('/profile')
-  },
-  fetchOnServer: false
-}
-</script>
-
 <template>
   <section class="h-screen flex flex-col gap-4 justify-center items-center">
     <div class="text-center" v-if="errors">
@@ -34,8 +10,30 @@ export default {
       </p>
     </div>
     <div class="text-center" v-else>
-      <p class="text-6xl text-black">Please wait</p>
-      <p class="text-3xl text-black">You're redirecting to your profile...</p>
+      <p class="text-6xl text-white">请稍等...</p>
+      <p class="text-3xl text-white">马上跳转到用户资料页</p>
     </div>
   </section>
 </template>
+
+<script>
+export default {
+  middleware: ['guest'],
+  data: () => ({
+    errors: null
+  }),
+  async fetch() {
+    const { access_token } = this.$route.query
+    const res = await fetch(`/api/verify-user?access_token=${access_token}`)
+    const { session, user, errors: apiErrors } = await res.json()
+    if (apiErrors) {
+      this.errors = apiErrors
+      return
+    }
+    this.$store.commit('setUser', user)
+    this.$store.commit('setSession', session)
+    await this.$router.push('/user')
+  },
+  fetchOnServer: false
+}
+</script>

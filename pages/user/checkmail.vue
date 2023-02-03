@@ -24,62 +24,41 @@
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>添加新闻
+                <v-icon left> mdi-plus </v-icon>添加
               </v-btn>
             </template>
             <v-card>
               <v-toolbar dense>
-                <span class="headline">{{ formTitle }}新闻</span>
+                <span class="headline">{{ formTitle }}</span>
                 <v-spacer></v-spacer>
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
                 <v-container>
                   <v-form ref="form" v-model="valid">
-                    <v-file-input
-                      v-model="file"
-                      class="d-none"
-                      ref="uploadFile"
-                      accept="image/*"
-                      @change="fileChange"
-                    />
                     <v-row>
                       <v-col cols="6">
-                        <v-text-field
+                        <v-autocomplete
                           dense
                           outlined
                           clearable
                           hide-details
-                          label="图片地址"
-                          v-model="listItem.cover"
+                          label="国家"
+                          v-model="listItem.country"
+                          :items="require('@/assets/json/countries.json')"
                         />
                       </v-col>
                       <v-col cols="6">
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              block
-                              v-on="on"
-                              v-bind="attrs"
-                              color="primary"
-                              :disabled="uploading"
-                              @click="uploadFile"
-                            >
-                              <v-icon left v-if="listItem.cover">
-                                mdi-image
-                              </v-icon>
-                              上传封面
-                            </v-btn>
-                          </template>
-                          <v-img
-                            max-height="320"
-                            max-width="320"
-                            v-if="listItem.cover"
-                            :src="listItem.cover"
-                            :lazy-src="listItem.cover"
-                          />
-                          <span v-else>请上传图片</span>
-                        </v-tooltip>
+                        <v-text-field
+                          dense
+                          chips
+                          outlined
+                          clearable
+                          hide-details
+                          label="ASIN"
+                          :rules="[rules.required]"
+                          v-model="listItem.asin"
+                        />
                       </v-col>
                       <v-col cols="12">
                         <v-text-field
@@ -88,20 +67,20 @@
                           outlined
                           clearable
                           hide-details
-                          label="标题"
+                          label="评价链接"
                           :rules="[rules.required]"
-                          v-model="listItem.title"
+                          v-model="listItem.reviewUrl"
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-textarea
+                        <v-text-field
+                          dense
+                          chips
                           outlined
-                          auto-grow
+                          clearable
                           hide-details
-                          label="内容"
-                          row-height="15"
-                          :rules="[rules.required]"
-                          v-model="listItem.content"
+                          label="评价Id"
+                          v-model="listItem.reivewId"
                         />
                       </v-col>
                     </v-row>
@@ -188,11 +167,10 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'news',
-  layout: 'admin',
+  name: 'checkmail',
+  layout: 'user',
   data: () => ({
     loading: true,
-    uploading: false,
     totalCount: 0,
     selected: [],
     options: {
@@ -207,15 +185,30 @@ export default {
         searchable: true
       },
       {
-        text: '封面',
-        value: 'cover',
+        text: '用户Id',
+        value: '_parent',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '国家',
+        value: 'country',
         sortable: false
       },
       {
-        text: '标题',
-        value: 'title',
-        sortable: false,
-        searchable: true
+        text: 'ASIN',
+        value: 'asin',
+        sortable: false
+      },
+      {
+        text: '评论链接',
+        value: 'reviewUrl',
+        sortable: false
+      },
+      {
+        text: '评论Id',
+        value: 'reviewId',
+        sortable: false
       },
       {
         text: '创建时间',
@@ -233,7 +226,6 @@ export default {
     dialog: false,
     dialogDelete: false,
     valid: false,
-    file: null,
     rules: {
       required: (value) => !!value || '必填项.'
     },
@@ -242,29 +234,14 @@ export default {
   }),
   watch: {
     options: {
-      async handler() {
+      handler() {
         this.getList()
-        this.$store.commit('SET_SEARCH_ITEMS', this.headers)
       },
       deep: true
-    },
-    searching: {
-      handler(val) {
-        if (val) {
-          this.getList()
-        }
-      }
-    },
-    searchText: {
-      handler(val) {
-        if (!val) {
-          this.getList()
-        }
-      }
     }
   },
   computed: {
-    ...mapState(['searchItem', 'searchText', 'searching']),
+    ...mapState(['user']),
     formTitle() {
       return this.editedIndex == -1 ? '添加' : '编辑'
     }
@@ -273,20 +250,10 @@ export default {
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options
-      const params = new URLSearchParams({
-        page,
-        pageSize: itemsPerPage
-      })
-      if (this.searchItem && this.searchText) {
-        params.append(this.searchItem, this.searchText)
-      }
-      if (this.searching) {
-        params.set('page', 1)
-        this.options.page = 1
-      }
 
       const { data, errors } = await this.$altogic.db
-        .model('news')
+        .model('users.checkmail')
+        .filter(`_parent == "${this.user._id}"`)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)
@@ -304,20 +271,7 @@ export default {
       this.loading = false
       this.$store.commit('SET_SEARCHING', false)
     },
-    uploadFile() {
-      this.$nextTick(() => {
-        this.$refs.uploadFile.$refs.input.click()
-      })
-    },
-    async fileChange() {
-      this.uploading = true
-      this.$notifier.showMessage({
-        content: '文件上传中...',
-        color: 'secondary'
-      })
-      this.$set(this.listItem, 'cover', 'todo')
-      this.uploading = false
-    },
+
     async submit() {
       if (this.editedIndex > -1) {
         await this.updateItem()
@@ -351,9 +305,9 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('news')
+        .model('users.checkmail')
         .object()
-        .create(params)
+        .append(params, this.user._id)
       if (errors) {
         this.$notifier.showMessage({
           content: errors,
@@ -392,7 +346,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('news')
+            .model('users.checkmail')
             .object(item._id)
             .delete()
           if (errors) {
@@ -405,7 +359,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('news')
+          .model('users.checkmail')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -422,7 +376,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('news')
+        .model('users.checkmail')
         .object(params['_id'])
         .update(params)
       if (errors) {

@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col items-center justify-center h-96 gap-4 px-4">
+  <main class="flex flex-col items-center justify-center py-16 h-96 gap-4 px-4">
     <form
       @submit.prevent="loginHandler"
       class="flex flex-col gap-2 w-full md:w-96"
@@ -19,7 +19,7 @@
         placeholder="输入您的密码"
         required
       />
-      <div class="flex justify-between gap-4">
+      <div class="flex items-start justify-between pt-4">
         <NuxtLink class="text-white" to="/register">
           还没有账号？立即注册
         </NuxtLink>
@@ -67,7 +67,7 @@ export default {
       } else {
         this.$store.commit('setUser', user)
         this.$store.commit('setSession', session)
-        await this.$router.push('/profile')
+        await this.$router.push('/user/profile')
       }
     }
   }

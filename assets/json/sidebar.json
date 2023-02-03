@@ -1,0 +1,17 @@
+[
+  {
+    "icon": "mdi-chart-bubble",
+    "title": "信息管理",
+    "to": "/admin/info"
+  },
+  {
+    "icon": "mdi-newspaper-variant-outline",
+    "title": "新闻管理",
+    "to": "/admin/news"
+  },
+  {
+    "icon": "mdi-email",
+    "title": "查邮管理",
+    "to": "/admin/checkmail"
+  }
+]

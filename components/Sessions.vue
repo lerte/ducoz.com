@@ -1,5 +1,5 @@
 <template>
-  <div class="border p-4 space-y-4 text-white">
+  <div class="border p-4 space-y-4">
     <p class="text-3xl">所有会话</p>
     <ul class="flex flex-col gap-2">
       <li
@@ -33,6 +33,7 @@
 import { mapState } from 'vuex'
 
 export default {
+  name: 'Sessions',
   data: () => ({
     sessions: []
   }),

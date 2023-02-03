@@ -56,7 +56,7 @@
           </NuxtLink>
           <NuxtLink
             v-else
-            to="/profile"
+            to="/user/profile"
             class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm mr-3"
           >
             {{ user?.name }}
