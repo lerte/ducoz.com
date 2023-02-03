@@ -17,6 +17,7 @@
 
         <button
           class="mx-auto lg:mx-0 bg-danger text-white font-bold rounded-lg my-6 p-4 shadow-lg"
+          @click="sloganClick"
         >
           中国人不骗中国人，让每个跨境人都挣钱
         </button>
@@ -31,6 +32,14 @@
 
 <script>
 export default {
-  name: 'HeroContent'
+  name: 'HeroContent',
+  methods: {
+    sloganClick() {
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '网站开发中，敬请期待!'
+      })
+    }
+  }
 }
 </script>

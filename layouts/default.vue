@@ -1,8 +1,9 @@
 <template>
   <div class="gradient">
     <Header />
-    <nuxt />
+    <Nuxt />
     <Footer />
+    <Snackbar />
   </div>
 </template>
 

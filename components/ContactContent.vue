@@ -18,6 +18,7 @@
     </h3>
 
     <button
+      @click="developTips"
       class="mx-auto lg:mx-0 bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg"
     >
       马上联系
@@ -27,6 +28,14 @@
 
 <script>
 export default {
-  name: 'CallToActionContent'
+  name: 'ContactContent',
+  methods: {
+    developTips() {
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '网站开发中，敬请期待!'
+      })
+    }
+  }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-data-table
       show-select
       :items="list"
@@ -232,6 +232,11 @@ export default {
         sortable: false
       },
       {
+        text: '反馈状态',
+        value: 'status',
+        sortable: false
+      },
+      {
         text: '创建时间',
         value: 'createdAt',
         sortable: false
@@ -239,11 +244,6 @@ export default {
       {
         text: '更新时间',
         value: 'updatedAt',
-        sortable: false
-      },
-      {
-        text: '反馈状态',
-        value: 'status',
         sortable: false
       },
       { text: '操作', value: 'actions', sortable: false }

@@ -103,9 +103,7 @@
       </v-menu>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <Nuxt />
     </v-main>
     <v-footer :absolute="!fixed" app>
       <span> {{ new Date().getFullYear() }}&copy;</span>

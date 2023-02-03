@@ -17,12 +17,12 @@
               v-for="(nav, index) in menu.children"
               class="mt-2 inline-block mr-2 md:block md:mr-0"
             >
-              <nuxt-link
-                :to="nav.to"
+              <span
+                @click="developTips"
                 class="no-underline text-gray-800 hover:bg-primary hover:text-white"
               >
                 {{ nav.title }}
-              </nuxt-link>
+              </span>
             </li>
           </ul>
         </div>
@@ -137,6 +137,14 @@ export default {
         svg: `<?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M38 10L10 38" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6L12 14L18 6" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 14H19" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20H19" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14V26" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32.8462 26H42V42H22V36.15" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`
       }
     ]
-  })
+  }),
+  methods: {
+    developTips() {
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '网站开发中，敬请期待!'
+      })
+    }
+  }
 }
 </script>

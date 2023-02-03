@@ -11,10 +11,11 @@
       class="flex-none mt-auto bg-white rounded-b rounded-t-none overflow-hidden shadow p-6"
     >
       <div class="w-full pt-6 text-3xl text-gray-600 font-bold text-center">
-        <p
-          class="text-lg leading-[48px] flex justify-center items-center"
-          v-for="(item, index) in items"
+        <NuxtLink
+          to="/user"
           :key="index"
+          v-for="(item, index) in items"
+          class="text-lg leading-[48px] flex justify-center items-center"
         >
           <svg class="h-6 w-6 mr-3" viewBox="0 0 24 24" fill="none">
             <path
@@ -45,10 +46,11 @@
               class="fill-purple-400 group-hover:fill-purple-500 dark:group-hover:fill-purple-300 dark:fill-slate-600"
             ></path>
           </svg>
-        </p>
+        </NuxtLink>
       </div>
       <div class="flex items-center justify-center">
         <button
+          @click="developTips"
           class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg"
         >
           了解更多...
@@ -69,6 +71,14 @@ export default {
     items: {
       type: Array,
       required: true
+    }
+  },
+  methods: {
+    developTips() {
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '网站开发中，敬请期待!'
+      })
     }
   }
 }
