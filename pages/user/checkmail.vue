@@ -44,6 +44,7 @@
                           clearable
                           hide-details
                           label="国家"
+                          :rules="[rules.required]"
                           v-model="listItem.country"
                           :items="require('@/assets/json/countries.json')"
                         />
@@ -83,6 +84,32 @@
                           v-model="listItem.reivewId"
                         />
                       </v-col>
+                      <v-card width="100%" v-if="editedIndex > -1">
+                        <v-card-title> 反馈信息 </v-card-title>
+                        <v-divider />
+                        <v-col cols="12">
+                          <v-text-field
+                            dense
+                            disabled
+                            outlined
+                            clearable
+                            hide-details
+                            label="邮箱"
+                            v-model="listItem.email"
+                          />
+                        </v-col>
+                        <v-col cols="12">
+                          <v-text-field
+                            dense
+                            disabled
+                            outlined
+                            clearable
+                            hide-details
+                            label="订单号"
+                            v-model="listItem.orderId"
+                          />
+                        </v-col>
+                      </v-card>
                     </v-row>
                   </v-form>
                 </v-container>
@@ -122,21 +149,15 @@
         </span>
       </template>
 
-      <template #[`item.cover`]="{ item }">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-img
-              height="80"
-              width="80"
-              v-on="on"
-              v-bind="attrs"
-              @click.stop="$copy(item.cover)"
-              :src="item.cover"
-            />
-          </template>
-          <v-img max-height="600" max-width="600" :src="item.cover" />
-          <p class="text-center">点击即可复制地址</p>
-        </v-tooltip>
+      <template #[`item.status`]="{ item }">
+        <v-chip
+          label
+          small
+          :color="item.email ? 'success' : 'secondary'"
+          text-color="white"
+        >
+          {{ item.email ? '已反馈' : '未反馈' }}
+        </v-chip>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -218,6 +239,11 @@ export default {
       {
         text: '更新时间',
         value: 'updatedAt',
+        sortable: false
+      },
+      {
+        text: '反馈状态',
+        value: 'status',
         sortable: false
       },
       { text: '操作', value: 'actions', sortable: false }
