@@ -10,11 +10,11 @@
             :src="`https://picsum.photos/800/600?t=${timestamp}`"
           >
             <v-layout
-              slot="placeholder"
+              ma-0
               fill-height
               align-center
               justify-center
-              ma-0
+              slot="placeholder"
             >
               <v-progress-circular indeterminate color="grey lighten-5" />
             </v-layout>
@@ -29,7 +29,7 @@
                 label="手机号"
                 v-model="phone"
                 prepend-inner-icon="mdi-cellphone"
-                @keyup.enter.native="userLogin"
+                @keyup.enter.native="loginHandler"
               />
             </v-flex>
             <v-flex xs12>
@@ -47,20 +47,19 @@
             </v-flex>
             <v-flex xs12>
               <v-btn
-                :loading="loading"
-                :disabled="disabled"
                 large
                 block
                 color="primary"
+                :loading="loading"
+                :disabled="disabled || loading"
                 @click.native="loginHandler"
-                >登录
-              </v-btn>
+              />登录
               <v-alert
                 class="mt-3"
-                :value="Boolean(errors)"
                 type="info"
-                transition="scale-transition"
                 v-text="errors"
+                :value="Boolean(errors)"
+                transition="scale-transition"
               />
             </v-flex>
           </v-layout>

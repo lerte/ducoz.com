@@ -48,6 +48,14 @@
         </ul>
         <span v-if="user">
           <NuxtLink
+            to="/admin"
+            v-if="user.isAdmin"
+            class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm mr-3"
+          >
+            管理后台
+          </NuxtLink>
+          <NuxtLink
+            v-else
             to="/profile"
             class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm mr-3"
           >

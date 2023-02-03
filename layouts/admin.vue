@@ -24,7 +24,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
@@ -55,6 +55,11 @@
         </template>
       </v-text-field>
       <v-spacer />
+      <NuxtLink to="/">
+        <v-btn text>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+      </NuxtLink>
       <v-menu bottom offset-y open-on-hover transition="scale-transition">
         <template v-slot:activator="{ attrs, on }">
           <v-btn class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
@@ -114,7 +119,7 @@ export default {
       }
     ],
     miniVariant: false,
-    title: '后台'
+    title: '管理后台'
   }),
   computed: {
     ...mapState(['searchItems', 'sessionToken']),
