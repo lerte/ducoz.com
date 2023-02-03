@@ -284,11 +284,23 @@ export default {
         params.set('page', 1)
         this.options.page = 1
       }
-      const { countInfo, result } = await this.$http.$get(
-        `https://ducoz.c1-asia-se.altogic.com/e:63d940c9a1ac9f2d382d6552/news`
-      )
-      this.totalCount = countInfo.count
-      this.list = result
+
+      const { data, errors } = await this.$altogic.db
+        .model('news')
+        .sort('updatedAt', 'desc')
+        .limit(itemsPerPage)
+        .page(page)
+        .get({ returnCountInfo: true })
+
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        this.list = data.data
+        this.totalCount = data.info.count
+      }
       this.loading = false
       this.$store.commit('SET_SEARCHING', false)
     },
