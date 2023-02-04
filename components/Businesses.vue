@@ -13,32 +13,8 @@
       <div
         class="max-w-7xl mx-auto grid-cols-1 sm:grid sm:grid-cols-2 lg:gap-40 md:gap-20 sm:gap-10 gap-0 relative"
       >
-        <Business
-          name="平台电商服务"
-          :items="[
-            '海外平台电商测评',
-            '店铺预定及转让',
-            '精准查邮箱',
-            '高效删差评',
-            '测评黑名单库查询',
-            '平台账号交易',
-            '站外折扣推广',
-            '海外商标交易'
-          ]"
-        />
-        <Business
-          name="独立站流量营销"
-          :items="[
-            'Facebook广告开户',
-            'Google广告开户',
-            'Tiktok广告开户',
-            '海外社媒开户',
-            '电商网站建站',
-            '独立站广告代投',
-            '粉丝人气营销',
-            '网红资源服务'
-          ]"
-        />
+        <Business name="平台电商服务" :items="items1" />
+        <Business name="独立站流量营销" :items="items2" />
         <div
           class="h-full hidden sm:block gradient-vertical w-px absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
         ></div>
@@ -49,6 +25,28 @@
 
 <script>
 export default {
-  name: 'Businesses'
+  name: 'Businesses',
+  data: () => ({
+    items1: [
+      { title: '海外平台电商测评', to: '/user' },
+      { title: '店铺预定及转让', to: '/user' },
+      { title: '精准查邮箱', to: '/user/checkmail' },
+      { title: '高效删差评', to: '/user' },
+      { title: '测评黑名单库查询', to: '/user' },
+      { title: '平台账号交易', to: '/user' },
+      { title: '精准查站外折扣推广邮箱', to: '/user' },
+      { title: '海外商标交易', to: '/user' }
+    ],
+    items2: [
+      { title: 'Facebook广告开户', to: '/user' },
+      { title: 'Google广告开户', to: '/user' },
+      { title: 'Tiktok广告开户', to: '/user' },
+      { title: '海外社媒开户', to: '/user' },
+      { title: '电商网站建站', to: '/user' },
+      { title: '独立站广告代投', to: '/user' },
+      { title: '粉丝人气营销', to: '/user' },
+      { title: '网红资源服务', to: '/user' }
+    ]
+  })
 }
 </script>

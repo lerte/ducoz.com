@@ -18,13 +18,10 @@
           <v-btn color="secondary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
-          <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
-            <v-icon left> mdi-delete </v-icon>删除
-          </v-btn>
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>添加
+                <v-icon left> mdi-plus </v-icon>提交信息
               </v-btn>
             </template>
             <v-card>
@@ -149,6 +146,17 @@
         </span>
       </template>
 
+      <template #[`item.createdAt`]="{ item }">
+        <span>
+          {{ item.createdAt | format }}
+        </span>
+      </template>
+      <template #[`item.updatedAt`]="{ item }">
+        <span>
+          {{ item.updatedAt | format }}
+        </span>
+      </template>
+
       <template #[`item.status`]="{ item }">
         <v-chip
           label
@@ -168,6 +176,7 @@
           min-width="0"
           color="primary"
           @click.stop="editItem(item)"
+          v-if="!item.email || !item.orderId"
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
@@ -177,6 +186,7 @@
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
+          v-if="!item.email || !item.orderId"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
@@ -228,6 +238,16 @@ export default {
       {
         text: '反馈状态',
         value: 'status',
+        sortable: false
+      },
+      {
+        text: '邮箱',
+        value: 'email',
+        sortable: false
+      },
+      {
+        text: '订单Id',
+        value: 'orderId',
         sortable: false
       },
       {

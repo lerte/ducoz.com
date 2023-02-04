@@ -2,9 +2,7 @@
   <main
     class="h-full py-16 px-4 space-y-4 flex flex-col text-center items-center justify-center"
   >
-    <Avatar />
-    <UserInfo />
-    <Sessions />
+    更多功能正在开发中...
   </main>
 </template>
 

@@ -149,6 +149,17 @@
         </span>
       </template>
 
+      <template #[`item.createdAt`]="{ item }">
+        <span>
+          {{ item.createdAt | format }}
+        </span>
+      </template>
+      <template #[`item.updatedAt`]="{ item }">
+        <span>
+          {{ item.updatedAt | format }}
+        </span>
+      </template>
+
       <template #[`item.status`]="{ item }">
         <v-chip
           label
@@ -234,6 +245,16 @@ export default {
       {
         text: '反馈状态',
         value: 'status',
+        sortable: false
+      },
+      {
+        text: '邮箱',
+        value: 'email',
+        sortable: false
+      },
+      {
+        text: '订单Id',
+        value: 'orderId',
         sortable: false
       },
       {

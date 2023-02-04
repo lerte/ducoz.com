@@ -1,6 +1,12 @@
 import Vue from 'vue'
+import dayjs from 'dayjs'
 
 Vue.mixin({
+  filters: {
+    format(datetime) {
+      return dayjs(datetime).format('YYYY-MM-DD')
+    }
+  },
   methods: {
     async $copy(text) {
       try {

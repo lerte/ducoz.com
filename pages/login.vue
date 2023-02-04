@@ -68,9 +68,17 @@ export default {
         this.$store.commit('setUser', user)
         this.$store.commit('setSession', session)
         if (user.isAdmin) {
-          await this.$router.push('/admin')
+          if (this.$route.query && this.$route.query.to) {
+            await this.$router.push(this.$route.query.to)
+          } else {
+            await this.$router.push('/admin')
+          }
         } else {
-          await this.$router.push('/user')
+          if (this.$route.query && this.$route.query.to) {
+            await this.$router.push(this.$route.query.to)
+          } else {
+            await this.$router.push('/user')
+          }
         }
       }
     }

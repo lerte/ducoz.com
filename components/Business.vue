@@ -12,7 +12,7 @@
     >
       <div class="w-full pt-6 text-3xl text-gray-600 font-bold text-center">
         <NuxtLink
-          to="/user"
+          :to="item.to"
           :key="index"
           v-for="(item, index) in items"
           class="text-lg leading-[48px] flex justify-center items-center"
@@ -31,7 +31,7 @@
               class="fill-purple-400 group-hover:fill-purple-500 dark:group-hover:fill-purple-300 dark:fill-slate-600"
             ></path>
           </svg>
-          {{ item }}
+          {{ item.title }}
           <svg class="h-6 w-6 ml-3" viewBox="0 0 24 24" fill="none">
             <path
               d="M6 8a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8ZM6 15a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-1Z"
