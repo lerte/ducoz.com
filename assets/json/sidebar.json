@@ -1,8 +1,8 @@
 [
   {
-    "icon": "mdi-chart-bubble",
-    "title": "信息管理",
-    "to": "/admin/info"
+    "icon": "mdi-account",
+    "title": "用户管理",
+    "to": "/admin/users"
   },
   {
     "icon": "mdi-newspaper-variant-outline",
