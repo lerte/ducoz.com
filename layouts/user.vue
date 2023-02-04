@@ -101,7 +101,6 @@
 </style>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'UserLayout',
   middleware: ['auth'],
@@ -115,32 +114,6 @@ export default {
     fixed: false,
     miniVariant: false,
     items: require('@/assets/json/sidebar-user.json')
-  }),
-  computed: {
-    ...mapState(['searchItems', 'sessionToken']),
-    searchText: {
-      get() {
-        return this.$store.state.searchText
-      },
-      set(val) {
-        this.$store.commit('SET_SEARCH_TEXT', val && val.trim())
-      }
-    },
-    searchItem: {
-      get() {
-        return this.$store.state.searchItem
-      },
-      set(val) {
-        this.$store.commit('SET_SEARCH_ITEM', val)
-      }
-    }
-  },
-  methods: {
-    doSearching() {
-      if (this.searchItem && this.searchText) {
-        this.$store.commit('SET_SEARCHING', true)
-      }
-    }
-  }
+  })
 }
 </script>

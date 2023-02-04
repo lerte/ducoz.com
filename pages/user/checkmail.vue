@@ -309,7 +309,6 @@ export default {
         this.totalCount = data.info.count
       }
       this.loading = false
-      this.$store.commit('SET_SEARCHING', false)
     },
 
     async submit() {

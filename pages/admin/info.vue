@@ -379,7 +379,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'info',
   layout: 'admin',
@@ -546,27 +545,11 @@ export default {
     options: {
       async handler() {
         this.getList()
-        this.$store.commit('SET_SEARCH_ITEMS', this.headers)
       },
       deep: true
-    },
-    searching: {
-      handler(val) {
-        if (val) {
-          this.getList()
-        }
-      }
-    },
-    searchText: {
-      handler(val) {
-        if (!val) {
-          this.getList()
-        }
-      }
     }
   },
   computed: {
-    ...mapState(['searchItem', 'searchText', 'searching']),
     formTitle() {
       return this.editedIndex == -1 ? '添加' : '编辑'
     }
@@ -579,20 +562,11 @@ export default {
         page,
         pageSize: itemsPerPage
       })
-      if (this.searchItem && this.searchText) {
-        params.append(this.searchItem, this.searchText)
-      }
-      if (this.searching) {
-        params.set('page', 1)
-        this.options.page = 1
-      }
 
       await new Promise((r) => setTimeout(r, 1500))
       this.totalCount = 0
       this.list = []
-
       this.loading = false
-      this.$store.commit('SET_SEARCHING', false)
     },
     async submit() {
       if (this.editedIndex > -1) {

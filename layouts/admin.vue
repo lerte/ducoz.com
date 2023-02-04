@@ -62,30 +62,6 @@
       </v-btn>
       <v-toolbar-title v-text="title" />
       <v-spacer />
-      <v-text-field
-        solo
-        dense
-        clearable
-        hide-details
-        label="搜索"
-        v-model="searchText"
-        append-icon="mdi-magnify"
-        @click:append="doSearching"
-        @keyup.enter.native="doSearching"
-      >
-        <template v-slot:prepend-inner>
-          <v-select
-            solo
-            dense
-            hide-details
-            label="搜索条件"
-            class="inner-select"
-            v-model="searchItem"
-            :items="searchItems.filter((i) => i.searchable == true)"
-          />
-        </template>
-      </v-text-field>
-      <v-spacer />
       <NuxtLink to="/">
         <v-btn fab text>
           <v-icon>mdi-home</v-icon>
@@ -113,19 +89,7 @@
   </v-app>
 </template>
 
-<style lang="scss">
-.inner-select {
-  width: 120px;
-  &.v-text-field--solo:not(.v-text-field--solo-flat)
-    > .v-input__control
-    > .v-input__slot {
-    box-shadow: none;
-  }
-}
-</style>
-
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'AdminLayout',
   middleware: ['auth'],
@@ -139,32 +103,6 @@ export default {
     fixed: false,
     miniVariant: false,
     items: require('@/assets/json/sidebar.json')
-  }),
-  computed: {
-    ...mapState(['searchItems', 'sessionToken']),
-    searchText: {
-      get() {
-        return this.$store.state.searchText
-      },
-      set(val) {
-        this.$store.commit('SET_SEARCH_TEXT', val && val.trim())
-      }
-    },
-    searchItem: {
-      get() {
-        return this.$store.state.searchItem
-      },
-      set(val) {
-        this.$store.commit('SET_SEARCH_ITEM', val)
-      }
-    }
-  },
-  methods: {
-    doSearching() {
-      if (this.searchItem && this.searchText) {
-        this.$store.commit('SET_SEARCHING', true)
-      }
-    }
-  }
+  })
 }
 </script>
