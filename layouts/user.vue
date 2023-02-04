@@ -89,17 +89,6 @@
   </v-app>
 </template>
 
-<style lang="scss">
-.inner-select {
-  width: 120px;
-  &.v-text-field--solo:not(.v-text-field--solo-flat)
-    > .v-input__control
-    > .v-input__slot {
-    box-shadow: none;
-  }
-}
-</style>
-
 <script>
 export default {
   name: 'UserLayout',
