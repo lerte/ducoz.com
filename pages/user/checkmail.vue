@@ -8,7 +8,6 @@
       :loading="loading"
       v-model="selected"
       class="elevation-1"
-      @click:row="editItem"
       :options.sync="options"
       :server-items-length="totalCount"
       :footer-props="require('@/assets/json/footer-props.json')"
