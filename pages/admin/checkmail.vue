@@ -81,7 +81,7 @@
                           clearable
                           hide-details
                           label="评价Id"
-                          v-model="listItem.reivewId"
+                          v-model="listItem.reviewId"
                         />
                       </v-col>
                       <v-card width="100%" v-if="editedIndex > -1">

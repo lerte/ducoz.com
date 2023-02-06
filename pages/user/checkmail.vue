@@ -1,5 +1,12 @@
 <template>
   <v-container fluid>
+    <v-file-input
+      class="d-none"
+      accept=".xls,.xlsx"
+      ref="uploadFile"
+      v-model="file"
+      @change="fileChange"
+    />
     <v-data-table
       show-select
       :items="list"
@@ -77,7 +84,7 @@
                           clearable
                           hide-details
                           label="评价Id"
-                          v-model="listItem.reivewId"
+                          v-model="listItem.reviewId"
                         />
                       </v-col>
                       <v-card width="100%" v-if="editedIndex > -1">
@@ -120,6 +127,17 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <a href="/多泽跨境-查邮箱.xlsx" target="_blank">
+            <v-btn color="ml-2 danger" dark>
+              <v-icon left> mdi-download </v-icon> 下载导入模板
+            </v-btn>
+          </a>
+          <v-btn color="ml-2 success" dark @click="importExcel">
+            <v-icon left> mdi-import </v-icon> 批量导入
+          </v-btn>
+          <v-btn color="ml-2 success" dark @click="exportExcel">
+            <v-icon left> mdi-export </v-icon> 导出数据
+          </v-btn>
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
@@ -196,6 +214,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { read, utils, writeFileXLSX } from 'xlsx'
 export default {
   name: 'checkmail',
   layout: 'user',
@@ -261,6 +280,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    file: null,
     list: [],
     dialog: false,
     dialogDelete: false,
@@ -425,6 +445,84 @@ export default {
       } else {
         await this.getList()
         this.closeAdd()
+      }
+    },
+    importExcel() {
+      this.file = null
+      this.$nextTick(() => {
+        this.$refs.uploadFile.$refs.input.click()
+      })
+    },
+    async fileChange() {
+      if (!this.file) {
+        return
+      }
+      const ab = await this.readFile()
+      // parse workbook
+      const wb = read(ab)
+      // update data
+      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      const params = items.map((item) =>
+        this.getPureData({
+          country: item['国家'],
+          asin: item['ASIN'],
+          reviewUrl: item['评论链接'],
+          reviewId: item['评论Id']
+        })
+      )
+      for (let data of params) {
+        const { errors } = await this.$altogic.db
+          .model('users.checkmail')
+          .object()
+          .append(data, this.user._id)
+        if (errors) {
+          this.$notifier.showMessage({
+            content: errors,
+            color: 'error'
+          })
+        } else {
+          this.$notifier.showMessage({
+            content: '导入成功',
+            color: 'success'
+          })
+        }
+      }
+      await this.getList()
+    },
+    readFile() {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = reject
+        reader.readAsArrayBuffer(this.file)
+      })
+    },
+    exportExcel() {
+      if (this.selected.length) {
+        const data = this.selected.map((item) => ({
+          国家: item['country'],
+          ASIN: item['asin'],
+          评论链接: item['reviewUrl'],
+          评论Id: item['reviewId'],
+          邮箱: item['email'],
+          订单Id: item['orderId']
+        }))
+        const ws = utils.json_to_sheet(data)
+        const wb = utils.book_new()
+        utils.book_append_sheet(wb, ws, '多泽跨境-查邮箱')
+        const now = Date.now()
+        writeFileXLSX(wb, `多泽跨境-查邮箱-${now}.xlsx`)
+        this.$notifier.showMessage({
+          color: 'success',
+          content: '导出成功'
+        })
+      } else {
+        this.$notifier.showMessage({
+          color: 'error',
+          content: '请选择要删除的条目'
+        })
       }
     }
   }
