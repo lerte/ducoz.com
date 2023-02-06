@@ -209,6 +209,24 @@
         </v-btn>
       </template>
     </v-data-table>
+    <v-dialog persistent scrollable v-model="dialogTips" max-width="320">
+      <v-card>
+        <v-toolbar dense>
+          <span class="headline">在线支付{{ amount }}</span>
+          <v-spacer></v-spacer>
+          <v-icon @click="dialogTips = false">mdi-close</v-icon>
+        </v-toolbar>
+        <v-card-text>
+          <img alt="wxpay" src="@/assets/img/wxpay.jpg" style="width: 320px" />
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn block color="success" @click="addItemConfirm">
+            支付成功确认
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -283,6 +301,8 @@ export default {
     file: null,
     list: [],
     dialog: false,
+    dialogTips: false, // 提示付款
+    amount: 0,
     dialogDelete: false,
     valid: false,
     rules: {
@@ -309,7 +329,6 @@ export default {
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options
-
       const { data, errors } = await this.$altogic.db
         .model('users.checkmail')
         .filter(`_parent == "${this.user._id}"`)
@@ -329,7 +348,6 @@ export default {
       }
       this.loading = false
     },
-
     async submit() {
       if (this.editedIndex > -1) {
         await this.updateItem()
@@ -360,6 +378,16 @@ export default {
       })
     },
     async addItem() {
+      this.amount = '100元'
+      this.dialogTips = true
+    },
+    async addItemConfirm() {
+      if (!this.dialog) {
+        // 批量导入的
+        await this.addMultiItems()
+        this.dialogTips = false
+        return
+      }
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
@@ -372,7 +400,12 @@ export default {
           color: 'error'
         })
       } else {
+        this.$notifier.showMessage({
+          color: 'success',
+          content: '添加成功，付款后，我们的工作人员会处理的'
+        })
         await this.getList()
+        this.dialogTips = false
         this.closeAdd()
       }
     },
@@ -462,6 +495,15 @@ export default {
       const wb = read(ab)
       // update data
       const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      this.amount = items.length * 100 + '元'
+      this.dialogTips = true
+    },
+    async addMultiItems() {
+      const ab = await this.readFile()
+      // parse workbook
+      const wb = read(ab)
+      // update data
+      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
       const params = items.map((item) =>
         this.getPureData({
           country: item['国家'],
@@ -480,13 +522,12 @@ export default {
             content: errors,
             color: 'error'
           })
-        } else {
-          this.$notifier.showMessage({
-            content: '导入成功',
-            color: 'success'
-          })
         }
       }
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '导入成功，付款后，我们的工作人员会处理的'
+      })
       await this.getList()
     },
     readFile() {
