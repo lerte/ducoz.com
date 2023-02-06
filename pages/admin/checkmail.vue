@@ -124,6 +124,12 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <Search
+            ref="search"
+            @doSearch="doSearch"
+            :headers="headers"
+            :dicts="{ status }"
+          />
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
@@ -144,9 +150,36 @@
       </template>
 
       <template #[`item._id`]="{ item }">
-        <span @click.stop="$copy(item._id)">
+        <v-chip
+          small
+          label
+          color="primary"
+          @click.stop="setSearch({ key: '_id', value: item._id })"
+        >
           {{ item._id }}
-        </span>
+        </v-chip>
+      </template>
+
+      <template #[`item._parent`]="{ item }">
+        <v-chip
+          small
+          label
+          color="secondary"
+          @click.stop="setSearch({ key: '_parent', value: item._parent })"
+        >
+          {{ item._parent }}
+        </v-chip>
+      </template>
+
+      <template #[`item.asin`]="{ item }">
+        <v-chip
+          small
+          label
+          color="warning"
+          @click.stop="setSearch({ key: 'asin', value: item.asin })"
+        >
+          {{ item.asin }}
+        </v-chip>
       </template>
 
       <template #[`item.createdAt`]="{ item }">
@@ -230,7 +263,8 @@ export default {
       {
         text: 'ASIN',
         value: 'asin',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '评论链接',
@@ -245,7 +279,8 @@ export default {
       {
         text: '反馈状态',
         value: 'status',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '邮箱',
@@ -277,7 +312,18 @@ export default {
       required: (value) => !!value || '必填项.'
     },
     editedIndex: -1,
-    listItem: {}
+    listItem: {},
+    status: [
+      {
+        text: '未反馈',
+        value: '!INCLUDES(email, "")'
+      },
+      {
+        text: '已反馈',
+        value: 'INCLUDES(email, "")'
+      }
+    ],
+    searchParams: {}
   }),
   watch: {
     options: {
@@ -294,16 +340,35 @@ export default {
     }
   },
   methods: {
+    doSearch(params) {
+      this.searchParams = Object.assign({}, params)
+      if (this.options.page == 1) {
+        this.getList()
+      } else {
+        this.options.page = 1
+      }
+    },
+    setSearch(item) {
+      this.$refs.search.setSearch(item)
+    },
+    getParams() {
+      const params = []
+      for (let param in this.searchParams) {
+        if (param == 'status') {
+          params.push(this.searchParams[param])
+        } else {
+          params.push(`${param} == "${this.searchParams[param]}"`)
+        }
+      }
+      return params.join(' && ')
+    },
     async getList() {
       this.loading = true
+      const params = this.getParams()
       const { page, itemsPerPage } = this.options
-      const params = new URLSearchParams({
-        page,
-        pageSize: itemsPerPage
-      })
-
       const { data, errors } = await this.$altogic.db
         .model('users.checkmail')
+        .filter(params)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)
