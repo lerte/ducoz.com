@@ -37,7 +37,7 @@
                 <v-container>
                   <v-form ref="form" v-model="valid">
                     <v-row>
-                      <v-col cols="6">
+                      <v-col cols="12">
                         <v-text-field
                           dense
                           outlined
@@ -48,7 +48,7 @@
                           v-model="listItem.name"
                         />
                       </v-col>
-                      <v-col cols="6">
+                      <v-col cols="12">
                         <v-text-field
                           dense
                           outlined
@@ -57,6 +57,17 @@
                           label="邮箱"
                           :rules="[rules.required]"
                           v-model="listItem.email"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="密码"
+                          :rules="[rules.required]"
+                          v-model="listItem.password"
                         />
                       </v-col>
                       <v-col cols="12">
@@ -89,6 +100,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <Search ref="search" @doSearch="doSearch" :headers="headers" />
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
@@ -131,6 +143,17 @@
             :src="item.profilePicture | avatar(item.name)"
           />
         </v-tooltip>
+      </template>
+
+      <template #[`item.signUpAt`]="{ item }">
+        <span>
+          {{ item.signUpAt | format }}
+        </span>
+      </template>
+      <template #[`item.lastLoginAt`]="{ item }">
+        <span>
+          {{ item.lastLoginAt | format }}
+        </span>
       </template>
 
       <template #[`item.isAdmin`]="{ item }">
@@ -201,12 +224,14 @@ export default {
       {
         text: '用户名',
         value: 'name',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '邮箱',
         value: 'email',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '注册时间',
@@ -233,7 +258,8 @@ export default {
       required: (value) => !!value || '必填项.'
     },
     editedIndex: -1,
-    listItem: {}
+    listItem: {},
+    searchParams: {}
   }),
   watch: {
     options: {
@@ -249,16 +275,34 @@ export default {
     }
   },
   methods: {
+    doSearch(params) {
+      this.searchParams = Object.assign({}, params)
+      if (this.options.page == 1) {
+        this.getList()
+      } else {
+        this.options.page = 1
+      }
+    },
+    getParams() {
+      const params = []
+      for (let param in this.searchParams) {
+        if (param == 'name' || param == 'email') {
+          params.push(
+            `INCLUDES(${param}, "${this.searchParams[param]}", false)`
+          )
+        } else {
+          params.push(`${param} == "${this.searchParams[param]}"`)
+        }
+      }
+      return params.join(' && ')
+    },
     async getList() {
       this.loading = true
+      const params = this.getParams()
       const { page, itemsPerPage } = this.options
-      const params = new URLSearchParams({
-        page,
-        pageSize: itemsPerPage
-      })
-
       const { data, errors } = await this.$altogic.db
         .model('users')
+        .filter(params)
         .limit(itemsPerPage)
         .page(page)
         .get({ returnCountInfo: true })

@@ -1,4 +1,4 @@
 <script>
-import News from '~/pages/admin/news'
-export default News
+import Users from '~/pages/admin/users'
+export default Users
 </script>
