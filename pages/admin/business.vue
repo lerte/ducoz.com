@@ -39,7 +39,7 @@
                     <v-row>
                       <v-col cols="12">
                         <v-autocomplete
-                          :items="business"
+                          :items="businesses"
                           dense
                           chips
                           outlined
@@ -94,7 +94,7 @@
       </template>
 
       <template #[`item.name`]="{ item }">
-        {{ business.find((b) => b.value == item.name).text }}
+        {{ businesses.find((business) => business.value == item.name).text }}
       </template>
 
       <template #[`item.createdAt`]="{ item }">
@@ -171,72 +171,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
-    business: [
-      {
-        text: '海外平台电商测评',
-        value: 'evaluation'
-      },
-      {
-        text: '店铺预定及转让',
-        value: 'store-reserve-transfer '
-      },
-      {
-        text: '精准查邮箱',
-        value: 'checkmail'
-      },
-      {
-        text: '高效删差评',
-        value: 'delete-negative-comment'
-      },
-      {
-        text: '测评黑名单库查询',
-        value: 'search-blacklist'
-      },
-      {
-        text: '平台账号交易',
-        value: 'account-transaction'
-      },
-      {
-        text: '精准查站外折扣推广邮箱',
-        value: 'search-promotion-email'
-      },
-      {
-        text: '海外商标交易',
-        value: 'trademark-transaction'
-      },
-      {
-        text: 'Facebook广告开户',
-        value: 'facebook-ad-account'
-      },
-      {
-        text: 'Google广告开户',
-        value: 'google-ad-account'
-      },
-      {
-        text: 'Tiktok广告开户',
-        value: 'tiktok-ad-account'
-      },
-      {
-        text: '海外社媒开户',
-        value: 'social-media-account'
-      },
-      {
-        text: '电商网站建站',
-        value: 'e-commerce-website'
-      },
-      {
-        text: '独立站广告代投',
-        value: 'website-ad-agency'
-      },
-      {
-        text: '粉丝人气营销',
-        value: 'fans-promotion'
-      },
-      {
-        text: '网红资源服务',
-        value: 'internet-celebrity'
-      }
-    ],
+    businesses: require('@/assets/json/businesses.json'),
     list: [],
     dialog: false,
     dialogDelete: false,
