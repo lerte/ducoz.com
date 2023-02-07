@@ -11,6 +11,11 @@
 
 <script>
 export default {
-  name: 'index'
+  name: 'index',
+  asyncData({ redirect, params }) {
+    if (params.name == 'checkmail') {
+      redirect(302, '/user/checkmail')
+    }
+  }
 }
 </script>
