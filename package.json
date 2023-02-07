@@ -21,6 +21,7 @@
     "nuxt-clipboard": "^0.0.7",
     "nuxt-svg-loader": "^1.2.0",
     "three": "^0.149.0",
+    "tiptap-vuetify": "^2.24.0",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",

@@ -1,6 +1,6 @@
 [
   {
-    "icon": "mdi-account",
+    "icon": "mdi-account ",
     "title": "用户管理",
     "to": "/admin/users"
   },
@@ -13,5 +13,10 @@
     "icon": "mdi-email",
     "title": "查邮管理",
     "to": "/admin/checkmail"
+  },
+  {
+    "icon": "mdi-view-dashboard",
+    "title": "业务介绍",
+    "to": "/admin/business"
   }
 ]

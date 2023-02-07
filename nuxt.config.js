@@ -27,7 +27,12 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ['@/plugins/base', '@/plugins/notifier', '@/plugins/altogic'],
+  plugins: [
+    '@/plugins/base',
+    '@/plugins/notifier',
+    '@/plugins/altogic',
+    { src: '~/plugins/TiptapVuetify', mode: 'client' }
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -71,7 +76,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['three'],
+    transpile: ['three', 'vuetify/lib', 'tiptap-vuetify'],
     babel: {
       compact: true
     }

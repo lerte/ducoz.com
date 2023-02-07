@@ -24,85 +24,35 @@
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>添加新闻
+                <v-icon left> mdi-plus </v-icon>添加介绍
               </v-btn>
             </template>
             <v-card>
               <v-toolbar dense>
-                <span class="headline">{{ formTitle }}新闻</span>
+                <span class="headline">{{ formTitle }}介绍</span>
                 <v-spacer></v-spacer>
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
                 <v-container>
                   <v-form ref="form" v-model="valid">
-                    <v-file-input
-                      v-model="file"
-                      class="d-none"
-                      ref="uploadFile"
-                      accept="image/*"
-                      @change="fileChange"
-                    />
                     <v-row>
-                      <v-col cols="6">
-                        <v-text-field
-                          dense
-                          outlined
-                          clearable
-                          hide-details
-                          label="图片地址"
-                          v-model="listItem.cover"
-                        />
-                      </v-col>
-                      <v-col cols="6">
-                        <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                              block
-                              v-on="on"
-                              v-bind="attrs"
-                              color="primary"
-                              :disabled="uploading"
-                              @click="uploadFile"
-                            >
-                              <v-icon left v-if="listItem.cover">
-                                mdi-image
-                              </v-icon>
-                              上传封面
-                            </v-btn>
-                          </template>
-                          <v-img
-                            max-height="320"
-                            max-width="320"
-                            v-if="listItem.cover"
-                            :src="listItem.cover"
-                            :lazy-src="listItem.cover"
-                          />
-                          <span v-else>请上传图片</span>
-                        </v-tooltip>
-                      </v-col>
                       <v-col cols="12">
-                        <v-text-field
+                        <v-autocomplete
+                          :items="business"
                           dense
                           chips
                           outlined
                           clearable
+                          small-chips
                           hide-details
-                          label="标题"
+                          label="业务名称"
                           :rules="[rules.required]"
-                          v-model="listItem.title"
+                          v-model="listItem.name"
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-textarea
-                          outlined
-                          auto-grow
-                          hide-details
-                          label="内容"
-                          row-height="15"
-                          :rules="[rules.required]"
-                          v-model="listItem.content"
-                        />
+                        <Editor v-model="listItem.content" />
                       </v-col>
                     </v-row>
                   </v-form>
@@ -143,21 +93,8 @@
         </span>
       </template>
 
-      <template #[`item.cover`]="{ item }">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-img
-              height="80"
-              width="80"
-              v-on="on"
-              v-bind="attrs"
-              @click.stop="$copy(item.cover)"
-              :src="item.cover"
-            />
-          </template>
-          <v-img max-height="600" max-width="600" :src="item.cover" />
-          <p class="text-center">点击即可复制地址</p>
-        </v-tooltip>
+      <template #[`item.name`]="{ item }">
+        {{ business.find((b) => b.value == item.name).text }}
       </template>
 
       <template #[`item.createdAt`]="{ item }">
@@ -198,7 +135,7 @@
 
 <script>
 export default {
-  name: 'news',
+  name: 'business',
   layout: 'admin',
   data: () => ({
     loading: true,
@@ -217,13 +154,8 @@ export default {
         searchable: true
       },
       {
-        text: '封面',
-        value: 'cover',
-        sortable: false
-      },
-      {
-        text: '标题',
-        value: 'title',
+        text: '名称',
+        value: 'name',
         sortable: false,
         searchable: true
       },
@@ -238,6 +170,72 @@ export default {
         sortable: false
       },
       { text: '操作', value: 'actions', sortable: false }
+    ],
+    business: [
+      {
+        text: '海外平台电商测评',
+        value: 'evaluation'
+      },
+      {
+        text: '店铺预定及转让',
+        value: 'store-reserve-transfer '
+      },
+      {
+        text: '精准查邮箱',
+        value: 'checkmail'
+      },
+      {
+        text: '高效删差评',
+        value: 'delete-negative-comment'
+      },
+      {
+        text: '测评黑名单库查询',
+        value: 'search-blacklist'
+      },
+      {
+        text: '平台账号交易',
+        value: 'account-transaction'
+      },
+      {
+        text: '精准查站外折扣推广邮箱',
+        value: 'search-promotion-email'
+      },
+      {
+        text: '海外商标交易',
+        value: 'trademark-transaction'
+      },
+      {
+        text: 'Facebook广告开户',
+        value: 'facebook-ad-account'
+      },
+      {
+        text: 'Google广告开户',
+        value: 'google-ad-account'
+      },
+      {
+        text: 'Tiktok广告开户',
+        value: 'tiktok-ad-account'
+      },
+      {
+        text: '海外社媒开户',
+        value: 'social-media-account'
+      },
+      {
+        text: '电商网站建站',
+        value: 'e-commerce-website'
+      },
+      {
+        text: '独立站广告代投',
+        value: 'website-ad-agency'
+      },
+      {
+        text: '粉丝人气营销',
+        value: 'fans-promotion'
+      },
+      {
+        text: '网红资源服务',
+        value: 'internet-celebrity'
+      }
     ],
     list: [],
     dialog: false,
@@ -268,8 +266,9 @@ export default {
       this.loading = true
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
-        .model('news')
+        .model('businesses')
         .sort('updatedAt', 'desc')
+        // .omit('content') 可优化
         .limit(itemsPerPage)
         .page(page)
         .get({ returnCountInfo: true })
@@ -332,7 +331,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('news')
+        .model('businesses')
         .object()
         .create(params)
       if (errors) {
@@ -373,7 +372,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('news')
+            .model('businesses')
             .object(item._id)
             .delete()
           if (errors) {
@@ -386,7 +385,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('news')
+          .model('businesses')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -403,7 +402,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('news')
+        .model('businesses')
         .object(params['_id'])
         .update(params)
       if (errors) {
