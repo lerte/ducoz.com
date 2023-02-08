@@ -10,7 +10,7 @@
     "to": "/user/checkmail"
   },
   {
-    "icon": "mdi-check",
+    "icon": "mdi-account-group",
     "title": "测评管理",
     "to": "/user/evaluation"
   }

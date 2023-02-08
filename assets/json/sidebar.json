@@ -10,13 +10,18 @@
     "to": "/admin/news"
   },
   {
+    "icon": "mdi-view-dashboard",
+    "title": "业务介绍",
+    "to": "/admin/business"
+  },
+  {
     "icon": "mdi-email",
     "title": "查邮管理",
     "to": "/admin/checkmail"
   },
   {
-    "icon": "mdi-view-dashboard",
-    "title": "业务介绍",
-    "to": "/admin/business"
+    "icon": "mdi-account-group",
+    "title": "测评管理",
+    "to": "/admin/evaluation"
   }
 ]

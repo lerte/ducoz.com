@@ -26,6 +26,8 @@ export const actions = {
   async nuxtServerInit({ commit }, { req, res }) {
     const { session_token } = parseCookies(req)
     const { user } = await this.$altogic.auth.getUserFromDBbyCookie(req, res)
+    delete user['checkmail']
+    delete user['evaluation']
     if (user) {
       commit('setUser', user)
       commit('setSessionToken', session_token)

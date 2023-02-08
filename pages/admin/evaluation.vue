@@ -352,6 +352,7 @@
           <v-btn color="ml-2 success" dark @click="exportExcel">
             <v-icon left> mdi-export </v-icon> 导出数据
           </v-btn>
+          <Search ref="search" @doSearch="doSearch" :headers="headers" />
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
@@ -372,9 +373,36 @@
       </template>
 
       <template #[`item._id`]="{ item }">
-        <span @click.stop="$copy(item._id)">
+        <v-chip
+          small
+          label
+          color="primary"
+          @click.stop="setSearch({ key: '_id', value: item._id })"
+        >
           {{ item._id }}
-        </span>
+        </v-chip>
+      </template>
+
+      <template #[`item._parent`]="{ item }">
+        <v-chip
+          small
+          label
+          color="secondary"
+          @click.stop="setSearch({ key: '_parent', value: item._parent })"
+        >
+          {{ item._parent }}
+        </v-chip>
+      </template>
+
+      <template #[`item.asin`]="{ item }">
+        <v-chip
+          small
+          label
+          color="warning"
+          @click.stop="setSearch({ key: 'asin', value: item.asin })"
+        >
+          {{ item.asin }}
+        </v-chip>
       </template>
 
       <template #[`item.mainImage`]="{ item }">
@@ -424,7 +452,6 @@
           min-width="0"
           color="primary"
           @click.stop="editItem(item)"
-          v-if="!item.tax"
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
@@ -448,7 +475,7 @@ import { mapState } from 'vuex'
 import { read, utils, writeFileXLSX } from 'xlsx'
 export default {
   name: 'evaluation',
-  layout: 'user',
+  layout: 'admin',
   data: () => ({
     loading: true,
     uploading: false,
@@ -462,6 +489,12 @@ export default {
       {
         text: 'Id',
         value: '_id',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '用户Id',
+        value: '_parent',
         sortable: false,
         searchable: true
       },
@@ -488,7 +521,8 @@ export default {
       {
         text: 'ASIN',
         value: 'asin',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '关键词',
@@ -555,7 +589,8 @@ export default {
       platform: '亚马逊',
       country: '美国',
       isEvaluation: false // 默认不是免评
-    }
+    },
+    searchParams: {}
   }),
   watch: {
     options: {
@@ -572,12 +607,35 @@ export default {
     }
   },
   methods: {
+    doSearch(params) {
+      this.searchParams = Object.assign({}, params)
+      if (this.options.page == 1) {
+        this.getList()
+      } else {
+        this.options.page = 1
+      }
+    },
+    setSearch(item) {
+      this.$refs.search.setSearch(item)
+    },
+    getParams() {
+      const params = []
+      for (let param in this.searchParams) {
+        if (param == 'status') {
+          params.push(this.searchParams[param])
+        } else {
+          params.push(`${param} == "${this.searchParams[param]}"`)
+        }
+      }
+      return params.join(' && ')
+    },
     async getList() {
       this.loading = true
+      const params = this.getParams()
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
         .model('users.evaluation')
-        .filter(`_parent == "${this.user._id}"`)
+        .filter(params)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)

@@ -22,19 +22,17 @@ app.get('/', async (req, res) => {
 // 邮箱登录
 app.post('/login', async (req, res) => {
   const { email, password } = req.body
-
   const { errors, session, user } = await altogic.auth.signInWithEmail(
     email,
     password
   )
-
   if (errors) {
     return res.json({ errors })
   }
-
   altogic.auth.setSession(session)
   altogic.auth.setSessionCookie(session.token, req, res)
-
+  delete user['checkmail']
+  delete user['evaluation']
   return res.json({
     session,
     user

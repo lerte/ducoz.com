@@ -127,7 +127,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <a href="/多泽跨境-查邮箱.xlsx" target="_blank">
+          <a href="/ducoz-checkmail.xlsx" target="_blank">
             <v-btn color="ml-2 danger" dark>
               <v-icon left> mdi-download </v-icon> 下载导入模板
             </v-btn>
