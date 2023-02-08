@@ -8,5 +8,10 @@
     "icon": "mdi-email",
     "title": "查邮管理",
     "to": "/user/checkmail"
+  },
+  {
+    "icon": "mdi-check",
+    "title": "测评管理",
+    "to": "/user/evaluation"
   }
 ]
