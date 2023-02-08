@@ -809,7 +809,7 @@ export default {
       } else {
         this.$notifier.showMessage({
           color: 'error',
-          content: '请选择要删除的条目'
+          content: '请选择要导出的条目'
         })
       }
     }

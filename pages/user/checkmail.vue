@@ -552,9 +552,9 @@ export default {
         }))
         const ws = utils.json_to_sheet(data)
         const wb = utils.book_new()
-        utils.book_append_sheet(wb, ws, '多泽跨境-查邮箱')
+        utils.book_append_sheet(wb, ws, '多泽跨境-查邮模板')
         const now = Date.now()
-        writeFileXLSX(wb, `多泽跨境-查邮箱-${now}.xlsx`)
+        writeFileXLSX(wb, `多泽跨境-查邮-${now}.xlsx`)
         this.$notifier.showMessage({
           color: 'success',
           content: '导出成功'
@@ -562,7 +562,7 @@ export default {
       } else {
         this.$notifier.showMessage({
           color: 'error',
-          content: '请选择要删除的条目'
+          content: '请选择要导出的条目'
         })
       }
     }

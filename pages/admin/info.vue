@@ -621,7 +621,7 @@ export default {
           this.dialogDelete = true
         } else {
           this.$notifier.showMessage({
-            content: '请选择要删除的字典',
+            content: '请选择要删除的条目',
             color: 'error'
           })
         }
