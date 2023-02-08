@@ -94,15 +94,7 @@
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-textarea
-                          outlined
-                          auto-grow
-                          hide-details
-                          label="内容"
-                          row-height="15"
-                          :rules="[rules.required]"
-                          v-model="listItem.content"
-                        />
+                        <Editor v-model="listItem.content" v-if="dialog" />
                       </v-col>
                     </v-row>
                   </v-form>
@@ -182,6 +174,24 @@
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
+        <v-tooltip left>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-on="on"
+              v-bind="attrs"
+              fab
+              x-small
+              class="mr-2"
+              min-width="0"
+              color="success"
+              @click.stop
+              :to="`/news/${item._id}`"
+            >
+              <v-icon small> mdi-apple-safari </v-icon>
+            </v-btn>
+          </template>
+          <span>在前台预览</span>
+        </v-tooltip>
         <v-btn
           fab
           x-small
