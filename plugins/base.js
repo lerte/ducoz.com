@@ -33,7 +33,7 @@ Vue.mixin({
     async $uploadFile(file, prefix) {
       const { data, errors } = await this.$altogic.storage
         .bucket(prefix)
-        .upload(`main_image`, file)
+        .upload(file.name, file)
       if (errors) throw new Error("Couldn't upload file")
       return data
     }

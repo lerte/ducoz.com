@@ -874,6 +874,11 @@ export default {
       if (!this.file) {
         return
       }
+      this.uploading = true
+      this.$notifier.showMessage({
+        content: '文件上传中...',
+        color: 'secondary'
+      })
       if (/^image\//.test(this.file.type)) {
         // 上传主图
         const { publicPath } = await this.$uploadFile(this.file, 'evaluation')
@@ -920,6 +925,7 @@ export default {
         })
         await this.getList()
       }
+      this.uploading = false
     },
     readFile() {
       return new Promise((resolve, reject) => {

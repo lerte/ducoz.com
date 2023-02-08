@@ -301,12 +301,16 @@ export default {
       })
     },
     async fileChange() {
+      if (!this.file) {
+        return
+      }
       this.uploading = true
       this.$notifier.showMessage({
         content: '文件上传中...',
         color: 'secondary'
       })
-      this.$set(this.listItem, 'cover', 'todo')
+      const { publicPath } = await this.$uploadFile(this.file, 'news')
+      this.$set(this.listItem, 'cover', publicPath)
       this.uploading = false
     },
     async submit() {
