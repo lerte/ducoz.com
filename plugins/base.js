@@ -5,6 +5,14 @@ Vue.mixin({
   filters: {
     format(datetime) {
       return dayjs(datetime).format('YYYY-MM-DD')
+    },
+    ellipsis(str, length) {
+      if (str) {
+        if (str.length > length) {
+          return str.slice(0, length) + '...'
+        }
+      }
+      return str
     }
   },
   methods: {

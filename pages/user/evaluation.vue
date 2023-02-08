@@ -52,6 +52,7 @@
                           dense
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="平台"
                           v-model="listItem.platform"
@@ -70,6 +71,7 @@
                           dense
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="国家"
                           :rules="[rules.required]"
@@ -83,6 +85,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="产品中文名"
                           :rules="[rules.required]"
@@ -94,6 +97,7 @@
                           dense
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="币种"
                           :rules="[rules.required]"
@@ -106,6 +110,7 @@
                           dense
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="售价"
                           type="number"
@@ -119,6 +124,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="ASIN"
                           :rules="[rules.required]"
@@ -131,6 +137,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="关键词"
                           :rules="[rules.required]"
@@ -143,6 +150,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           type="number"
                           label="关键词所在页"
@@ -156,6 +164,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           type="number"
                           label="期望每日单数"
@@ -169,6 +178,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           type="number"
                           label="总单数"
@@ -182,6 +192,7 @@
                           outlined
                           clearable
                           hide-details
+                          :disabled="listItem.orderProgress"
                           label="产品主图"
                           :rules="[rules.required]"
                           v-model="listItem.mainImage"
@@ -220,6 +231,7 @@
                           chips
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="Listing链接"
                           :rules="[rules.required]"
@@ -231,6 +243,7 @@
                           dense
                           outlined
                           clearable
+                          :disabled="listItem.orderProgress"
                           hide-details
                           label="是否免评"
                           :rules="[rules.required]"
@@ -241,92 +254,21 @@
                           ]"
                         />
                       </v-col>
-
-                      <v-card width="100%" v-if="editedIndex > -1">
-                        <v-card-title> 反馈信息 </v-card-title>
-                        <v-divider />
-                        <v-card-text>
-                          <v-row>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="税费"
-                                v-model="listItem.tax"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="汇率"
-                                v-model="listItem.exchangeRate"
-                              />
-                            </v-col>
-                            <v-col cols="12">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="订单号"
-                                v-model="listItem.orderId"
-                              />
-                            </v-col>
-                            <v-col cols="12">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="评价链接"
-                                v-model="listItem.reviewUrl"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="Rating"
-                                v-model="listItem.rating"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="Feedback"
-                                v-model="listItem.feedback"
-                              />
-                            </v-col>
-                            <v-col cols="12">
-                              <v-text-field
-                                dense
-                                disabled
-                                outlined
-                                clearable
-                                hide-details
-                                label="待退款金额"
-                                v-model="listItem.refund"
-                              />
-                            </v-col>
-                          </v-row>
-                        </v-card-text>
-                      </v-card>
+                      <v-col cols="12">
+                        <v-textarea
+                          :disabled="
+                            listItem.orderProgress == '已完成' ||
+                            listItem.orderProgress == 'rating' ||
+                            listItem.orderProgress == 'feedback'
+                          "
+                          outlined
+                          auto-grow
+                          hide-details
+                          label="备注"
+                          row-height="15"
+                          v-model="listItem.clientRemark"
+                        />
+                      </v-col>
                     </v-row>
                   </v-form>
                 </v-container>
@@ -416,6 +358,28 @@
         </v-chip>
       </template>
 
+      <template v-slot:[`item.orderId`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.orderId)">
+              {{ item.orderId | ellipsis(28) }}
+            </span>
+          </template>
+          <span>{{ item.orderId }}</span>
+        </v-tooltip>
+      </template>
+
+      <template v-slot:[`item.reviewUrl`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.reviewUrl)">
+              {{ item.reviewUrl | ellipsis(28) }}
+            </span>
+          </template>
+          <span>{{ item.reviewUrl }}</span>
+        </v-tooltip>
+      </template>
+
       <template #[`item.actions`]="{ item }">
         <v-btn
           fab
@@ -424,7 +388,6 @@
           min-width="0"
           color="primary"
           @click.stop="editItem(item)"
-          v-if="!item.tax"
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
@@ -513,6 +476,27 @@ export default {
       {
         text: '是否免评',
         value: 'isEvaluation',
+        sortable: false
+      },
+      // ------------------------ 反馈信息 ------------------------------
+      {
+        text: '税费',
+        value: 'tax',
+        sortable: false
+      },
+      {
+        text: '汇率',
+        value: 'exchangeRate',
+        sortable: false
+      },
+      {
+        text: '订单号',
+        value: 'orderId',
+        sortable: false
+      },
+      {
+        text: '评价链接',
+        value: 'reviewUrl',
         sortable: false
       },
       {
@@ -791,19 +775,27 @@ export default {
     exportExcel() {
       if (this.selected.length) {
         const data = this.selected.map((item) => ({
-          ASIN: item['asin'],
-          售价: item['price'],
-          国家: item['country'],
           平台: item['platform'],
+          国家: item['country'],
           币种: item['currency'],
-          总单数: item['orders'],
-          主图: item['mainImage'],
+          售价: item['price'],
+          ASIN: item['asin'],
+          产品中文名: item['productChineseName'],
           关键词: item['keywords'],
-          Listing链接: item['listing'],
           关键词所在页: item['keywordsPage'],
           期望每日单数: item['dailyOrders'],
-          产品中文名: item['productChineseName'],
-          是否免评: item['isEvaluation'] ? '是' : '否'
+          总单数: item['orders'],
+          主图: item['mainImage'],
+          Listing链接: item['listing'],
+          是否免评: item['isEvaluation'] ? '是' : '否',
+          // 反馈信息
+          税费: item['tax'],
+          汇率: item['exchangeRate'],
+          订单号: item['orderId'],
+          评价链接: item['reviewUrl'],
+          订单状态: item['orderStatus'],
+          订单进度: item['orderProgress'],
+          待退款金额: item['refund']
         }))
         const ws = utils.json_to_sheet(data)
         const wb = utils.book_new()

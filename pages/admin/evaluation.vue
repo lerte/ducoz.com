@@ -241,6 +241,16 @@
                           ]"
                         />
                       </v-col>
+                      <v-col cols="12">
+                        <v-textarea
+                          outlined
+                          auto-grow
+                          hide-details
+                          label="客户备注"
+                          row-height="15"
+                          v-model="listItem.clientRemark"
+                        />
+                      </v-col>
 
                       <v-card width="100%" v-if="editedIndex > -1">
                         <v-card-title> 反馈信息 </v-card-title>
@@ -268,13 +278,23 @@
                               />
                             </v-col>
                             <v-col cols="12">
-                              <v-text-field
-                                dense
+                              <v-textarea
                                 outlined
-                                clearable
+                                auto-grow
                                 hide-details
                                 label="订单号"
+                                row-height="15"
                                 v-model="listItem.orderId"
+                              />
+                            </v-col>
+                            <v-col cols="12">
+                              <v-textarea
+                                outlined
+                                auto-grow
+                                hide-details
+                                label="评价链接"
+                                row-height="15"
+                                v-model="listItem.reviewUrl"
                               />
                             </v-col>
                             <v-col cols="6">
@@ -311,18 +331,21 @@
                                 outlined
                                 clearable
                                 hide-details
-                                label="评价链接"
-                                v-model="listItem.reviewUrl"
+                                label="待退款金额"
+                                v-model="listItem.refund"
                               />
                             </v-col>
                             <v-col cols="12">
-                              <v-text-field
-                                dense
+                              <v-divider />
+                            </v-col>
+                            <v-col cols="12">
+                              <v-textarea
                                 outlined
-                                clearable
+                                auto-grow
                                 hide-details
-                                label="待退款金额"
-                                v-model="listItem.refund"
+                                label="备注"
+                                row-height="15"
+                                v-model="listItem.remark"
                               />
                             </v-col>
                           </v-row>
@@ -385,14 +408,32 @@
       </template>
 
       <template #[`item._parent`]="{ item }">
-        <v-chip
-          small
-          label
-          color="secondary"
-          @click.stop="setSearch({ key: '_parent', value: item._parent })"
-        >
-          {{ item._parent }}
-        </v-chip>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <v-chip
+              small
+              label
+              v-on="on"
+              v-bind="attrs"
+              color="secondary"
+              @click.stop="setSearch({ key: '_parent', value: item._parent })"
+            >
+              {{ item._parent }}
+            </v-chip>
+          </template>
+          <p class="text-center">{{ item.clientRemark }}</p>
+        </v-tooltip>
+      </template>
+
+      <template #[`item.productChineseName`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.productChineseName }}
+            </span>
+          </template>
+          <p class="text-center">{{ item.remark }}</p>
+        </v-tooltip>
       </template>
 
       <template #[`item.asin`]="{ item }">
@@ -443,6 +484,28 @@
         >
           {{ item.isEvaluation ? '是' : '否' }}
         </v-chip>
+      </template>
+
+      <template v-slot:[`item.orderId`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.orderId)">
+              {{ item.orderId | ellipsis(28) }}
+            </span>
+          </template>
+          <span>{{ item.orderId }}</span>
+        </v-tooltip>
+      </template>
+
+      <template v-slot:[`item.reviewUrl`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.reviewUrl)">
+              {{ item.reviewUrl | ellipsis(28) }}
+            </span>
+          </template>
+          <span>{{ item.reviewUrl }}</span>
+        </v-tooltip>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -548,6 +611,27 @@ export default {
       {
         text: '是否免评',
         value: 'isEvaluation',
+        sortable: false
+      },
+      // ------------------------ 反馈信息 ------------------------------
+      {
+        text: '税费',
+        value: 'tax',
+        sortable: false
+      },
+      {
+        text: '汇率',
+        value: 'exchangeRate',
+        sortable: false
+      },
+      {
+        text: '订单号',
+        value: 'orderId',
+        sortable: false
+      },
+      {
+        text: '评价链接',
+        value: 'reviewUrl',
         sortable: false
       },
       {
@@ -850,19 +934,27 @@ export default {
     exportExcel() {
       if (this.selected.length) {
         const data = this.selected.map((item) => ({
-          ASIN: item['asin'],
-          售价: item['price'],
-          国家: item['country'],
           平台: item['platform'],
+          国家: item['country'],
           币种: item['currency'],
-          总单数: item['orders'],
-          主图: item['mainImage'],
+          售价: item['price'],
+          ASIN: item['asin'],
+          产品中文名: item['productChineseName'],
           关键词: item['keywords'],
-          Listing链接: item['listing'],
           关键词所在页: item['keywordsPage'],
           期望每日单数: item['dailyOrders'],
-          产品中文名: item['productChineseName'],
-          是否免评: item['isEvaluation'] ? '是' : '否'
+          总单数: item['orders'],
+          主图: item['mainImage'],
+          Listing链接: item['listing'],
+          是否免评: item['isEvaluation'] ? '是' : '否',
+          // 反馈信息
+          税费: item['tax'],
+          汇率: item['exchangeRate'],
+          订单号: item['orderId'],
+          评价链接: item['reviewUrl'],
+          订单状态: item['orderStatus'],
+          订单进度: item['orderProgress'],
+          待退款金额: item['refund']
         }))
         const ws = utils.json_to_sheet(data)
         const wb = utils.book_new()
