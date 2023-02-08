@@ -93,6 +93,7 @@
 import { mapState } from 'vuex'
 export default {
   name: 'Header',
+  props: ['sticky'],
   data: () => ({
     scrollY: 0,
     isOpen: false,
@@ -110,7 +111,7 @@ export default {
       user: (state) => state.user
     }),
     isSticky() {
-      return this.scrollY > 10
+      return this.sticky || this.scrollY > 10
     },
     headerClassList() {
       return this.isSticky ? 'bg-primary shadow' : ''

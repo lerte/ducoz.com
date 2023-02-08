@@ -1,9 +1,11 @@
 <template>
-  <main class="flex flex-col items-center justify-center h-96 gap-4 px-4">
-    <div class="text-white">
+  <main
+    class="h-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
+  >
+    <article>
       <p>{{ news.title }}</p>
       <p>{{ news.content }}</p>
-    </div>
+    </article>
   </main>
 </template>
 

@@ -11,6 +11,7 @@
 
 <script>
 export default {
-  name: 'Index'
+  name: 'Index',
+  layout: 'home'
 }
 </script>

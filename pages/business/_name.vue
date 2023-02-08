@@ -1,20 +1,28 @@
 <template>
   <main
-    class="h-full py-16 px-4 space-y-4 flex flex-col text-center items-center justify-center"
+    class="h-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
   >
-    <p>更多功能正在开发中...</p>
-    <v-btn color="primary" to="/">
-      <v-icon left>mdi-home</v-icon>返回首页
-    </v-btn>
+    <article v-if="business.length" v-html="business[0].content"></article>
+    <article v-else>暂无内容！</article>
   </main>
 </template>
 
 <script>
 export default {
-  name: 'index',
-  asyncData({ redirect, params }) {
+  name: 'business',
+  async asyncData({ app, redirect, params }) {
     if (params.name == 'checkmail') {
       redirect(302, '/user/checkmail')
+    } else {
+      const { data, errors } = await app.$altogic.db
+        .model('businesses')
+        .filter(`name == "${params.name}"`)
+        .get()
+      if (!errors) {
+        return { business: data }
+      } else {
+        return { business: [] }
+      }
     }
   }
 }
