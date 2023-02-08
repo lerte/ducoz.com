@@ -19,7 +19,7 @@
           class="mx-auto lg:mx-0 bg-danger text-white font-bold rounded-lg my-6 p-4 shadow-lg"
           @click="sloganClick"
         >
-          中国人不骗中国人，让每个跨境人都挣钱
+          U Can Obtain, 让每个跨境人都挣钱
         </button>
       </div>
       <!--Right Col-->
