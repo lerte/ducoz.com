@@ -145,15 +145,15 @@
         </v-tooltip>
       </template>
 
-      <template #[`item.signUpAt`]="{ item }">
-        <span>
-          {{ item.signUpAt | format }}
-        </span>
-      </template>
-      <template #[`item.lastLoginAt`]="{ item }">
-        <span>
-          {{ item.lastLoginAt | format }}
-        </span>
+      <template #[`item.emailVerified`]="{ item }">
+        <v-chip
+          label
+          small
+          :color="item.emailVerified ? 'success' : 'secondary'"
+          text-color="white"
+        >
+          {{ item.emailVerified ? '是' : '否' }}
+        </v-chip>
       </template>
 
       <template #[`item.isAdmin`]="{ item }">
@@ -230,6 +230,12 @@ export default {
       {
         text: '邮箱',
         value: 'email',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '邮箱是否验证',
+        value: 'emailVerified',
         sortable: false,
         searchable: true
       },
