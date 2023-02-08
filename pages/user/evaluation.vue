@@ -434,7 +434,7 @@
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
-          v-if="!item.email || !item.orderId"
+          v-if="!item.tax"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
