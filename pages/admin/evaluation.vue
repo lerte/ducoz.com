@@ -277,6 +277,34 @@
                                 v-model="listItem.orderId"
                               />
                             </v-col>
+                            <v-col cols="6">
+                              <v-autocomplete
+                                dense
+                                outlined
+                                clearable
+                                hide-details
+                                label="订单状态"
+                                v-model="listItem.orderStatus"
+                                :items="['未收本佣', '已收本佣', '已退佣金']"
+                              />
+                            </v-col>
+                            <v-col cols="6">
+                              <v-autocomplete
+                                item
+                                dense
+                                outlined
+                                clearable
+                                hide-details
+                                label="订单进度"
+                                v-model="listItem.orderProgress"
+                                :items="[
+                                  '正在送测',
+                                  '已完成',
+                                  'rating',
+                                  'feedback'
+                                ]"
+                              />
+                            </v-col>
                             <v-col cols="12">
                               <v-text-field
                                 dense
@@ -285,26 +313,6 @@
                                 hide-details
                                 label="评价链接"
                                 v-model="listItem.reviewUrl"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                outlined
-                                clearable
-                                hide-details
-                                label="Rating"
-                                v-model="listItem.rating"
-                              />
-                            </v-col>
-                            <v-col cols="6">
-                              <v-text-field
-                                dense
-                                outlined
-                                clearable
-                                hide-details
-                                label="Feedback"
-                                v-model="listItem.feedback"
                               />
                             </v-col>
                             <v-col cols="12">
