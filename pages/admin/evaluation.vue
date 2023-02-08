@@ -250,7 +250,6 @@
                             <v-col cols="6">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -261,7 +260,6 @@
                             <v-col cols="6">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -272,7 +270,6 @@
                             <v-col cols="12">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -283,7 +280,6 @@
                             <v-col cols="12">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -294,7 +290,6 @@
                             <v-col cols="6">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -305,7 +300,6 @@
                             <v-col cols="6">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
@@ -316,7 +310,6 @@
                             <v-col cols="12">
                               <v-text-field
                                 dense
-                                disabled
                                 outlined
                                 clearable
                                 hide-details
