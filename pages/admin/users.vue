@@ -66,7 +66,6 @@
                           clearable
                           hide-details
                           label="密码"
-                          :rules="[rules.required]"
                           v-model="listItem.password"
                         />
                       </v-col>
@@ -352,14 +351,6 @@ export default {
         await this.addItem()
       }
     },
-    getPureData(data) {
-      for (var key in data) {
-        if (!data[key]) {
-          delete data[key]
-        }
-      }
-      return data
-    },
     closeAdd() {
       this.dialog = false
       this.close()
@@ -447,10 +438,14 @@ export default {
     },
     async updateItem() {
       const data = Object.assign({}, this.listItem)
-      const params = this.getPureData(data)
+      const params = this.getPureData({
+        _id: data._id,
+        isAdmin: data.isAdmin,
+        password: data.password
+      })
       const { errors } = await this.$altogic.db
-        .model('news')
-        .object(params['_id'])
+        .model('users')
+        .object(params._id)
         .update(params)
       if (errors) {
         this.$notifier.showMessage({

@@ -30,6 +30,14 @@ Vue.mixin({
         })
       }
     },
+    getPureData(data) {
+      for (let key in data) {
+        if (data[key] == null || data[key] == undefined) {
+          delete data[key]
+        }
+      }
+      return data
+    },
     async $uploadFile(file, prefix) {
       const { data, errors } = await this.$altogic.storage
         .bucket(prefix)

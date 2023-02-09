@@ -330,14 +330,6 @@ export default {
         await this.addItem()
       }
     },
-    getPureData(data) {
-      for (var key in data) {
-        if (!data[key]) {
-          delete data[key]
-        }
-      }
-      return data
-    },
     closeAdd() {
       this.dialog = false
       this.close()
