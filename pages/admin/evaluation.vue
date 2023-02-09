@@ -305,7 +305,7 @@
                                 hide-details
                                 label="订单状态"
                                 v-model="listItem.orderStatus"
-                                :items="['未收本佣', '已收本佣', '已退佣金']"
+                                :items="orderStatus"
                               />
                             </v-col>
                             <v-col cols="6">
@@ -317,12 +317,7 @@
                                 hide-details
                                 label="订单进度"
                                 v-model="listItem.orderProgress"
-                                :items="[
-                                  '正在送测',
-                                  '已完成',
-                                  'rating',
-                                  'feedback'
-                                ]"
+                                :items="orderProgress"
                               />
                             </v-col>
                             <v-col cols="12">
@@ -432,7 +427,7 @@
               {{ item.productChineseName }}
             </span>
           </template>
-          <p class="text-center">{{ item.remark }}</p>
+          <span>{{ item.remark }}</span>
         </v-tooltip>
       </template>
 
@@ -516,6 +511,37 @@
           </template>
           <span>{{ item.reviewUrl }}</span>
         </v-tooltip>
+      </template>
+
+      <template v-slot:[`item.orderStatus`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          v-if="item.orderStatus"
+          :color="
+            ['primary', 'secondary', 'success', 'error'][
+              orderStatus.findIndex((status) => status == item.orderStatus)
+            ]
+          "
+        >
+          {{ item.orderStatus }}
+        </v-chip>
+      </template>
+      <template v-slot:[`item.orderProgress`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          v-if="item.orderProgress"
+          :color="
+            ['primary', 'secondary', 'success', 'error'][
+              orderProgress.findIndex((status) => status == item.orderProgress)
+            ]
+          "
+        >
+          {{ item.orderProgress }}
+        </v-chip>
       </template>
 
       <template #[`item.actions`]="{ item }">
@@ -671,6 +697,8 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    orderStatus: ['未收本佣', '已收本佣', '已退佣金'],
+    orderProgress: ['正在送测', '已完成', 'rating', 'feedback'],
     file: null,
     list: [],
     dialog: false,
