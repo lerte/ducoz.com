@@ -167,6 +167,27 @@
         </v-chip>
       </template>
 
+      <template #[`item.signUpAt`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.signUpAt | format }}
+            </span>
+          </template>
+          <span>{{ item.signUpAt }}</span>
+        </v-tooltip>
+      </template>
+      <template #[`item.lastLoginAt`]="{ item }">
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.lastLoginAt | format }}
+            </span>
+          </template>
+          <span>{{ item.lastLoginAt }}</span>
+        </v-tooltip>
+      </template>
+
       <template #[`item.actions`]="{ item }">
         <v-btn
           fab

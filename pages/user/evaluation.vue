@@ -337,14 +337,24 @@
       </template>
 
       <template #[`item.createdAt`]="{ item }">
-        <span>
-          {{ item.createdAt | format }}
-        </span>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.createdAt | format }}
+            </span>
+          </template>
+          <span>{{ item.createdAt }}</span>
+        </v-tooltip>
       </template>
       <template #[`item.updatedAt`]="{ item }">
-        <span>
-          {{ item.updatedAt | format }}
-        </span>
+        <v-tooltip right>
+          <template v-slot:activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.updatedAt | format }}
+            </span>
+          </template>
+          <span>{{ item.updatedAt }}</span>
+        </v-tooltip>
       </template>
 
       <template #[`item.isEvaluation`]="{ item }">
