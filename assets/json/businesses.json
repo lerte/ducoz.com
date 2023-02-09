@@ -1,66 +1,92 @@
 [
   {
     "text": "海外平台电商测评",
-    "value": "evaluation"
+    "value": "evaluation",
+    "icon": "mdi-fire",
+    "color": "#ED1941"
   },
   {
     "text": "店铺预定及转让",
-    "value": "store-reserve-transfer "
+    "value": "store-reserve-transfer",
+    "icon": "mdi-wrench"
   },
   {
     "text": "精准查邮箱",
-    "value": "checkmail"
+    "value": "checkmail",
+    "icon": "mdi-thumb-up",
+    "color": "#426AB3"
   },
   {
     "text": "高效删差评",
-    "value": "delete-negative-comment"
+    "value": "delete-negative-comment",
+    "icon": "mdi-lightning-bolt-outline",
+    "color": "#426AB3"
   },
   {
-    "text": "测评黑名单库查询",
-    "value": "search-blacklist"
+    "text": "测评黑名单查询",
+    "value": "search-blacklist",
+    "icon": "mdi-shield-crown-outline",
+    "color": "#102B6A"
   },
   {
     "text": "平台账号交易",
-    "value": "account-transaction"
+    "value": "account-transaction",
+    "icon": "mdi-wrench"
   },
   {
     "text": "站外折扣推广",
-    "value": "search-promotion-email"
+    "value": "search-promotion-email",
+    "icon": "mdi-wrench"
   },
   {
     "text": "海外商标交易",
-    "value": "trademark-transaction"
+    "value": "trademark-transaction",
+    "icon": "mdi-wrench"
   },
   {
     "text": "Facebook广告开户",
-    "value": "facebook-ad-account"
+    "value": "facebook-ad-account",
+    "icon": "mdi-fire",
+    "color": "#ED1941"
   },
   {
     "text": "Google广告开户",
-    "value": "google-ad-account"
+    "value": "google-ad-account",
+    "icon": "mdi-fire",
+    "color": "#ED1941"
   },
   {
     "text": "Tiktok广告开户",
-    "value": "tiktok-ad-account"
+    "value": "tiktok-ad-account",
+    "icon": "mdi-fire",
+    "color": "#ED1941"
   },
   {
     "text": "海外社媒开户",
-    "value": "social-media-account"
+    "value": "social-media-account",
+    "icon": "mdi-thumb-up",
+    "color": "#426AB3"
   },
   {
     "text": "电商网站建站",
-    "value": "e-commerce-website"
+    "value": "e-commerce-website",
+    "icon": "mdi-diamond-stone",
+    "color": "#102B6A"
   },
   {
     "text": "独立站广告代投",
-    "value": "website-ad-agency"
+    "value": "website-ad-agency",
+    "icon": "mdi-stairs-up",
+    "color": "#426AB3"
   },
   {
     "text": "粉丝人气营销",
-    "value": "fans-promotion"
+    "value": "fans-promotion",
+    "icon": "mdi-wrench"
   },
   {
     "text": "网红资源服务",
-    "value": "internet-celebrity"
+    "value": "internet-celebrity",
+    "icon": "mdi-wrench"
   }
 ]

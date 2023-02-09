@@ -1,21 +1,23 @@
 <template>
   <main
-    class="h-min-[calc(100vh_-_472px)] pb-14 flex flex-col text-center items-center justify-center bg-gray-100"
+    class="h-min-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
   >
-    <div class="container mt-16">
+    <div
+      class="mt-16 bg-white container h-[calc(100vh_-_512px)] overflow-hidden overflow-y-auto"
+    >
       <article
         class="text-left tiptap-vuetify-editor__content"
         v-if="business.length"
         v-html="business[0]?.content"
       />
-      <NuxtLink
-        v-if="business.length"
-        :to="`/user/${business[0]?.name}`"
-        class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm"
-      >
-        马上进入
-      </NuxtLink>
     </div>
+    <NuxtLink
+      v-if="business.length"
+      :to="`/user/${business[0]?.name}`"
+      class="px-4 py-2 font-semibold bg-secondary rounded-sm text-white shadow-sm"
+    >
+      马上进入
+    </NuxtLink>
   </main>
 </template>
 
