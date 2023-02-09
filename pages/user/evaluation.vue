@@ -613,7 +613,11 @@ export default {
     },
     close() {
       this.$nextTick(() => {
-        this.listItem = {}
+        this.listItem = {
+          platform: '亚马逊',
+          country: '美国',
+          isEvaluation: false // 默认不是免评
+        }
         this.editedIndex = -1
       })
     },
