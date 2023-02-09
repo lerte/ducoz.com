@@ -206,7 +206,7 @@
                               v-on="on"
                               v-bind="attrs"
                               color="primary"
-                              :disabled="uploading"
+                              :disabled="uploading || listItem.orderProgress"
                               @click="uploadFile"
                             >
                               <v-icon left v-if="listItem.mainImage">
@@ -389,6 +389,36 @@
           <span>{{ item.reviewUrl }}</span>
         </v-tooltip>
       </template>
+      <template #[`item.orderStatus`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          v-if="item.orderStatus"
+          :color="
+            ['primary', 'secondary', 'success', 'error'][
+              orderStatus.findIndex((status) => status == item.orderStatus)
+            ]
+          "
+        >
+          {{ item.orderStatus }}
+        </v-chip>
+      </template>
+      <template #[`item.orderProgress`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          v-if="item.orderProgress"
+          :color="
+            ['grey', 'primary', 'secondary', 'success', 'error'][
+              orderProgress.findIndex((status) => status == item.orderProgress)
+            ]
+          "
+        >
+          {{ item.orderProgress }}
+        </v-chip>
+      </template>
 
       <template #[`item.actions`]="{ item }">
         <v-btn
@@ -401,18 +431,46 @@
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              v-on="on"
+              v-bind="attrs"
+              fab
+              x-small
+              class="mr-2"
+              min-width="0"
+              color="secondary"
+              @click="stopEvaluation(item)"
+            >
+              <v-icon small> mdi-power </v-icon>
+            </v-btn>
+          </template>
+          <span>停止送测</span>
+        </v-tooltip>
         <v-btn
           fab
           x-small
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
-          v-if="!item.tax"
+          v-if="!item.orderProgress"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
       </template>
     </v-data-table>
+    <v-dialog v-model="dialogStop" width="auto">
+      <v-card>
+        <v-card-title class="text-h5"> 你确定要停止送测吗？ </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="secondary" @click="dialogStop = false"> 取消 </v-btn>
+          <v-btn color="primary" @click="stopEvaluationConfirm">确定</v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -536,10 +594,20 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    orderStatus: ['未收本佣', '已收本佣', '已退佣金'],
+    orderProgress: [
+      '停止送测',
+      '初次送测',
+      '送测执行中',
+      '已完成',
+      'rating',
+      'feedback'
+    ],
     file: null,
     list: [],
     dialog: false,
     dialogDelete: false,
+    dialogStop: false,
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
@@ -825,6 +893,29 @@ export default {
           color: 'error',
           content: '请选择要导出的条目'
         })
+      }
+    },
+    stopEvaluation(item) {
+      this.editedIndex = this.list.indexOf(item)
+      if (this.editedIndex > -1) {
+        this.listItem = Object.assign({}, item)
+        this.dialogStop = true
+      }
+    },
+    async stopEvaluationConfirm() {
+      const { errors } = await this.$altogic.db
+        .model('users.evaluation')
+        .object(this.listItem._id)
+        .update({
+          orderProgress: '停止送测'
+        })
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        this.getList()
       }
     }
   }

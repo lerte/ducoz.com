@@ -535,7 +535,7 @@
           text-color="white"
           v-if="item.orderProgress"
           :color="
-            ['primary', 'secondary', 'success', 'error'][
+            ['grey', 'primary', 'secondary', 'success', 'error'][
               orderProgress.findIndex((status) => status == item.orderProgress)
             ]
           "
@@ -698,7 +698,14 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     orderStatus: ['未收本佣', '已收本佣', '已退佣金'],
-    orderProgress: ['正在送测', '已完成', 'rating', 'feedback'],
+    orderProgress: [
+      '停止送测',
+      '初次送测',
+      '送测执行中',
+      '已完成',
+      'rating',
+      'feedback'
+    ],
     file: null,
     list: [],
     dialog: false,
