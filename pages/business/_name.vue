@@ -1,9 +1,9 @@
 <template>
   <main
-    class="h-min-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
+    class="h-min-[calc(100vh_-_104px)] flex flex-col text-center items-center justify-center bg-gray-100"
   >
     <div
-      class="mt-16 bg-white container h-[calc(100vh_-_512px)] overflow-hidden overflow-y-auto"
+      class="mt-16 bg-white container h-[calc(100vh_-_104px)] overflow-hidden overflow-y-auto"
     >
       <article
         class="text-left tiptap-vuetify-editor__content"
