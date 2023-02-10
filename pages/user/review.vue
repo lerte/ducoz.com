@@ -896,6 +896,10 @@ export default {
         name: 'user-order',
         params: {
           _parent: item._id
+        },
+        query: {
+          tax: item.tax,
+          exchangeRate: item.exchangeRate
         }
       })
     }

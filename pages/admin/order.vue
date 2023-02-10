@@ -160,6 +160,28 @@
                   <v-card-text>
                     <v-row>
                       <v-col cols="12">
+                        <v-autocomplete
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="结算"
+                          :items="[
+                            {
+                              text: '已结算',
+                              value: true
+                            },
+                            {
+                              text: '待结算',
+                              value: false
+                            }
+                          ]"
+                          v-model="listItem.settlement"
+                        />
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols="12">
                         <v-text-field
                           dense
                           outlined

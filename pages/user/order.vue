@@ -45,6 +45,23 @@
         </v-tooltip>
       </template>
 
+      <template #[`item.settlement`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          :color="item.settlement ? 'success' : 'error'"
+        >
+          {{ item.settlement ? '已结算' : '待结算' }}
+        </v-chip>
+      </template>
+
+      <template #[`item.balance`]="{ item }">
+        <v-chip label small text-color="white" color="primary">
+          {{ balance(item) }}
+        </v-chip>
+      </template>
+
       <template #[`item.reviewTime`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
@@ -224,6 +241,16 @@ export default {
         sortable: false
       },
       {
+        text: '结算',
+        value: 'settlement',
+        sortable: false
+      },
+      {
+        text: '本佣',
+        value: 'balance',
+        sortable: false
+      },
+      {
         text: '创建时间',
         value: 'createdAt',
         sortable: false
@@ -258,6 +285,13 @@ export default {
     ...mapState(['user'])
   },
   methods: {
+    balance(item) {
+      return (
+        item.price * this.$route.query.exchangeRate +
+        parseFloat(item.commission) +
+        parseFloat(this.$route.query.tax)
+      ).toFixed(2)
+    },
     doSearch(params) {
       this.searchParams = Object.assign({}, params)
       if (this.options.page == 1) {
