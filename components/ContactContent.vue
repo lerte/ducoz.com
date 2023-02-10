@@ -28,14 +28,6 @@
 
 <script>
 export default {
-  name: 'ContactContent',
-  methods: {
-    developTips() {
-      this.$notifier.showMessage({
-        color: 'success',
-        content: '网站开发中，敬请期待!'
-      })
-    }
-  }
+  name: 'ContactContent'
 }
 </script>

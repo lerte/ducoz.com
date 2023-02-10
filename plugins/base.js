@@ -30,6 +30,12 @@ Vue.mixin({
         })
       }
     },
+    developTips() {
+      this.$notifier.showMessage({
+        color: 'error',
+        content: '开发中，敬请期待!'
+      })
+    },
     getPureData(data) {
       for (let key in data) {
         if (data[key] == null || data[key] == undefined) {

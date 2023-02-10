@@ -47,14 +47,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  methods: {
-    developTips() {
-      this.$notifier.showMessage({
-        color: 'success',
-        content: '网站开发中，敬请期待!'
-      })
-    }
   }
 }
 </script>
