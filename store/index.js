@@ -28,7 +28,7 @@ export const actions = {
     const { user } = await this.$altogic.auth.getUserFromDBbyCookie(req, res)
     if (user) {
       delete user['checkmail']
-      delete user['evaluation']
+      delete user['review']
       commit('setUser', user)
       commit('setSessionToken', session_token)
     }

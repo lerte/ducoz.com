@@ -32,7 +32,7 @@ app.post('/login', async (req, res) => {
   altogic.auth.setSession(session)
   altogic.auth.setSessionCookie(session.token, req, res)
   delete user['checkmail']
-  delete user['evaluation']
+  delete user['review']
   return res.json({
     session,
     user

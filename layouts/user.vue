@@ -16,7 +16,7 @@
             v-if="item.children"
             :active-class="`secondary white--text`"
           >
-            <template v-slot:activator>
+            <template #activator>
               <v-list-item-content>
                 <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
@@ -68,7 +68,7 @@
         </v-btn>
       </NuxtLink>
       <v-menu bottom offset-y open-on-hover transition="scale-transition">
-        <template v-slot:activator="{ attrs, on }">
+        <template #activator="{ attrs, on }">
           <v-btn class="ml-2" min-width="0" fab text v-bind="attrs" v-on="on">
             <v-icon>mdi-account</v-icon>
           </v-btn>

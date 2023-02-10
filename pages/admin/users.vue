@@ -22,7 +22,7 @@
             <v-icon left> mdi-delete </v-icon>删除
           </v-btn>
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 <v-icon left> mdi-plus </v-icon>添加账号
               </v-btn>
@@ -127,7 +127,7 @@
 
       <template #[`item.profilePicture`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-img
               height="80"
               width="80"
@@ -168,7 +168,7 @@
 
       <template #[`item.signUpAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.signUpAt | format }}
             </span>
@@ -178,7 +178,7 @@
       </template>
       <template #[`item.lastLoginAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.lastLoginAt | format }}
             </span>

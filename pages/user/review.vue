@@ -16,6 +16,7 @@
       v-model="selected"
       class="elevation-1"
       :options.sync="options"
+      @click:row="manageOrders"
       :server-items-length="totalCount"
       :footer-props="require('@/assets/json/footer-props.json')"
     >
@@ -25,7 +26,7 @@
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 <v-icon left> mdi-plus </v-icon>提交信息
               </v-btn>
@@ -196,7 +197,7 @@
                           type="number"
                           label="总单数"
                           :rules="[rules.required]"
-                          v-model="listItem.orders"
+                          v-model="listItem.totalOrders"
                         />
                       </v-col>
                       <v-col cols="6">
@@ -213,7 +214,7 @@
                       </v-col>
                       <v-col cols="6">
                         <v-tooltip top>
-                          <template v-slot:activator="{ on, attrs }">
+                          <template #activator="{ on, attrs }">
                             <v-btn
                               block
                               v-on="on"
@@ -293,7 +294,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <a href="/ducoz-evaluation.xlsx" target="_blank">
+          <a href="/ducoz-review.xlsx" target="_blank">
             <v-btn color="ml-2 danger" dark>
               <v-icon left> mdi-download </v-icon> 下载导入模板
             </v-btn>
@@ -331,7 +332,7 @@
 
       <template #[`item.mainImage`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <v-img
               height="80"
               width="80"
@@ -348,7 +349,7 @@
 
       <template #[`item.createdAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.createdAt | format }}
             </span>
@@ -358,7 +359,7 @@
       </template>
       <template #[`item.updatedAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.updatedAt | format }}
             </span>
@@ -367,69 +368,52 @@
         </v-tooltip>
       </template>
 
-      <template v-slot:[`item.orderId`]="{ item }">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <span v-bind="attrs" v-on="on" @click="$copy(item.orderId)">
-              {{ item.orderId | ellipsis(28) }}
-            </span>
-          </template>
-          <span>{{ item.orderId }}</span>
-        </v-tooltip>
-      </template>
-
-      <template v-slot:[`item.reviewUrl`]="{ item }">
-        <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
-            <span v-bind="attrs" v-on="on" @click="$copy(item.reviewUrl)">
-              {{ item.reviewUrl | ellipsis(28) }}
-            </span>
-          </template>
-          <span>{{ item.reviewUrl }}</span>
-        </v-tooltip>
-      </template>
-      <template #[`item.orderStatus`]="{ item }">
+      <template #[`item.reviewStatus`]="{ item }">
         <v-chip
           label
           small
           text-color="white"
-          v-if="item.orderStatus"
+          v-if="item.reviewStatus"
           :color="
-            ['primary', 'secondary', 'success', 'error'][
-              orderStatus.findIndex((status) => status == item.orderStatus)
+            ['secondary', 'primary', 'success', 'error'][
+              reviewStatus.findIndex((status) => status == item.reviewStatus)
             ]
           "
         >
-          {{ item.orderStatus }}
+          {{ item.reviewStatus }}
         </v-chip>
       </template>
-      <template #[`item.orderProgress`]="{ item }">
+
+      <template #[`item.reviewProgress`]="{ item }">
         <v-chip
           label
           small
           text-color="white"
-          v-if="item.orderProgress"
-          :color="
-            ['grey', 'primary', 'secondary', 'success', 'error'][
-              orderProgress.findIndex((status) => status == item.orderProgress)
-            ]
-          "
+          color="success"
+          @click="toOrders(item)"
         >
-          {{ item.orderProgress }}
+          {{ item.orders?.length }} / {{ item.totalOrders }}
         </v-chip>
       </template>
 
       <template #[`item.actions`]="{ item }">
-        <v-btn
-          fab
-          x-small
-          class="mr-2"
-          min-width="0"
-          color="success"
-          @click.stop="copyItem(item)"
-        >
-          <v-icon small> mdi-content-copy </v-icon>
-        </v-btn>
+        <v-tooltip left>
+          <template #activator="{ on, attrs }">
+            <v-btn
+              v-on="on"
+              v-bind="attrs"
+              fab
+              x-small
+              class="mr-2"
+              min-width="0"
+              color="success"
+              @click.stop="copyItem(item)"
+            >
+              <v-icon small> mdi-content-copy </v-icon>
+            </v-btn>
+          </template>
+          <span>复制</span>
+        </v-tooltip>
         <v-btn
           fab
           x-small
@@ -450,12 +434,12 @@
               class="mr-2"
               min-width="0"
               color="secondary"
-              @click="stopEvaluation(item)"
+              @click="stopReview(item)"
             >
               <v-icon small> mdi-power </v-icon>
             </v-btn>
           </template>
-          <span>停止送测</span>
+          <span>停止任务</span>
         </v-tooltip>
         <v-btn
           fab
@@ -471,11 +455,11 @@
     </v-data-table>
     <v-dialog v-model="dialogStop" width="auto">
       <v-card>
-        <v-card-title class="text-h5"> 你确定要停止送测吗？ </v-card-title>
+        <v-card-title class="text-h5"> 你确定要停止该任务吗？ </v-card-title>
         <v-card-actions>
           <v-spacer />
           <v-btn color="secondary" @click="dialogStop = false"> 取消 </v-btn>
-          <v-btn color="primary" @click="stopEvaluationConfirm">确定</v-btn>
+          <v-btn color="primary" @click="stopReviewConfirm">确定</v-btn>
           <v-spacer />
         </v-card-actions>
       </v-card>
@@ -487,7 +471,7 @@
 import { mapState } from 'vuex'
 import { read, utils, writeFileXLSX } from 'xlsx'
 export default {
-  name: 'evaluation',
+  name: 'review',
   layout: 'user',
   data: () => ({
     loading: true,
@@ -547,12 +531,22 @@ export default {
       },
       {
         text: '总单数',
-        value: 'orders',
+        value: 'totalOrders',
         sortable: false
       },
       {
         text: '评价类型',
         value: 'reviewType',
+        sortable: false
+      },
+      {
+        text: '任务状态',
+        value: 'reviewStatus',
+        sortable: false
+      },
+      {
+        text: '任务进度',
+        value: 'reviewProgress',
         sortable: false
       },
       // ------------------------ 反馈信息 ------------------------------
@@ -564,26 +558,6 @@ export default {
       {
         text: '汇率',
         value: 'exchangeRate',
-        sortable: false
-      },
-      {
-        text: '订单号',
-        value: 'orderId',
-        sortable: false
-      },
-      {
-        text: '评价链接',
-        value: 'reviewUrl',
-        sortable: false
-      },
-      {
-        text: '订单状态',
-        value: 'orderStatus',
-        sortable: false
-      },
-      {
-        text: '订单进度',
-        value: 'orderProgress',
         sortable: false
       },
       {
@@ -604,15 +578,7 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     reviewType: ['免评', 'rating', 'feedback', 'review', '点赞 & QA'],
-    orderStatus: ['未收本佣', '已收本佣', '已退佣金'],
-    orderProgress: [
-      '停止送测',
-      '初次送测',
-      '送测执行中',
-      '已完成',
-      'rating',
-      'feedback'
-    ],
+    reviewStatus: ['已停止', '任务执行中', '已完成'],
     file: null,
     list: [],
     dialog: false,
@@ -625,7 +591,8 @@ export default {
     editedIndex: -1,
     listItem: {
       platform: '亚马逊',
-      country: '美国'
+      country: '美国',
+      reviewType: 'review' // 默认留评
     }
   }),
   watch: {
@@ -643,11 +610,14 @@ export default {
     }
   },
   methods: {
+    manageOrders(item) {
+      console.log(item)
+    },
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
-        .model('users.evaluation')
+        .model('users.review')
         .filter(`_parent == "${this.user._id}"`)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
@@ -684,7 +654,8 @@ export default {
       this.$nextTick(() => {
         this.listItem = {
           platform: '亚马逊',
-          country: '美国'
+          country: '美国',
+          reviewType: 'review' // 默认留评
         }
         this.editedIndex = -1
       })
@@ -697,7 +668,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('users.evaluation')
+        .model('users.review')
         .object()
         .append(params, this.user._id)
       if (errors) {
@@ -742,7 +713,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('users.evaluation')
+            .model('users.review')
             .object(item._id)
             .delete()
           if (errors) {
@@ -755,7 +726,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('users.evaluation')
+          .model('users.review')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -771,9 +742,10 @@ export default {
     async updateItem() {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
+      delete params['orders']
       const { errors } = await this.$altogic.db
-        .model('users.evaluation')
-        .object(params['_id'])
+        .model('users.review')
+        .object(params._id)
         .update(params)
       if (errors) {
         this.$notifier.showMessage({
@@ -803,7 +775,7 @@ export default {
       }
       if (/^image\//.test(this.file.type)) {
         // 上传主图
-        const { publicPath } = await this.$uploadFile(this.file, 'evaluation')
+        const { publicPath } = await this.$uploadFile(this.file, 'review')
         this.$set(this.listItem, 'mainImage', publicPath)
       } else {
         // 批量导入
@@ -819,10 +791,11 @@ export default {
             country: item['国家'],
             platform: item['平台'],
             currency: item['币种'],
-            orders: item['总单数'],
+            totalOrders: item['总单数'],
             mainImage: item['主图'],
             keywords: item['关键词'],
             listing: item['Listing链接'],
+            reviewType: item['评价类型'],
             keywordsPage: item['关键词所在页'],
             dailyOrders: item['期望每日单数'],
             productChineseName: item['产品中文名']
@@ -830,7 +803,7 @@ export default {
         )
         for (let data of params) {
           const { errors } = await this.$altogic.db
-            .model('users.evaluation')
+            .model('users.review')
             .object()
             .append(data, this.user._id)
           if (errors) {
@@ -869,16 +842,13 @@ export default {
           关键词: item['keywords'],
           关键词所在页: item['keywordsPage'],
           期望每日单数: item['dailyOrders'],
-          总单数: item['orders'],
+          总单数: item['totalOrders'],
           主图: item['mainImage'],
           Listing链接: item['listing'],
+          评价类型: item['reviewType'],
           // 反馈信息
           税费: item['tax'],
           汇率: item['exchangeRate'],
-          订单号: item['orderId'],
-          评价链接: item['reviewUrl'],
-          订单状态: item['orderStatus'],
-          订单进度: item['orderProgress'],
           待退款金额: item['refund']
         }))
         const ws = utils.json_to_sheet(data)
@@ -897,19 +867,19 @@ export default {
         })
       }
     },
-    stopEvaluation(item) {
+    stopReview(item) {
       this.editedIndex = this.list.indexOf(item)
       if (this.editedIndex > -1) {
         this.listItem = Object.assign({}, item)
         this.dialogStop = true
       }
     },
-    async stopEvaluationConfirm() {
+    async stopReviewConfirm() {
       const { errors } = await this.$altogic.db
-        .model('users.evaluation')
+        .model('users.review')
         .object(this.listItem._id)
         .update({
-          orderProgress: '停止送测'
+          reviewStatus: this.reviewStatus[0]
         })
       if (errors) {
         this.$notifier.showMessage({
@@ -917,8 +887,17 @@ export default {
           color: 'error'
         })
       } else {
-        this.getList()
+        await this.getList()
+        this.dialogStop = false
       }
+    },
+    toOrders(item) {
+      this.$router.push({
+        name: 'user-order',
+        params: {
+          _parent: item._id
+        }
+      })
     }
   }
 }

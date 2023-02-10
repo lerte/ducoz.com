@@ -1,12 +1,5 @@
 <template>
   <v-container fluid>
-    <v-file-input
-      class="d-none"
-      accept=".xls,.xlsx"
-      ref="uploadFile"
-      v-model="file"
-      @change="fileChange"
-    />
     <v-data-table
       show-select
       :items="list"
@@ -24,42 +17,12 @@
           <v-btn color="secondary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
-          <v-menu bottom offset-y transition="scale-transition">
-            <template #activator="{ attrs, on }">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>提交开户信息
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-btn dark @click="dialog = true">
-                  <v-icon left>mdi-home</v-icon>Facebook国内广告开户
-                </v-btn>
-              </v-list-item>
-              <v-list-item>
-                <v-btn dark color="secondary" @click="developTips">
-                  <v-icon left>mdi-web</v-icon>Facebook海外广告开户
-                </v-btn>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-          <v-dialog v-model="dialogDelete" width="auto">
-            <v-card>
-              <v-card-title class="text-h5">
-                {{ `你确定要删除这${listItem.length || ''}条信息吗?` }}
-              </v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="secondary" @click="dialogDelete = false">
-                  取消
-                </v-btn>
-                <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
+            <v-icon left> mdi-delete </v-icon>删除
+          </v-btn>
+          <Search ref="search" @doSearch="doSearch" :headers="headers" />
         </v-toolbar>
-        <v-divider></v-divider>
+        <v-divider />
       </template>
 
       <template #[`item._id`]="{ item }">
@@ -68,7 +31,7 @@
         </span>
       </template>
 
-      <template #[`item.mainImage`]="{ item }">
+      <template #[`item.reviewImage`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
             <v-img
@@ -76,15 +39,25 @@
               width="80"
               v-on="on"
               v-bind="attrs"
-              :src="item.mainImage"
-              @click.stop="$copy(item.mainImage)"
+              :src="item.reviewImage"
+              @click.stop="$copy(item.reviewImage)"
             />
           </template>
-          <v-img max-height="600" max-width="600" :src="item.mainImage" />
+          <v-img max-height="600" max-width="600" :src="item.reviewImage" />
           <p class="text-center">点击即可复制地址</p>
         </v-tooltip>
       </template>
 
+      <template #[`item.reviewTime`]="{ item }">
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.reviewTime | format }}
+            </span>
+          </template>
+          <span>{{ item.reviewTime }}</span>
+        </v-tooltip>
+      </template>
       <template #[`item.createdAt`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
@@ -104,17 +77,6 @@
           </template>
           <span>{{ item.updatedAt }}</span>
         </v-tooltip>
-      </template>
-
-      <template #[`item.isEvaluation`]="{ item }">
-        <v-chip
-          label
-          small
-          :color="item.isEvaluation ? 'success' : 'secondary'"
-          text-color="white"
-        >
-          {{ item.isEvaluation ? '是' : '否' }}
-        </v-chip>
       </template>
 
       <template #[`item.orderId`]="{ item }">
@@ -156,7 +118,6 @@
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
-          v-if="!item.tax"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
@@ -165,7 +126,7 @@
     <v-dialog persistent v-model="dialog" max-width="720" scrollable>
       <v-card>
         <v-toolbar dense>
-          <span class="headline">{{ formTitle }}开户信息</span>
+          <span class="headline">订单信息</span>
           <v-spacer></v-spacer>
           <v-icon @click="closeAdd">mdi-close</v-icon>
         </v-toolbar>
@@ -180,115 +141,125 @@
                 @change="fileChange"
               />
               <v-row>
-                <v-col cols="6">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="姓"
-                    :rules="[rules.required]"
-                    v-model="listItem.lastName"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="名"
-                    :rules="[rules.required]"
-                    v-model="listItem.firstName"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="性别"
-                    :rules="[rules.required]"
-                    v-model="listItem.sex"
-                    :items="['男', '女']"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <DatePicker label="生日" v-model="listItem.birthday" />
-                </v-col>
-                <v-col cols="12">
-                  <v-autocomplete
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="行业类型"
-                    :rules="[rules.required]"
-                    v-model="listItem.sex"
-                    :items="require('@/assets/json/industries.json')"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="营业执照"
-                    :rules="[rules.required]"
-                    v-model="listItem.businessLicense"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-tooltip top>
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        block
-                        v-on="on"
-                        v-bind="attrs"
-                        color="primary"
-                        :disabled="uploading"
-                        @click="uploadFile"
-                      >
-                        <v-icon left v-if="listItem.businessLicense">
-                          mdi-image
-                        </v-icon>
-                        上传营业执照
-                      </v-btn>
-                    </template>
-                    <v-img
-                      max-height="320"
-                      max-width="320"
-                      v-if="listItem.businessLicense"
-                      :src="listItem.businessLicense"
-                      :lazy-src="listItem.businessLicense"
-                    />
-                    <span v-else>请上传图片</span>
-                  </v-tooltip>
-                </v-col>
                 <v-col cols="12">
                   <v-text-field
                     dense
                     outlined
                     clearable
                     hide-details
-                    label="营业执照信息"
-                    :rules="[rules.required]"
-                    v-model="listItem.businessLicense"
+                    type="number"
+                    label="后台价格"
+                    disabled
+                    v-model="listItem.price"
                   />
                 </v-col>
+
+                <v-card width="100%" v-if="editedIndex > -1">
+                  <v-card-title> 反馈信息 </v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          type="number"
+                          label="佣金"
+                          v-model="listItem.commission"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="订单号"
+                          v-model="listItem.orderId"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="评价链接"
+                          v-model="listItem.reviewUrl"
+                        />
+                      </v-col>
+                      <v-col cols="6">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="评价截图"
+                          v-model="listItem.reviewImage"
+                        />
+                      </v-col>
+                      <v-col cols="6">
+                        <v-tooltip top>
+                          <template #activator="{ on, attrs }">
+                            <v-btn
+                              block
+                              v-on="on"
+                              v-bind="attrs"
+                              color="primary"
+                              :disabled="uploading"
+                              @click="uploadFile"
+                            >
+                              <v-icon left v-if="listItem.reviewImage">
+                                mdi-image
+                              </v-icon>
+                              上传评价截图
+                            </v-btn>
+                          </template>
+                          <v-img
+                            max-height="320"
+                            max-width="320"
+                            v-if="listItem.reviewImage"
+                            :src="listItem.reviewImage"
+                            :lazy-src="listItem.reviewImage"
+                          />
+                          <span v-else>请上传图片</span>
+                        </v-tooltip>
+                      </v-col>
+                      <v-col cols="12">
+                        <DatePicker
+                          label="评价时间"
+                          v-model="listItem.reviewTime"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
               </v-row>
             </v-form>
           </v-container>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="primary" :disabled="!valid" @click="submit">
             提交
           </v-btn>
           <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDelete" width="auto">
+      <v-card>
+        <v-card-title class="text-h5">
+          {{ `你确定要删除这${listItem.length || ''}个订单吗?` }}
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="secondary" @click="dialogDelete = false"> 取消 </v-btn>
+          <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
+          <v-spacer />
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -299,8 +270,8 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'facebook-ad-account',
-  layout: 'user',
+  name: 'order',
+  layout: 'admin',
   data: () => ({
     loading: true,
     uploading: false,
@@ -318,28 +289,40 @@ export default {
         searchable: true
       },
       {
-        text: '姓',
-        value: 'lastName',
+        text: '任务Id',
+        value: '_parent',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '订单号',
+        value: 'orderId',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '评价链接',
+        value: 'reviewUrl',
         sortable: false
       },
       {
-        text: '名',
-        value: 'firstName',
+        text: '评价截图',
+        value: 'reviewImage',
         sortable: false
       },
       {
-        text: '性别',
-        value: 'sex',
+        text: '评价时间',
+        value: 'reviewTime',
         sortable: false
       },
       {
-        text: '行业类型',
-        value: 'industryType',
+        text: '后台价格',
+        value: 'price',
         sortable: false
       },
       {
-        text: '上传你的营业执照',
-        value: 'businessLicense',
+        text: '佣金',
+        value: 'commission',
         sortable: false
       },
       {
@@ -363,7 +346,8 @@ export default {
       required: (value) => (value != null && value != undefined) || '必填项.'
     },
     editedIndex: -1,
-    listItem: {}
+    listItem: {},
+    searchParams: {}
   }),
   watch: {
     options: {
@@ -374,18 +358,31 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user']),
-    formTitle() {
-      return this.editedIndex == -1 ? '添加' : '编辑'
-    }
+    ...mapState(['user'])
   },
   methods: {
+    doSearch(params) {
+      this.searchParams = Object.assign({}, params)
+      if (this.options.page == 1) {
+        this.getList()
+      } else {
+        this.options.page = 1
+      }
+    },
+    getParams() {
+      const params = []
+      for (let param in this.searchParams) {
+        params.push(`${param} == "${this.searchParams[param]}"`)
+      }
+      return params.join(' && ')
+    },
     async getList() {
       this.loading = true
+      const params = this.getParams()
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
-        .model('users.facebook_ad_account')
-        .filter(`_parent == "${this.user._id}"`)
+        .model('users.review.orders')
+        .filter(params)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)
@@ -438,7 +435,7 @@ export default {
       } else {
         this.$notifier.showMessage({
           color: 'success',
-          content: '添加成功，我们的工作人员马上会处理'
+          content: '添加成功'
         })
         await this.getList()
         this.closeAdd()
@@ -448,6 +445,23 @@ export default {
       this.editedIndex = this.list.indexOf(item)
       this.listItem = Object.assign({}, item)
       this.dialog = true
+    },
+    async updateItem() {
+      const data = Object.assign({}, this.listItem)
+      const params = this.getPureData(data)
+      const { errors } = await this.$altogic.db
+        .model('users.review.orders')
+        .object(params._id)
+        .update(params)
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        await this.getList()
+        this.closeAdd()
+      }
     },
     async deleteItem(item) {
       if (item.length) {
@@ -472,7 +486,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('users.review')
+            .model('users.review.orders')
             .object(item._id)
             .delete()
           if (errors) {
@@ -485,7 +499,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('users.review')
+          .model('users.review.orders')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -498,23 +512,6 @@ export default {
       await this.getList()
       this.closeDelete()
     },
-    async updateItem() {
-      const data = Object.assign({}, this.listItem)
-      const params = this.getPureData(data)
-      const { errors } = await this.$altogic.db
-        .model('users.review')
-        .object(params['_id'])
-        .update(params)
-      if (errors) {
-        this.$notifier.showMessage({
-          content: errors,
-          color: 'error'
-        })
-      } else {
-        await this.getList()
-        this.closeAdd()
-      }
-    },
     uploadFile() {
       this.file = null
       this.$nextTick(() => {
@@ -525,11 +522,14 @@ export default {
       if (!this.file) {
         return
       }
-      if (/^image\//.test(this.file.type)) {
-        // 上传营业执照
-        const { publicPath } = await this.$uploadFile(this.file, 'review')
-        this.$set(this.listItem, 'mainImage', publicPath)
-      }
+      this.uploading = true
+      this.$notifier.showMessage({
+        content: '文件上传中...',
+        color: 'secondary'
+      })
+      const { publicPath } = await this.$uploadFile(this.file, 'order')
+      this.$set(this.listItem, 'reviewImage', publicPath)
+      this.uploading = false
     }
   }
 }

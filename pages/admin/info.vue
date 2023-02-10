@@ -21,7 +21,7 @@
             <v-icon left> mdi-delete </v-icon>删除
           </v-btn>
           <v-dialog persistent v-model="dialog" max-width="960" scrollable>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 <v-icon left> mdi-plus </v-icon>添加信息
               </v-btn>

@@ -22,7 +22,7 @@
             <v-icon left> mdi-delete </v-icon>删除
           </v-btn>
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
-            <template v-slot:activator="{ on, attrs }">
+            <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
                 <v-icon left> mdi-plus </v-icon>添加
               </v-btn>
@@ -184,7 +184,7 @@
 
       <template #[`item.createdAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.createdAt | format }}
             </span>
@@ -194,7 +194,7 @@
       </template>
       <template #[`item.updatedAt`]="{ item }">
         <v-tooltip right>
-          <template v-slot:activator="{ on, attrs }">
+          <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
               {{ item.updatedAt | format }}
             </span>

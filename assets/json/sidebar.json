@@ -22,6 +22,17 @@
   {
     "icon": "mdi-account-group",
     "title": "测评管理",
-    "to": "/admin/evaluation"
+    "children": [
+      {
+        "icon": "mdi-check",
+        "title": "测评任务",
+        "to": "/admin/review"
+      },
+      {
+        "icon": "mdi-cart",
+        "title": "订单管理",
+        "to": "/admin/order"
+      }
+    ]
   }
 ]
