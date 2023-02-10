@@ -232,13 +232,10 @@
                           outlined
                           clearable
                           hide-details
-                          label="是否免评"
+                          label="评价类型"
                           :rules="[rules.required]"
-                          v-model="listItem.isEvaluation"
-                          :items="[
-                            { value: true, text: '是' },
-                            { value: false, text: '否' }
-                          ]"
+                          v-model="listItem.reviewType"
+                          :items="reviewType"
                         />
                       </v-col>
                       <v-col cols="12">
@@ -480,17 +477,6 @@
         </v-tooltip>
       </template>
 
-      <template #[`item.isEvaluation`]="{ item }">
-        <v-chip
-          label
-          small
-          :color="item.isEvaluation ? 'success' : 'secondary'"
-          text-color="white"
-        >
-          {{ item.isEvaluation ? '是' : '否' }}
-        </v-chip>
-      </template>
-
       <template v-slot:[`item.orderId`]="{ item }">
         <v-tooltip right>
           <template v-slot:activator="{ on, attrs }">
@@ -645,8 +631,8 @@ export default {
         sortable: false
       },
       {
-        text: '是否免评',
-        value: 'isEvaluation',
+        text: '评价类型',
+        value: 'reviewType',
         sortable: false
       },
       // ------------------------ 反馈信息 ------------------------------
@@ -697,6 +683,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    reviewType: ['免评', 'rating', 'feedback', 'review', '点赞 & QA'],
     orderStatus: ['未收本佣', '已收本佣', '已退佣金'],
     orderProgress: [
       '停止送测',
@@ -717,8 +704,7 @@ export default {
     editedIndex: -1,
     listItem: {
       platform: '亚马逊',
-      country: '美国',
-      isEvaluation: false // 默认不是免评
+      country: '美国'
     },
     searchParams: {}
   }),
@@ -940,8 +926,7 @@ export default {
             listing: item['Listing链接'],
             keywordsPage: item['关键词所在页'],
             dailyOrders: item['期望每日单数'],
-            productChineseName: item['产品中文名'],
-            isEvaluation: item['是否免评'] == '否' ? false : true
+            productChineseName: item['产品中文名']
           })
         )
         for (let data of params) {
@@ -989,7 +974,6 @@ export default {
           总单数: item['orders'],
           主图: item['mainImage'],
           Listing链接: item['listing'],
-          是否免评: item['isEvaluation'] ? '是' : '否',
           // 反馈信息
           税费: item['tax'],
           汇率: item['exchangeRate'],
