@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-file-input
       class="d-none"
-      :accept="accept"
+      accept=".xls,.xlsx"
       ref="uploadFile"
       v-model="file"
       @change="fileChange"
@@ -16,6 +16,7 @@
       v-model="selected"
       class="elevation-1"
       :options.sync="options"
+      @click:row="viewOrders"
       :server-items-length="totalCount"
       :footer-props="require('@/assets/json/footer-props.json')"
     >
@@ -321,7 +322,12 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" :disabled="!valid" @click="submit">
+                <v-btn
+                  color="primary"
+                  :loading="loading"
+                  :disabled="!valid || loading"
+                  @click="submit"
+                >
                   提交
                 </v-btn>
                 <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>
@@ -384,19 +390,12 @@
               {{ item._parent }}
             </v-chip>
           </template>
-          <p class="text-center">{{ item.clientRemark }}</p>
+          <span>{{ item.clientRemark }}</span>
         </v-tooltip>
       </template>
 
       <template #[`item.productChineseName`]="{ item }">
-        <v-tooltip right>
-          <template #activator="{ on, attrs }">
-            <span v-on="on" v-bind="attrs">
-              {{ item.productChineseName }}
-            </span>
-          </template>
-          <span>{{ item.remark }}</span>
-        </v-tooltip>
+        {{ item.productChineseName }}
       </template>
 
       <template #[`item.asin`]="{ item }">
@@ -450,19 +449,28 @@
       </template>
 
       <template #[`item.reviewStatus`]="{ item }">
-        <v-chip
-          label
-          small
-          text-color="white"
-          v-if="item.reviewStatus"
-          :color="
-            ['secondary', 'primary', 'success', 'error'][
-              reviewStatus.findIndex((status) => status == item.reviewStatus)
-            ]
-          "
-        >
-          {{ item.reviewStatus }}
-        </v-chip>
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <v-chip
+              label
+              small
+              v-on="on"
+              v-bind="attrs"
+              text-color="white"
+              v-if="item.reviewStatus"
+              :color="
+                ['secondary', 'primary', 'success', 'error'][
+                  reviewStatus.findIndex(
+                    (status) => status == item.reviewStatus
+                  )
+                ]
+              "
+            >
+              {{ item.reviewStatus }}
+            </v-chip>
+          </template>
+          <span>{{ item.remark }}</span>
+        </v-tooltip>
       </template>
 
       <template #[`item.reviewProgress`]="{ item }">
@@ -471,7 +479,7 @@
           small
           text-color="white"
           color="success"
-          @click="toOrders(item)"
+          @click.stop="viewOrders(item)"
         >
           {{ item.orders?.length }} / {{ item.totalOrders }}
         </v-chip>
@@ -488,23 +496,6 @@
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
-        <v-tooltip left>
-          <template #activator="{ on, attrs }">
-            <v-btn
-              v-on="on"
-              v-bind="attrs"
-              fab
-              x-small
-              class="mr-2"
-              min-width="0"
-              color="success"
-              @click="addOrder(item)"
-            >
-              <v-icon small> mdi-plus </v-icon>
-            </v-btn>
-          </template>
-          <span>添加订单</span>
-        </v-tooltip>
         <v-btn
           fab
           x-small
@@ -517,100 +508,21 @@
         </v-btn>
       </template>
     </v-data-table>
-    <v-dialog v-model="dialogAddOrder" persistent max-width="720" scrollable>
+    <v-dialog v-model="dialogOrder">
       <v-card>
         <v-toolbar dense>
-          <span class="headline">添加订单</span>
+          <span class="headline">订单管理</span>
           <v-spacer></v-spacer>
-          <v-icon @click="closeAddOrder">mdi-close</v-icon>
+          <v-icon @click="dialogOrder = false">mdi-close</v-icon>
         </v-toolbar>
         <v-card-text>
-          <v-container>
-            <v-form ref="form" v-model="valid">
-              <v-row>
-                <v-col cols="12">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    type="number"
-                    label="佣金"
-                    v-model="orderItem.commission"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="订单号"
-                    v-model="orderItem.orderId"
-                  />
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="评价链接"
-                    v-model="orderItem.reviewUrl"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-text-field
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="评价截图"
-                    v-model="orderItem.reviewImage"
-                  />
-                </v-col>
-                <v-col cols="6">
-                  <v-tooltip top>
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        block
-                        v-on="on"
-                        v-bind="attrs"
-                        color="primary"
-                        :disabled="uploading"
-                        @click="uploadFile"
-                      >
-                        <v-icon left v-if="orderItem.reviewImage">
-                          mdi-image
-                        </v-icon>
-                        上传评价截图
-                      </v-btn>
-                    </template>
-                    <v-img
-                      max-height="320"
-                      max-width="320"
-                      v-if="orderItem.reviewImage"
-                      :src="orderItem.reviewImage"
-                      :lazy-src="orderItem.reviewImage"
-                    />
-                    <span v-else>请上传图片</span>
-                  </v-tooltip>
-                </v-col>
-                <v-col cols="12">
-                  <DatePicker label="评价时间" v-model="orderItem.reviewTime" />
-                </v-col>
-              </v-row>
-            </v-form>
-          </v-container>
+          <Order
+            v-if="dialogOrder"
+            :tax="listItem.tax"
+            :_parent="listItem._id"
+            :exchangeRate="listItem.exchangeRate"
+          />
         </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" :disabled="!valid" @click="addOrderSubmit">
-            提交
-          </v-btn>
-          <v-btn color="secondary" @click="closeAddOrder"> 取消 </v-btn>
-        </v-card-actions>
       </v-card>
     </v-dialog>
   </v-container>
@@ -736,11 +648,10 @@ export default {
     reviewType: ['免评', 'rating', 'feedback', 'review', '点赞 & QA'],
     reviewStatus: ['已停止', '任务执行中', '已完成'],
     file: null,
-    accept: '.xls,.xlsx',
     list: [],
     dialog: false,
     dialogDelete: false,
-    dialogAddOrder: false,
+    dialogOrder: false,
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
@@ -822,10 +733,6 @@ export default {
     },
     closeAdd() {
       this.dialog = false
-      this.close()
-    },
-    closeAddOrder() {
-      this.dialogAddOrder = false
       this.close()
     },
     closeDelete() {
@@ -933,13 +840,13 @@ export default {
       }
     },
     importExcel() {
-      ;(this.accept = '.xls,.xlsx'), (this.file = null)
+      this.file = null
       this.$nextTick(() => {
         this.$refs.uploadFile.$refs.input.click()
       })
     },
     uploadFile() {
-      ;(this.accept = 'image/*'), (this.file = null)
+      this.file = null
       this.$nextTick(() => {
         this.$refs.uploadFile.$refs.input.click()
       })
@@ -953,13 +860,6 @@ export default {
         content: '文件上传中...',
         color: 'secondary'
       })
-      if (this.dialogAddOrder) {
-        // 上传评价截图
-        const { publicPath } = await this.$uploadFile(this.file, 'order')
-        this.$set(this.orderItem, 'reviewImage', publicPath)
-        this.uploading = false
-        return
-      }
       if (/^image\//.test(this.file.type)) {
         // 上传主图
         const { publicPath } = await this.$uploadFile(this.file, 'review')
@@ -1055,38 +955,12 @@ export default {
         })
       }
     },
-    addOrder(item) {
-      this.$set(this.orderItem, '_parent', item._id)
-      this.dialogAddOrder = true
-    },
-    async addOrderSubmit() {
-      const data = Object.assign({}, this.orderItem)
-      const params = this.getPureData(data)
-      const { errors } = await this.$altogic.db
-        .model('users.review.orders')
-        .object()
-        .append(params, params._parent)
-      if (errors) {
-        this.$notifier.showMessage({
-          content: errors,
-          color: 'error'
-        })
-      } else {
-        this.$notifier.showMessage({
-          color: 'success',
-          content: '添加成功'
-        })
-        await this.getList()
-        this.closeAddOrder()
+    viewOrders(item) {
+      this.editedIndex = this.list.indexOf(item)
+      if (this.editedIndex > -1) {
+        this.listItem = Object.assign({}, item)
+        this.dialogOrder = true
       }
-    },
-    toOrders(item) {
-      this.$router.push({
-        name: 'admin-order',
-        params: {
-          _parent: item._id
-        }
-      })
     }
   }
 }

@@ -12,13 +12,7 @@
   {
     "icon": "mdi-account-group",
     "title": "测评管理",
-    "children": [
-      {
-        "icon": "mdi-check",
-        "title": "测评任务",
-        "to": "/user/review"
-      }
-    ]
+    "to": "/user/review"
   },
   {
     "icon": "mdi-advertisements",

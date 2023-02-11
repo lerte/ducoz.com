@@ -8,7 +8,6 @@
       @change="fileChange"
     />
     <v-data-table
-      show-select
       :items="list"
       item-key="_id"
       :headers="headers"
@@ -16,7 +15,7 @@
       v-model="selected"
       class="elevation-1"
       :options.sync="options"
-      @click:row="manageOrders"
+      @click:row="viewOrders"
       :server-items-length="totalCount"
       :footer-props="require('@/assets/json/footer-props.json')"
     >
@@ -287,7 +286,12 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" :disabled="!valid" @click="submit">
+                <v-btn
+                  @click="submit"
+                  color="primary"
+                  :loading="loading"
+                  :disabled="!valid || loading"
+                >
                   提交
                 </v-btn>
                 <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>
@@ -308,7 +312,7 @@
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
-                {{ `你确定要删除这${listItem.length || ''}条信息吗?` }}
+                {{ `你确定要删除这${listItem.length || ''}个任务吗?` }}
               </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -390,7 +394,7 @@
           small
           text-color="white"
           color="success"
-          @click="toOrders(item)"
+          @click.stop="viewOrders(item)"
         >
           {{ item.orders?.length }} / {{ item.totalOrders }}
         </v-chip>
@@ -412,7 +416,7 @@
               <v-icon small> mdi-content-copy </v-icon>
             </v-btn>
           </template>
-          <span>复制</span>
+          <span>复制，然后修改主图或其他内容，主要用于添加变体</span>
         </v-tooltip>
         <v-btn
           fab
@@ -434,7 +438,7 @@
               class="mr-2"
               min-width="0"
               color="secondary"
-              @click="stopReview(item)"
+              @click.stop="stopReview(item)"
             >
               <v-icon small> mdi-power </v-icon>
             </v-btn>
@@ -447,7 +451,7 @@
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
-          v-if="!item.orderProgress"
+          v-if="!item.reviewStatus"
         >
           <v-icon small> mdi-delete </v-icon>
         </v-btn>
@@ -462,6 +466,23 @@
           <v-btn color="primary" @click="stopReviewConfirm">确定</v-btn>
           <v-spacer />
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogOrder">
+      <v-card>
+        <v-toolbar dense>
+          <span class="headline">订单管理</span>
+          <v-spacer></v-spacer>
+          <v-icon @click="dialogOrder = false">mdi-close</v-icon>
+        </v-toolbar>
+        <v-card-text>
+          <Order
+            v-if="dialogOrder"
+            :tax="listItem.tax"
+            :_parent="listItem._id"
+            :exchangeRate="listItem.exchangeRate"
+          />
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-container>
@@ -540,6 +561,11 @@ export default {
         sortable: false
       },
       {
+        text: '备注',
+        value: 'clientRemark',
+        sortable: false
+      },
+      {
         text: '任务状态',
         value: 'reviewStatus',
         sortable: false
@@ -584,6 +610,7 @@ export default {
     dialog: false,
     dialogDelete: false,
     dialogStop: false,
+    dialogOrder: false,
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
@@ -610,9 +637,6 @@ export default {
     }
   },
   methods: {
-    manageOrders(item) {
-      console.log(item)
-    },
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options
@@ -661,6 +685,12 @@ export default {
       })
     },
     async copyItem(item) {
+      // 税费，汇率，待退款金额，任务状态，订单，不复制
+      delete item['tax']
+      delete item['refund']
+      delete item['orders']
+      delete item['exchangeRate']
+      delete item['reviewStatus']
       this.listItem = Object.assign({}, item)
       await this.addItem()
     },
@@ -891,17 +921,12 @@ export default {
         this.dialogStop = false
       }
     },
-    toOrders(item) {
-      this.$router.push({
-        name: 'user-order',
-        params: {
-          _parent: item._id
-        },
-        query: {
-          tax: item.tax,
-          exchangeRate: item.exchangeRate
-        }
-      })
+    viewOrders(item) {
+      this.editedIndex = this.list.indexOf(item)
+      if (this.editedIndex > -1) {
+        this.listItem = Object.assign({}, item)
+        this.dialogOrder = true
+      }
     }
   }
 }

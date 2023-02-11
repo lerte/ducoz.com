@@ -61,7 +61,12 @@
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="primary" :disabled="!valid" @click="submit">
+                <v-btn
+                  color="primary"
+                  :loading="loading"
+                  :disabled="!valid || loading"
+                  @click="submit"
+                >
                   提交
                 </v-btn>
                 <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>

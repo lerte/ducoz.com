@@ -81,18 +81,9 @@ export default {
   },
   methods: {
     removeEmpty(obj) {
-      Object.keys(obj).forEach((k) => {
-        if (obj[k] == null) {
-          delete obj[k]
-        }
-        if (typeof obj[k] == 'string') {
-          obj[k] = obj[k].trim()
-        }
-        if (obj[k] == '') {
-          delete obj[k]
-        }
-        if (!obj[k] && obj[k] != 0) {
-          delete obj[k]
+      Object.keys(obj).forEach((key) => {
+        if (obj[key] == null || obj[key] == undefined) {
+          delete obj[key]
         }
       })
       return obj
