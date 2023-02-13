@@ -18,19 +18,19 @@
           class="text-lg leading-[48px] flex justify-center items-center"
         >
           {{ item.text }}
-          <v-icon class="ml-2" :style="`color: ${item.color}`">{{
-            item.icon
-          }}</v-icon>
+          <v-icon class="ml-2" :style="`color: ${item.color}`">
+            {{ item.icon }}
+          </v-icon>
         </NuxtLink>
       </div>
-      <div class="flex items-center justify-center">
+      <!-- <div class="flex items-center justify-center">
         <button
           @click="developTips"
           class="mx-auto lg:mx-0 gradient text-white font-bold rounded-full my-6 py-4 px-8 shadow-lg"
         >
           了解更多...
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -6,10 +6,13 @@
       class="mt-16 bg-white container h-[calc(100vh_-_104px)] overflow-hidden overflow-y-auto"
     >
       <article
-        class="text-left tiptap-vuetify-editor__content"
-        v-if="business.length"
+        v-if="!loading && business.length"
         v-html="business[0]?.content"
+        class="text-left tiptap-vuetify-editor__content"
       />
+      <div v-else class="h-full flex items-center justify-center">
+        <Spinner />
+      </div>
     </div>
     <NuxtLink
       v-if="business.length"
@@ -21,25 +24,23 @@
   </main>
 </template>
 
-<style scoped>
-table {
-  border: 1px solid;
-}
-</style>
-
 <script>
 export default {
   name: 'business',
-  async asyncData({ app, params }) {
-    const { data, errors } = await app.$altogic.db
+  data: () => ({
+    loading: true,
+    business: []
+  }),
+  async created() {
+    const { params } = this.$route
+    const { data, errors } = await this.$altogic.db
       .model('businesses')
       .filter(`name == "${params.name}"`)
       .get()
     if (!errors) {
-      return { business: data }
-    } else {
-      return { business: [] }
+      this.business = data
     }
+    this.loading = false
   }
 }
 </script>
