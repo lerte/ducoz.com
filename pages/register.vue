@@ -42,6 +42,7 @@
 <script>
 export default {
   name: 'register',
+  layout: 'home',
   middleware: ['guest'],
   data: () => ({
     email: '',
