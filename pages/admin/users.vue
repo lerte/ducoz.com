@@ -69,7 +69,7 @@
                           v-model="listItem.password"
                         />
                       </v-col>
-                      <v-col cols="12">
+                      <v-col cols="6">
                         <v-autocomplete
                           :items="[
                             { value: true, text: '是' },
@@ -81,7 +81,23 @@
                           clearable
                           small-chips
                           hide-details
-                          label="管理员"
+                          label="邮箱是否激活"
+                          v-model="listItem.emailVerified"
+                        />
+                      </v-col>
+                      <v-col cols="6">
+                        <v-autocomplete
+                          :items="[
+                            { value: true, text: '是' },
+                            { value: false, text: '否' }
+                          ]"
+                          chips
+                          dense
+                          outlined
+                          clearable
+                          small-chips
+                          hide-details
+                          label="是否是管理员"
                           v-model="listItem.isAdmin"
                         />
                       </v-col>
@@ -369,7 +385,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('news')
+        .model('users')
         .object()
         .create(params)
       if (errors) {
@@ -410,7 +426,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('news')
+            .model('users')
             .object(item._id)
             .delete()
           if (errors) {
@@ -423,7 +439,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('news')
+          .model('users')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -441,7 +457,8 @@ export default {
       const params = this.getPureData({
         _id: data._id,
         isAdmin: data.isAdmin,
-        password: data.password
+        password: data.password,
+        emailVerified: data.emailVerified
       })
       const { errors } = await this.$altogic.db
         .model('users')
