@@ -272,8 +272,7 @@ export default {
       {
         text: '邮箱是否验证',
         value: 'emailVerified',
-        sortable: false,
-        searchable: true
+        sortable: false
       },
       {
         text: '注册时间',
