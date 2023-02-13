@@ -2,7 +2,10 @@
   <main
     class="h-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
   >
-    <article>
+    <div v-if="loading" class="h-full flex items-center justify-center">
+      <Spinner />
+    </div>
+    <article v-else>
       <p>{{ news.title }}</p>
       <p>{{ news.content }}</p>
     </article>
@@ -12,16 +15,20 @@
 <script>
 export default {
   name: 'news-detail',
-  async asyncData({ app, params }) {
-    const { data, errors } = await app.$altogic.db
+  data: () => ({
+    loading: true,
+    news: {}
+  }),
+  async created() {
+    const { params } = this.$route
+    const { data, errors } = await this.$altogic.db
       .model('news')
       .object(params.id)
       .get()
     if (!errors) {
-      return { news: data }
-    } else {
-      return { news: {} }
+      this.news = data
     }
+    this.loading = false
   }
 }
 </script>

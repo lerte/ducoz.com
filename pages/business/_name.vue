@@ -5,14 +5,14 @@
     <div
       class="mt-16 bg-white container h-[calc(100vh_-_104px)] overflow-hidden overflow-y-auto"
     >
+      <div v-if="loading" class="h-full flex items-center justify-center">
+        <Spinner />
+      </div>
       <article
-        v-if="!loading && business.length"
+        v-else
         v-html="business[0]?.content"
         class="text-left tiptap-vuetify-editor__content"
       />
-      <div v-else class="h-full flex items-center justify-center">
-        <Spinner />
-      </div>
     </div>
     <NuxtLink
       v-if="business.length"
