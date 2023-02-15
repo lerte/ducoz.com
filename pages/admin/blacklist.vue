@@ -286,7 +286,7 @@ export default {
       const { data, errors } = await this.$altogic.db
         .model('blacklist')
         .filter(params)
-        .sort('createdTime', 'desc')
+        .sort('id', 'desc')
         .limit(itemsPerPage)
         .page(page)
         .get({ returnCountInfo: true })
