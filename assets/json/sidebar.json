@@ -23,5 +23,10 @@
     "icon": "mdi-account-group",
     "title": "测评管理",
     "to": "/admin/review"
+  },
+  {
+    "icon": "mdi-account-off",
+    "title": "测评黑名单",
+    "to": "/admin/blacklist"
   }
 ]
