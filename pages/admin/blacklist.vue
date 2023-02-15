@@ -128,6 +128,17 @@
         </v-tooltip>
       </template>
 
+      <template #[`item.createdTime`]="{ item }">
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.createdTime | format }}
+            </span>
+          </template>
+          <span>{{ item.createdTime }}</span>
+        </v-tooltip>
+      </template>
+
       <template #[`item.actions`]="{ item }">
         <v-btn
           fab
@@ -154,6 +165,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 export default {
   name: 'blacklist',
   layout: 'admin',
@@ -274,6 +286,7 @@ export default {
       const { data, errors } = await this.$altogic.db
         .model('blacklist')
         .filter(params)
+        .sort('createdTime', 'desc')
         .limit(itemsPerPage)
         .page(page)
         .get({ returnCountInfo: true })
@@ -380,6 +393,7 @@ export default {
         }
       }
       await this.getList()
+      this.selected = []
       this.loading = false
       this.closeDelete()
     },
@@ -406,21 +420,38 @@ export default {
         this.$refs.uploadFile.$refs.input.click()
       })
     },
+    isValidDate(d) {
+      return d instanceof Date && !isNaN(d)
+    },
     async fileChange() {
       if (!this.file) {
         return
       }
+      const fileName = this.file.name.slice(0, 10)
+      const datetime = new Date(fileName)
+      if (!this.isValidDate(datetime)) {
+        this.$notifier.showMessage({
+          color: 'error',
+          content: '文件名不对，不符合日期格式'
+        })
+        return
+      }
+
       this.uploading = true
       this.$notifier.showMessage({
         content: '文件上传中...',
         color: 'secondary'
       })
+
       const text = await this.readAsText(this.file)
       const { list } = JSON.parse(text)
-      const data = list.map((item) =>
+      const data = list.map((item, index) =>
         this.getPureData({
           id: item['id'],
-          createdTime: item['createdTime'],
+          createdTime: dayjs(item['createdTime']).add(
+            60 * 24 - (index + 1),
+            'minute'
+          ),
           country: item['marketName'],
           summary: item['summary'],
           wechat: item['reviewerExposure']['wechat'],
