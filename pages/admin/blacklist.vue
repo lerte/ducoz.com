@@ -28,14 +28,35 @@
           <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
             <v-icon left> mdi-delete </v-icon>删除
           </v-btn>
-          <v-btn
-            color="success"
-            @click="importJSON"
-            :loading="uploading"
-            :disabled="uploading"
-          >
-            <v-icon left> mdi-import </v-icon> 批量导入
-          </v-btn>
+          <v-menu bottom offset-y transition="scale-transition">
+            <template #activator="{ attrs, on }">
+              <v-btn color="success" dark v-bind="attrs" v-on="on">
+                <v-icon left> mdi-import </v-icon> 批量导入
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item>
+                <v-btn
+                  color="primary"
+                  @click="importJSON"
+                  :loading="uploading"
+                  :disabled="uploading"
+                >
+                  <v-icon left> mdi-file </v-icon> 选择单个文件
+                </v-btn>
+              </v-list-item>
+              <v-list-item>
+                <v-btn
+                  color="primary"
+                  @click="importFolder"
+                  :loading="uploading"
+                  :disabled="uploading"
+                >
+                  <v-icon left> mdi-folder </v-icon> 选择文件夹
+                </v-btn>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </v-toolbar>
         <v-dialog v-model="dialogDelete" width="auto">
           <v-card>
@@ -436,14 +457,31 @@ export default {
         })
         return
       }
-
       this.uploading = true
       this.$notifier.showMessage({
         content: '文件上传中...',
         color: 'secondary'
       })
-
-      const text = await this.readAsText(this.file)
+      await this.importFile(this.file)
+      this.$notifier.showMessage({
+        color: 'success',
+        content: '导入成功'
+      })
+      await this.getList()
+      this.uploading = false
+    },
+    readAsText(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = reject
+        reader.readAsText(file)
+      })
+    },
+    async importFile(file) {
+      const text = await this.readAsText(file)
       const { list } = JSON.parse(text)
       const data = list.map((item, index) =>
         this.getPureData({
@@ -474,22 +512,22 @@ export default {
           })
         }
       }
-      this.$notifier.showMessage({
-        color: 'success',
-        content: '导入成功'
-      })
-      await this.getList()
-      this.uploading = false
     },
-    readAsText(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-          resolve(reader.result)
+    async importFolder() {
+      try {
+        const dirHandle = await window.showDirectoryPicker()
+        for await (const entry of dirHandle.values()) {
+          if (entry.kind === 'file') {
+            const file = await entry.getFile()
+            await this.importFile(file)
+          }
         }
-        reader.onerror = reject
-        reader.readAsText(file)
-      })
+      } catch (error) {
+        this.$notifier.showMessage({
+          content: error.message,
+          color: 'error'
+        })
+      }
     }
   }
 }
