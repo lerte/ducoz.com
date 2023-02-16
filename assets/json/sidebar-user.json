@@ -15,6 +15,11 @@
     "to": "/user/review"
   },
   {
+    "icon": "mdi-account-off",
+    "title": "测评黑名单",
+    "to": "/user/blacklist"
+  },
+  {
     "icon": "mdi-advertisements",
     "title": "广告开户",
     "children": [
