@@ -12,10 +12,10 @@
     >
       <div class="w-full pt-6 text-3xl text-gray-600 font-bold text-center">
         <NuxtLink
-          :to="`/business/${item.value}`"
           :key="index"
+          :to="`/business/${item.value}`"
           v-for="(item, index) in items"
-          class="text-lg leading-[48px] flex justify-center items-center"
+          class="text-lg leading-[48px] flex justify-center items-center hover:bg-secondary hover:text-white"
         >
           {{ item.text }}
           <v-icon class="ml-2" :style="`color: ${item.color}`">
