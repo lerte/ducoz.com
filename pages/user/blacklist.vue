@@ -101,19 +101,6 @@
           <span>{{ item.createdTime }}</span>
         </v-tooltip>
       </template>
-
-      <template #[`item.actions`]="{ item }">
-        <v-btn
-          fab
-          x-small
-          class="mr-2"
-          min-width="0"
-          color="primary"
-          @click.stop="editItem(item)"
-        >
-          <v-icon small> mdi-pencil </v-icon>
-        </v-btn>
-      </template>
     </v-data-table>
   </v-container>
 </template>
@@ -182,8 +169,7 @@ export default {
         text: '发布时间',
         value: 'createdTime',
         sortable: false
-      },
-      { text: '操作', value: 'actions', sortable: false }
+      }
     ],
     country: require('@/assets/json/countries.json'),
     list: [],
