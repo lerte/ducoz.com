@@ -301,7 +301,7 @@ export default {
     selected: [],
     options: {
       page: 1,
-      itemsPerPage: 12
+      itemsPerPage: 10
     },
     headers: [
       {

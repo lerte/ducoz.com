@@ -114,7 +114,7 @@ export default {
     totalCount: 0,
     options: {
       page: 1,
-      itemsPerPage: 12
+      itemsPerPage: 10
     },
     headers: [
       {
