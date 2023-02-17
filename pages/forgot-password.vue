@@ -1,13 +1,16 @@
 <template>
   <main class="flex flex-col items-center justify-center py-16 h-96 gap-4 px-4">
     <form
-      @submit.prevent="registerHandler"
+      @submit.prevent="loginHandler"
       class="flex flex-col gap-2 w-full md:w-96"
     >
-      <h1 class="self-start text-3xl font-bold text-white">创建账号</h1>
+      <h1 class="self-start text-3xl font-bold text-white">通过邮箱重设密码</h1>
 
-      <div v-if="isNeedToVerify" class="bg-green-500 text-white p-2">
-        恭喜你创建成功，请检查您的邮箱，激活账号
+      <div
+        v-if="successMessage"
+        class="bg-green-600 text-white text-[13px] p-2"
+      >
+        {{ successMessage }}
       </div>
 
       <div v-if="errors" class="bg-red-600 text-white text-[13px] p-2">
@@ -16,17 +19,14 @@
         </p>
       </div>
 
-      <input v-model="email" type="email" placeholder="输入您的邮箱" required />
-      <input v-model="name" type="text" placeholder="输入您的名称" required />
       <input
-        v-model="password"
-        type="password"
-        autocomplete="new-password"
-        placeholder="输入您的密码"
         required
+        type="email"
+        v-model="email"
+        placeholder="请输入您的邮箱"
       />
-      <div class="flex items-center justify-between">
-        <NuxtLink class="text-white" to="/login"> 已有账号，点击登录 </NuxtLink>
+      <div class="flex items-start justify-between pt-4">
+        <NuxtLink class="text-white" to="/login"> 返回登录 </NuxtLink>
         <button
           disabled
           type="button"
@@ -50,14 +50,14 @@
               fill="#1C64F2"
             />
           </svg>
-          注册中...
+          发送中...
         </button>
         <button
           v-else
           type="submit"
           class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
         >
-          注册
+          确认
         </button>
       </div>
     </form>
@@ -66,50 +66,36 @@
 
 <script>
 export default {
-  name: 'register',
+  name: 'forgot-password',
   layout: 'home',
   middleware: ['guest'],
   data: () => ({
     email: '',
-    name: '',
-    password: '',
-    loading: false,
     errors: null,
-    isNeedToVerify: false
+    loading: false,
+    successMessage: null
   }),
   methods: {
-    async registerHandler() {
+    async loginHandler() {
+      await this.$router.push({
+        name: 'reset-password',
+        query: {
+          accessToken: 'test token'
+        }
+      })
+      return
       this.loading = true
       this.errors = null
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-          name: this.name
-        })
-      })
-      const { user, session, errors: apiErrors } = await res.json()
+      const { errors: apiErrors } = await this.$altogic.auth.sendResetPwdEmail(
+        this.email
+      )
       this.loading = false
       if (apiErrors) {
         this.errors = apiErrors
-        return
+      } else {
+        this.email = ''
+        this.successMessage = '邮件已发送! 请检查收件箱.'
       }
-      this.email = ''
-      this.password = ''
-      this.name = ''
-
-      if (!session) {
-        this.isNeedToVerify = true
-        return
-      }
-
-      this.$store.commit('setUser', user)
-      this.$store.commit('setSession', session)
-      await this.$router.push('/user')
     }
   }
 }

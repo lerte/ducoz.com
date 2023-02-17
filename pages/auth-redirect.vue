@@ -23,16 +23,28 @@ export default {
     errors: null
   }),
   async fetch() {
-    const { access_token } = this.$route.query
-    const res = await fetch(`/api/verify-user?access_token=${access_token}`)
-    const { session, user, errors: apiErrors } = await res.json()
-    if (apiErrors) {
-      this.errors = apiErrors
-      return
+    const { access_token, action } = this.$route.query
+    if (action == 'reset-pwd') {
+      // 重设密码
+      await this.$router.push({
+        name: 'reset-password',
+        query: {
+          accessToken: 'access_token'
+        }
+      })
     }
-    this.$store.commit('setUser', user)
-    this.$store.commit('setSession', session)
-    await this.$router.push('/user')
+    if (action == 'magic-link') {
+      // 通过邮箱登录
+      const res = await fetch(`/api/verify-user?access_token=${access_token}`)
+      const { session, user, errors: apiErrors } = await res.json()
+      if (apiErrors) {
+        this.errors = apiErrors
+        return
+      }
+      this.$store.commit('setUser', user)
+      this.$store.commit('setSession', session)
+      await this.$router.push('/user')
+    }
   },
   fetchOnServer: false
 }

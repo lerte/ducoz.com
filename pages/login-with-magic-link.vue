@@ -4,7 +4,7 @@
       @submit.prevent="loginHandler"
       class="flex flex-col gap-2 w-full md:w-96"
     >
-      <h1 class="self-start text-3xl font-bold text-white">通过邮箱链接登陆</h1>
+      <h1 class="self-start text-3xl font-bold text-white">通过邮箱链接登录</h1>
 
       <div
         v-if="successMessage"
@@ -33,7 +33,7 @@
           disabled
           type="button"
           v-if="loading"
-          class="py-2.5 px-5 mr-2 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
+          class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 inline-flex items-center"
         >
           <svg
             aria-hidden="true"
@@ -57,7 +57,7 @@
         <button
           v-else
           type="submit"
-          class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+          class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
         >
           发送邮箱链接
         </button>
@@ -70,15 +70,13 @@
 export default {
   name: 'login-with-magic-link',
   layout: 'home',
-  data() {
-    return {
-      loading: false,
-      errors: null,
-      email: '',
-      successMessage: null
-    }
-  },
   middleware: ['guest'],
+  data: () => ({
+    email: '',
+    errors: null,
+    loading: false,
+    successMessage: null
+  }),
   methods: {
     async loginHandler() {
       this.loading = true
@@ -91,7 +89,7 @@ export default {
         this.errors = apiErrors
       } else {
         this.email = ''
-        this.successMessage = 'Email sent! Check your inbox.'
+        this.successMessage = '邮件已发送! 请检查收件箱.'
       }
     }
   }
