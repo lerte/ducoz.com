@@ -29,7 +29,7 @@ export default {
       await this.$router.push({
         name: 'reset-password',
         query: {
-          accessToken: 'access_token'
+          access_token
         }
       })
     }

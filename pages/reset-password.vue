@@ -89,10 +89,10 @@ export default {
       }
       this.loading = true
       this.errors = null
-      const { errors: apiErrors } = await this.$altogic.auth.resetPwdWithToken({
-        accessToken: this.$route.query?.accessToken,
-        newPassword: this.newPassword
-      })
+      const { errors: apiErrors } = await this.$altogic.auth.resetPwdWithToken(
+        this.$route.query?.access_token,
+        this.newPassword
+      )
       this.loading = false
       if (apiErrors) {
         this.errors = apiErrors
