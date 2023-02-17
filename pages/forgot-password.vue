@@ -77,13 +77,6 @@ export default {
   }),
   methods: {
     async loginHandler() {
-      await this.$router.push({
-        name: 'reset-password',
-        query: {
-          accessToken: 'test token'
-        }
-      })
-      return
       this.loading = true
       this.errors = null
       const { errors: apiErrors } = await this.$altogic.auth.sendResetPwdEmail(
