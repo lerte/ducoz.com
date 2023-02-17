@@ -17,7 +17,7 @@
   {
     "icon": "mdi-account-off",
     "title": "测评黑名单",
-    "to": "/user/blacklist"
+    "to": "/user/search-blacklist"
   },
   {
     "icon": "mdi-advertisements",
