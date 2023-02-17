@@ -57,6 +57,12 @@
               </v-list-item>
             </v-list>
           </v-menu>
+          <Search
+            ref="search"
+            @doSearch="doSearch"
+            :headers="headers"
+            :dicts="{ country }"
+          />
         </v-toolbar>
         <v-dialog v-model="dialogDelete" width="auto">
           <v-card>
@@ -208,7 +214,8 @@ export default {
       {
         text: '国家',
         value: 'country',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: '被曝光人',
@@ -228,7 +235,8 @@ export default {
       {
         text: '邮箱',
         value: 'email',
-        sortable: false
+        sortable: false,
+        searchable: true
       },
       {
         text: 'FB主页',
@@ -252,6 +260,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    country: require('@/assets/json/countries.json'),
     file: null,
     uploading: false,
     list: [],
@@ -307,7 +316,7 @@ export default {
       const { data, errors } = await this.$altogic.db
         .model('blacklist')
         .filter(params)
-        .sort('id', 'desc')
+        .sort('createdTime', 'desc')
         .limit(itemsPerPage)
         .page(page)
         .get({ returnCountInfo: true })
