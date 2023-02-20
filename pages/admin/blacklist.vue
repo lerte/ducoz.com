@@ -170,16 +170,6 @@
         <v-btn
           fab
           x-small
-          class="mr-2"
-          min-width="0"
-          color="primary"
-          @click.stop="editItem(item)"
-        >
-          <v-icon small> mdi-pencil </v-icon>
-        </v-btn>
-        <v-btn
-          fab
-          x-small
           min-width="0"
           color="error"
           @click.stop="deleteItem(item)"
@@ -490,15 +480,18 @@ export default {
       })
     },
     async importFile(file) {
+      const fileName = file.name.slice(0, 10)
       const text = await this.readAsText(file)
       const { list } = JSON.parse(text)
-      const data = list.map((item, index) =>
-        this.getPureData({
+      const data = list.map((item, index) => {
+        let createdTime = item.createdTime
+        if (!this.isValidDate(new Date(createdTime))) {
+          // 如果数据里面的创建时间不符合日期格式，就使用文件名的日期
+          createdTime = dayjs(fileName).add(60 * 24 - (index + 1), 'minute')
+        }
+        return this.getPureData({
           id: item['id'],
-          createdTime: dayjs(item['createdTime']).add(
-            60 * 24 - (index + 1),
-            'minute'
-          ),
+          createdTime,
           country: item['marketName'],
           summary: item['summary'],
           wechat: item['reviewerExposure']['wechat'],
@@ -508,7 +501,7 @@ export default {
           twitterIdCode: item['reviewerExposure']['twitterIdCode'],
           name: item['reviewerExposure']['name']
         })
-      )
+      })
       for (let params of data) {
         const { errors } = await this.$altogic.db
           .model('blacklist')
