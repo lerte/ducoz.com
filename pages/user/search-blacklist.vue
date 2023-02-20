@@ -25,6 +25,10 @@
         <v-divider />
       </template>
 
+      <template #[`item.country`]="{ item }">
+        <Country :country="item.country" />
+      </template>
+
       <template #[`item.summary`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
