@@ -128,6 +128,17 @@
         </v-tooltip>
       </template>
 
+      <template #[`item.email`]="{ item }">
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.email)">
+              {{ item.email | ellipsis(10) }}
+            </span>
+          </template>
+          <span>{{ item.email }}</span>
+        </v-tooltip>
+      </template>
+
       <template #[`item.facebookUrl`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
