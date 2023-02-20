@@ -22,7 +22,7 @@ def mapItem(item):
   }
 
 def writeFile(fileName, jsonData):
-  with open('./cache/amz123/'+fileName+'.json', 'w') as file:
+  with open('./.cache/amz123/'+fileName+'.json', 'w') as file:
     json.dump(jsonData, file)
 
 

@@ -30,8 +30,14 @@
           </v-btn>
           <v-menu bottom offset-y transition="scale-transition">
             <template #activator="{ attrs, on }">
-              <v-btn color="success" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-import </v-icon> 批量导入
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                color="success"
+                :disabled="importFileName"
+              >
+                <v-icon left> mdi-import </v-icon>
+                {{ importFileName || '批量导入' }}
               </v-btn>
             </template>
             <v-list>
@@ -252,6 +258,7 @@ export default {
     ],
     country: require('@/assets/json/countries.json'),
     file: null,
+    importFileName: null,
     uploading: false,
     list: [],
     dialog: false,
@@ -365,7 +372,7 @@ export default {
       this.listItem = Object.assign({}, item)
       this.dialog = true
     },
-    async deleteItem(item) {
+    deleteItem(item) {
       if (item.length) {
         // 删除多个
         this.listItem = item
@@ -480,6 +487,7 @@ export default {
       })
     },
     async importFile(file) {
+      this.importFileName = file.name
       const fileName = file.name.slice(0, 10)
       const text = await this.readAsText(file)
       const { list } = JSON.parse(text)
@@ -514,6 +522,7 @@ export default {
           })
         }
       }
+      this.importFileName = null
     },
     async importFolder() {
       try {

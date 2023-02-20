@@ -23,7 +23,7 @@ def writeFile(fileName, jsonData):
     json.dump(jsonData, file)
 
 def getList(startTime, endTime, position):
-  print('正在爬取{}的数据,position:{}'.format(startTime, endTime))
+  print('正在爬取{}的数据,position:{}'.format(startTime, position))
   url = 'https://data.mjzj.com/api/Exposury/Search?type=ReviewerExposure&sortType=1size={}&postion={}&startTime={}&endTime={}'.format(position, size, startTime, endTime)
   with requests.Session() as session:
     session.get('https://mjzj.com/checkevaluate')
@@ -45,7 +45,7 @@ def getList(startTime, endTime, position):
       time.sleep(60*5)
       getList(startTime, endTime, position)
 
-for day in getYearDates(2017):
+for day in getYearDates(2023):
   startTime = day
   endTime = day + datetime.timedelta(days = 1)
   getList(startTime, endTime, 0)
