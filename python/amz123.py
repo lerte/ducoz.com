@@ -35,7 +35,7 @@ def getList():
     response = requests.post(url, json=payload)
     jsonData = response.json()
     rows = jsonData['data']['rows']
-    content = {'list': list(map(mapItem, rows))}
+    content = {'list': list(filter(lambda item: item['reviewerExposure']['email']!='', list(map(mapItem, rows))))}
     writeFile(str(payload['page']), content)
     total = jsonData['data']['total']
     totalPage = math.ceil(total/30)
