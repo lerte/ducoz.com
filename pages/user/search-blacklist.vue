@@ -2,7 +2,6 @@
   <v-container fluid>
     <v-data-table
       :items="list"
-      item-key="_id"
       :headers="headers"
       :loading="loading"
       class="elevation-1"
@@ -132,12 +131,6 @@ export default {
       itemsPerPage: 10
     },
     headers: [
-      {
-        text: 'Id',
-        value: 'id',
-        sortable: false,
-        searchable: true
-      },
       {
         text: '国家',
         value: 'country',
