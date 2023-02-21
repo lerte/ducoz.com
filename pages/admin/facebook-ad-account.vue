@@ -542,7 +542,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'facebook-ad-account',
-  layout: 'user',
+  layout: 'admin',
   data: () => ({
     loading: true,
     uploading: false,
@@ -658,7 +658,6 @@ export default {
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
         .model('users.facebook_ad_account')
-        .filter(`_parent == "${this.user._id}"`)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)

@@ -33,6 +33,7 @@ app.post('/login', async (req, res) => {
   altogic.auth.setSessionCookie(session.token, req, res)
   delete user['checkmail']
   delete user['review']
+  delete user['facebook_ad_account']
   return res.json({
     session,
     user

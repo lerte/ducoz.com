@@ -29,6 +29,7 @@ export const actions = {
     if (user) {
       delete user['checkmail']
       delete user['review']
+      delete user['facebook_ad_account']
       commit('setUser', user)
       commit('setSessionToken', session_token)
     }

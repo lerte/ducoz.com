@@ -28,5 +28,16 @@
     "icon": "mdi-account-off",
     "title": "测评黑名单",
     "to": "/admin/search-blacklist"
+  },
+  {
+    "icon": "mdi-advertisements",
+    "title": "广告开户",
+    "children": [
+      {
+        "icon": "mdi-facebook",
+        "title": "Facebook广告开户",
+        "to": "/admin/facebook-ad-account"
+      }
+    ]
   }
 ]
