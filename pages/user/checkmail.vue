@@ -409,6 +409,13 @@ export default {
         await this.getList()
         this.dialogTips = false
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">查邮管理-有新的需求</font>\n[点击查看](https://ducoz.com/admin/checkmail)'
+          }
+        })
       }
     },
     editItem(item) {
@@ -480,6 +487,13 @@ export default {
       } else {
         await this.getList()
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">查邮管理-有更新</font>\n[点击查看](https://ducoz.com/admin/checkmail)'
+          }
+        })
       }
     },
     importExcel() {

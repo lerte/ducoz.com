@@ -1,12 +1,34 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import https from 'https'
 import express from 'express'
 import { createClient } from 'altogic'
 import cookieParser from 'cookie-parser'
 
 const app = express()
-const { ENV_URL, CLIENT_KEY } = process.env
+const { ENV_URL, CLIENT_KEY, WEB_HOOK_KEY } = process.env
+
+function doRequest(options, data) {
+  return new Promise((resolve, reject) => {
+    const req = https.request(options, (res) => {
+      res.setEncoding('utf8')
+      let responseBody = ''
+      res.on('data', (chunk) => {
+        responseBody += chunk
+      })
+      res.on('end', () => {
+        resolve(JSON.parse(responseBody))
+      })
+    })
+    req.on('error', (err) => {
+      reject(err)
+    })
+    req.write(JSON.stringify(data))
+    req.end()
+  })
+}
+
 const altogic = createClient(ENV_URL, CLIENT_KEY, {
   signInRedirect: '/login'
 })
@@ -99,6 +121,20 @@ app.get('/logout', async (req, res) => {
   await altogic.auth.signOut(session_token)
   altogic.auth.removeSessionCookie(req, res)
   res.redirect('/login')
+})
+
+// 发送企业微信机器人消息
+app.post('/sendMessage', async (req, res) => {
+  const options = {
+    hostname: 'qyapi.weixin.qq.com',
+    path: `/cgi-bin/webhook/send?key=${WEB_HOOK_KEY}`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  await doRequest(options, req.body)
+  return res.json('Talk is cheap. Show me your code.')
 })
 
 export default app

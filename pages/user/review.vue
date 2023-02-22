@@ -713,6 +713,13 @@ export default {
         })
         await this.getList()
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">测评管理-有新的需求</font>\n[点击查看](https://ducoz.com/admin/review)'
+          }
+        })
       }
     },
     editItem(item) {
@@ -785,6 +792,13 @@ export default {
       } else {
         await this.getList()
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">测评管理-有更新</font>\n[点击查看](https://ducoz.com/admin/review)'
+          }
+        })
       }
     },
     importExcel() {

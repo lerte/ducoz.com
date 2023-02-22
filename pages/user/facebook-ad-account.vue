@@ -717,6 +717,13 @@ export default {
         })
         await this.getList()
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">Facebook-有新的需求</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
+          }
+        })
       }
     },
     editItem(item) {
@@ -747,7 +754,7 @@ export default {
         // 删除多个
         for (let item of this.listItem) {
           const { errors } = await this.$altogic.db
-            .model('users.review')
+            .model('users.facebook_ad_account')
             .object(item._id)
             .delete()
           if (errors) {
@@ -760,7 +767,7 @@ export default {
       } else {
         // 删除单个
         const { errors } = await this.$altogic.db
-          .model('users.review')
+          .model('users.facebook_ad_account')
           .object(this.listItem._id)
           .delete()
         if (errors) {
@@ -777,7 +784,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
       const { errors } = await this.$altogic.db
-        .model('users.review')
+        .model('users.facebook_ad_account')
         .object(params['_id'])
         .update(params)
       if (errors) {
@@ -788,6 +795,13 @@ export default {
       } else {
         await this.getList()
         this.closeAdd()
+        this.$sendMessage({
+          msgtype: 'markdown',
+          markdown: {
+            content:
+              '<font color="warning">Facebook-有更新</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
+          }
+        })
       }
     },
     uploadFile(which) {

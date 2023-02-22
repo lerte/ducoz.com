@@ -50,6 +50,15 @@ Vue.mixin({
         .upload(file.name, file)
       if (errors) throw new Error("Couldn't upload file")
       return data
+    },
+    async $sendMessage(message) {
+      await fetch('/api/sendMessage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(message)
+      })
     }
   }
 })
