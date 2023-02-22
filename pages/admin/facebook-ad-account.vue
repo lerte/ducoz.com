@@ -22,25 +22,6 @@
           <v-btn color="secondary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
-          <v-menu bottom offset-y transition="scale-transition">
-            <template #activator="{ attrs, on }">
-              <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>提交开户信息
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item>
-                <v-btn dark @click="dialog = true">
-                  <v-icon left>mdi-home</v-icon>Facebook国内广告开户
-                </v-btn>
-              </v-list-item>
-              <v-list-item>
-                <v-btn dark color="secondary" @click="developTips">
-                  <v-icon left>mdi-web</v-icon>Facebook海外广告开户
-                </v-btn>
-              </v-list-item>
-            </v-list>
-          </v-menu>
           <v-dialog v-model="dialogDelete" width="auto">
             <v-card>
               <v-card-title class="text-h5">
@@ -64,6 +45,17 @@
         <span @click.stop="$copy(item._id)">
           {{ item._id }}
         </span>
+      </template>
+
+      <template #[`item.accountType`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          :color="item.initialCharge ? 'primary' : 'success'"
+        >
+          {{ item.initialCharge ? '海外户' : '国内户' }}
+        </v-chip>
       </template>
 
       <template #[`item.createdAt`]="{ item }">
@@ -534,6 +526,116 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog persistent v-model="dialog2" max-width="720" scrollable>
+      <v-card>
+        <v-toolbar dense>
+          <span class="headline">{{ formTitle }}Facebook海外广告开户信息</span>
+          <v-spacer />
+          <v-icon @click="closeAdd">mdi-close</v-icon>
+        </v-toolbar>
+        <v-card-text>
+          <v-container>
+            <v-form ref="form" v-model="valid2">
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="公司名称"
+                    :rules="[rules.required]"
+                    v-model="listItem.companyName"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="邮箱"
+                    :rules="[rules.required]"
+                    v-model="listItem.email"
+                  />
+                </v-col>
+                <v-col cols="6">
+                  <v-text-field
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="手机"
+                    :rules="[rules.required]"
+                    v-model="listItem.phone"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="BMID"
+                    :rules="[rules.required]"
+                    v-model="listItem.bmid"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-textarea
+                    outlined
+                    auto-grow
+                    hide-details
+                    row-height="15"
+                    :rules="[rules.required]"
+                    label="Facebook主页"
+                    placeholder="多个主页请使用逗号或换行分开"
+                    v-model="listItem.facebookPage"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-autocomplete
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="时区选择"
+                    :rules="[rules.required]"
+                    v-model="listItem.timezone"
+                    :items="require('@/assets/json/timezones.json')"
+                  />
+                </v-col>
+                <v-col cols="12">
+                  <v-autocomplete
+                    dense
+                    outlined
+                    clearable
+                    hide-details
+                    label="首充"
+                    :rules="[rules.required]"
+                    v-model="listItem.initialCharge"
+                    :items="['$2000', '$5000', '$10000', '其他']"
+                  />
+                </v-col>
+              </v-row>
+            </v-form>
+          </v-container>
+        </v-card-text>
+        <v-divider />
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            color="primary"
+            :disabled="!valid2"
+            :loading="loading"
+            @click="submit"
+          >
+            提交
+          </v-btn>
+          <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -559,28 +661,28 @@ export default {
         searchable: true
       },
       {
-        text: '姓',
-        value: 'lastName',
+        text: '公司名称',
+        value: 'companyName',
         sortable: false
       },
       {
-        text: '名',
-        value: 'firstName',
+        text: 'Facebook主页',
+        value: 'facebookPage',
         sortable: false
       },
       {
-        text: '性别',
-        value: 'sex',
+        text: 'BMID',
+        value: 'bmid',
         sortable: false
       },
       {
-        text: '行业类型',
-        value: 'industry',
+        text: '广告时区',
+        value: 'timezone',
         sortable: false
       },
       {
-        text: '上传你的营业执照',
-        value: 'businessLicense',
+        text: '账号类型',
+        value: 'accountType',
         sortable: false
       },
       {
@@ -603,8 +705,10 @@ export default {
     accept: '',
     list: [],
     dialog: false,
+    dialog2: false,
     dialogDelete: false,
     valid: false,
+    valid2: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
     },
@@ -685,6 +789,7 @@ export default {
     },
     closeAdd() {
       this.dialog = false
+      this.dialog2 = false
       this.close()
     },
     closeDelete() {
@@ -721,7 +826,11 @@ export default {
     editItem(item) {
       this.editedIndex = this.list.indexOf(item)
       this.listItem = Object.assign({}, item)
-      this.dialog = true
+      if (this.listItem.initialCharge) {
+        this.dialog2 = true
+      } else {
+        this.dialog = true
+      }
     },
     async deleteItem(item) {
       if (item.length) {
