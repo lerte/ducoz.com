@@ -721,7 +721,7 @@ export default {
           msgtype: 'markdown',
           markdown: {
             content:
-              '<font color="warning">Facebook-有新的需求</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
+              '<font color="warning">Facebook广告开户-有新的需求</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
           }
         })
       }
@@ -799,7 +799,7 @@ export default {
           msgtype: 'markdown',
           markdown: {
             content:
-              '<font color="warning">Facebook-有更新</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
+              '<font color="warning">Facebook广告开户-有更新</font>\n[点击查看](https://ducoz.com/admin/facebook-ad-account)'
           }
         })
       }
