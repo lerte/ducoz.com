@@ -1,5 +1,24 @@
 <template>
-  <main class="flex flex-col items-center justify-center py-16 h-96 gap-4 px-4">
-    <p class="text-white">页面开发中...</p>
+  <main class="pt-16 bg-gray-100">
+    <div class="container grid grid-cols-4 gap-4">
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+      <Card />
+    </div>
   </main>
 </template>
+
+<script>
+export default {
+  name: 'oversea'
+}
+</script>

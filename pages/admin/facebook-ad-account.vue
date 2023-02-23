@@ -80,6 +80,21 @@
         </v-tooltip>
       </template>
 
+      <template #[`item.requestService`]="{ item }">
+        <v-btn
+          fab
+          x-small
+          class="mr-2"
+          min-width="0"
+          color="warning"
+          @click.stop="viewServices(item)"
+        >
+          <v-badge color="red" :content="item.requestService?.length || '0'">
+            <v-icon small> mdi-comment-question </v-icon>
+          </v-badge>
+        </v-btn>
+      </template>
+
       <template #[`item.actions`]="{ item }">
         <v-btn
           fab
@@ -617,6 +632,35 @@
                     :items="['$2000', '$5000', '$10000', '其他']"
                   />
                 </v-col>
+                <v-card width="100%" v-if="editedIndex > -1">
+                  <v-card-title> 反馈信息 </v-card-title>
+                  <v-divider />
+                  <v-card-text>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-autocomplete
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="开户状态"
+                          :items="['开户中', '已开户', '驳回']"
+                          v-model="listItem.accountStatus"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="广告账户编号"
+                          v-model="listItem.act"
+                        />
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
               </v-row>
             </v-form>
           </v-container>
@@ -634,6 +678,18 @@
           </v-btn>
           <v-btn color="secondary" @click="closeAdd"> 取消 </v-btn>
         </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogService">
+      <v-card>
+        <v-toolbar dense>
+          <span class="headline">请求服务</span>
+          <v-spacer />
+          <v-icon @click="dialogService = false">mdi-close</v-icon>
+        </v-toolbar>
+        <v-card-text>
+          <Service v-if="dialogService" :_parent="listItem._id" />
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-container>
@@ -686,6 +742,16 @@ export default {
         sortable: false
       },
       {
+        text: '请求服务',
+        value: 'requestService',
+        sortable: false
+      },
+      {
+        text: '开户状态',
+        value: 'accountStatus',
+        sortable: false
+      },
+      {
         text: '创建时间',
         value: 'createdAt',
         sortable: false
@@ -707,6 +773,7 @@ export default {
     dialog: false,
     dialog2: false,
     dialogDelete: false,
+    dialogService: false,
     valid: false,
     valid2: false,
     rules: {
@@ -917,6 +984,13 @@ export default {
       // 上传营业执照
       const { publicPath } = await this.$uploadFile(this.file, 'advertisement')
       this.$set(this.listItem, 'businessLicense', publicPath)
+    },
+    viewServices(item) {
+      this.editedIndex = this.list.indexOf(item)
+      if (this.editedIndex > -1) {
+        this.listItem = Object.assign({}, item)
+        this.dialogService = true
+      }
     }
   }
 }
