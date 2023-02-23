@@ -46,10 +46,13 @@ export default {
       this.scene = new Scene()
 
       const loader = new FBXLoader()
-      loader.load('/earth.fbx', (object) => {
-        this.mesh = object
-        this.scene.add(this.mesh)
-      })
+      loader.load(
+        'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/63d940c9a1ac9f2d382d6552/63f71a4b3d87683896800a4b',
+        (object) => {
+          this.mesh = object
+          this.scene.add(this.mesh)
+        }
+      )
 
       const ambientLight = new AmbientLight(0xffffff, 0.6)
       this.scene.add(ambientLight)
