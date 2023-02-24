@@ -183,7 +183,7 @@
               {{ item.createdTime | format }}
             </span>
           </template>
-          <span>{{ item.createdTime }}</span>
+          <span>{{ item.createdTime | localTime }}</span>
         </v-tooltip>
       </template>
 

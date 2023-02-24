@@ -6,6 +6,9 @@ Vue.mixin({
     format(datetime) {
       return dayjs(datetime).format('YYYY-MM-DD')
     },
+    localTime(datetime) {
+      return dayjs(datetime).format('YYYY-MM-DD HH:mm:ss')
+    },
     ellipsis(str, length) {
       if (str) {
         if (str.length > length) {

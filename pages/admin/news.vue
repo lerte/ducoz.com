@@ -159,7 +159,7 @@
               {{ item.createdAt | format }}
             </span>
           </template>
-          <span>{{ item.createdAt }}</span>
+          <span>{{ item.createdAt | localTime }}</span>
         </v-tooltip>
       </template>
       <template #[`item.updatedAt`]="{ item }">
@@ -169,7 +169,7 @@
               {{ item.updatedAt | format }}
             </span>
           </template>
-          <span>{{ item.updatedAt }}</span>
+          <span>{{ item.updatedAt | localTime }}</span>
         </v-tooltip>
       </template>
 

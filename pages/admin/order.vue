@@ -55,7 +55,7 @@
               {{ item.reviewTime | format }}
             </span>
           </template>
-          <span>{{ item.reviewTime }}</span>
+          <span>{{ item.reviewTime | localTime }}</span>
         </v-tooltip>
       </template>
       <template #[`item.createdAt`]="{ item }">
@@ -65,7 +65,7 @@
               {{ item.createdAt | format }}
             </span>
           </template>
-          <span>{{ item.createdAt }}</span>
+          <span>{{ item.createdAt | localTime }}</span>
         </v-tooltip>
       </template>
       <template #[`item.updatedAt`]="{ item }">
@@ -75,7 +75,7 @@
               {{ item.updatedAt | format }}
             </span>
           </template>
-          <span>{{ item.updatedAt }}</span>
+          <span>{{ item.updatedAt | localTime }}</span>
         </v-tooltip>
       </template>
 

@@ -189,7 +189,7 @@
               {{ item.signUpAt | format }}
             </span>
           </template>
-          <span>{{ item.signUpAt }}</span>
+          <span>{{ item.signUpAt | localTime }}</span>
         </v-tooltip>
       </template>
       <template #[`item.lastLoginAt`]="{ item }">
@@ -199,7 +199,7 @@
               {{ item.lastLoginAt | format }}
             </span>
           </template>
-          <span>{{ item.lastLoginAt }}</span>
+          <span>{{ item.lastLoginAt | localTime }}</span>
         </v-tooltip>
       </template>
 
