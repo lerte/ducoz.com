@@ -32,7 +32,7 @@
             <v-card>
               <v-toolbar dense>
                 <span class="headline">{{ formTitle }}订单</span>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>

@@ -33,7 +33,7 @@
             <v-card>
               <v-toolbar dense>
                 <span class="headline">{{ formTitle }}</span>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
@@ -283,9 +283,9 @@
                   </v-form>
                 </v-container>
               </v-card-text>
-              <v-divider></v-divider>
+              <v-divider />
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   @click="submit"
                   color="primary"
@@ -315,17 +315,17 @@
                 {{ `你确定要删除这${listItem.length || ''}个任务吗?` }}
               </v-card-title>
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn color="secondary" @click="dialogDelete = false">
                   取消
                 </v-btn>
                 <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
-                <v-spacer></v-spacer>
+                <v-spacer />
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-toolbar>
-        <v-divider></v-divider>
+        <v-divider />
       </template>
 
       <template #[`item._id`]="{ item }">
@@ -472,7 +472,7 @@
       <v-card>
         <v-toolbar dense>
           <span class="headline">订单管理</span>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-icon @click="dialogOrder = false">mdi-close</v-icon>
         </v-toolbar>
         <v-card-text>

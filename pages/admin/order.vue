@@ -127,7 +127,7 @@
       <v-card>
         <v-toolbar dense>
           <span class="headline">订单信息</span>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-icon @click="closeAdd">mdi-close</v-icon>
         </v-toolbar>
         <v-card-text>

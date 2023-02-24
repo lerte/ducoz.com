@@ -33,7 +33,7 @@
             <v-card>
               <v-toolbar dense>
                 <span class="headline">{{ formTitle }}</span>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
@@ -117,9 +117,9 @@
                   </v-form>
                 </v-container>
               </v-card-text>
-              <v-divider></v-divider>
+              <v-divider />
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn color="primary" :disabled="!valid" @click="submit">
                   提交
                 </v-btn>
@@ -144,17 +144,17 @@
                 {{ `你确定要删除这${listItem.length || ''}条信息吗?` }}
               </v-card-title>
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn color="secondary" @click="dialogDelete = false">
                   取消
                 </v-btn>
                 <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
-                <v-spacer></v-spacer>
+                <v-spacer />
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-toolbar>
-        <v-divider></v-divider>
+        <v-divider />
       </template>
 
       <template #[`item._id`]="{ item }">
@@ -223,13 +223,13 @@
       <v-card>
         <v-toolbar dense>
           <span class="headline">在线支付{{ amount }}</span>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-icon @click="dialogTips = false">mdi-close</v-icon>
         </v-toolbar>
         <v-card-text>
           <img alt="wxpay" src="@/assets/img/wxpay.jpg" style="width: 320px" />
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider />
         <v-card-actions>
           <v-btn block color="success" @click="addItemConfirm">
             支付成功确认

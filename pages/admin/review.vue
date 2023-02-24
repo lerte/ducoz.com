@@ -34,7 +34,7 @@
             <v-card>
               <v-toolbar dense>
                 <span class="headline">{{ formTitle }}</span>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-icon @click="closeAdd">mdi-close</v-icon>
               </v-toolbar>
               <v-card-text>
@@ -319,9 +319,9 @@
                   </v-form>
                 </v-container>
               </v-card-text>
-              <v-divider></v-divider>
+              <v-divider />
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer />
                 <v-btn
                   color="primary"
                   :loading="loading"
@@ -512,7 +512,7 @@
       <v-card>
         <v-toolbar dense>
           <span class="headline">订单管理</span>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-icon @click="dialogOrder = false">mdi-close</v-icon>
         </v-toolbar>
         <v-card-text>

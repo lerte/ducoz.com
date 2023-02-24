@@ -76,7 +76,7 @@
               {{ `你确定要删除这${listItem.length || ''}条信息吗?` }}
             </v-card-title>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn color="secondary" @click="dialogDelete = false">
                 取消
               </v-btn>
