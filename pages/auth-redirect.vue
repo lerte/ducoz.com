@@ -18,6 +18,7 @@
 
 <script>
 export default {
+  layout: 'home',
   middleware: ['guest'],
   data: () => ({
     errors: null
@@ -32,9 +33,8 @@ export default {
           access_token
         }
       })
-    }
-    if (action == 'magic-link') {
-      // 通过邮箱登录
+    } else {
+      // email-confirm  magic-link
       const res = await fetch(`/api/verify-user?access_token=${access_token}`)
       const { session, user, errors: apiErrors } = await res.json()
       if (apiErrors) {
