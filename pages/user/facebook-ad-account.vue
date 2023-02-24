@@ -702,7 +702,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogService">
+    <v-dialog v-model="dialogService" scrollable>
       <v-card>
         <v-toolbar dense>
           <span class="headline">请求服务</span>
