@@ -508,7 +508,7 @@
         </v-btn>
       </template>
     </v-data-table>
-    <v-dialog v-model="dialogOrder">
+    <v-dialog v-model="dialogOrder" scrollable>
       <v-card>
         <v-toolbar dense>
           <span class="headline">订单管理</span>

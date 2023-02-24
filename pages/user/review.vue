@@ -468,7 +468,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogOrder">
+    <v-dialog v-model="dialogOrder" scrollable>
       <v-card>
         <v-toolbar dense>
           <span class="headline">订单管理</span>
