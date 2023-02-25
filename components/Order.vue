@@ -472,7 +472,7 @@ export default {
             params.push(`${param} == ${this.searchParams[param]}`)
           }
         } else {
-          params.push(`${param} == ${this.searchParams[param]}`)
+          params.push(`${param} == "${this.searchParams[param]}"`)
         }
       }
       return params.join(' && ')
