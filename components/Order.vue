@@ -271,14 +271,14 @@
       </template>
 
       <template #[`item.orderId`]="{ item }">
-        <v-tooltip right>
-          <template #activator="{ on, attrs }">
-            <span v-bind="attrs" v-on="on" @click="$copy(item.orderId)">
-              {{ item.orderId | ellipsis(28) }}
-            </span>
-          </template>
-          <span>{{ item.orderId }}</span>
-        </v-tooltip>
+        <v-chip
+          small
+          label
+          color="warning"
+          @click.stop="setSearch({ key: 'orderId', value: item.orderId })"
+        >
+          {{ item.orderId }}
+        </v-chip>
       </template>
 
       <template #[`item.reviewUrl`]="{ item }">
@@ -461,6 +461,9 @@ export default {
       } else {
         this.options.page = 1
       }
+    },
+    setSearch(item) {
+      this.$refs.search.setSearch(item)
     },
     getParams() {
       const params = [`_parent == "${this._parent}"`]

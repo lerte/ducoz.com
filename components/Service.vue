@@ -293,7 +293,7 @@
     <v-dialog v-model="dialogDelete" width="auto">
       <v-card>
         <v-card-title class="text-h5">
-          {{ `你确定要删除这${listItem.length || ''}个订单吗?` }}
+          {{ `你确定要删除这${listItem.length || ''}个请求服务吗?` }}
         </v-card-title>
         <v-card-actions>
           <v-spacer />
@@ -396,7 +396,7 @@ export default {
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.',
-      min: (v) => v >= 2000 || '最少2000$起'
+      min: (v) => v >= 2000 || '最少$2000起'
     },
     editedIndex: -1,
     listItem: {},
@@ -436,15 +436,7 @@ export default {
     getParams() {
       const params = [`_parent == "${this._parent}"`]
       for (let param in this.searchParams) {
-        if (param == 'settlement') {
-          if (!this.searchParams[param]) {
-            params.push(`${param} != true`)
-          } else {
-            params.push(`${param} == ${this.searchParams[param]}`)
-          }
-        } else {
-          params.push(`${param} == ${this.searchParams[param]}`)
-        }
+        params.push(`${param} == "${this.searchParams[param]}"`)
       }
       return params.join(' && ')
     },
