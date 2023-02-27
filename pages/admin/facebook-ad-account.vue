@@ -951,9 +951,10 @@ export default {
     async updateItem() {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData(data)
+      delete params['requestService']
       const { errors } = await this.$altogic.db
         .model('users.facebook_ad_account')
-        .object(params['_id'])
+        .object(params._id)
         .update(params)
       if (errors) {
         this.$notifier.showMessage({
