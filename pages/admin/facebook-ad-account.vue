@@ -47,6 +47,17 @@
         </span>
       </template>
 
+      <template #[`item.facebookPage`]="{ item }">
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <span v-bind="attrs" v-on="on" @click="$copy(item.facebookPage)">
+              {{ item.facebookPage | ellipsis(28) }}
+            </span>
+          </template>
+          <span>{{ item.facebookPage }}</span>
+        </v-tooltip>
+      </template>
+
       <template #[`item.accountType`]="{ item }">
         <v-chip
           label
@@ -55,6 +66,22 @@
           :color="item.initialCharge ? 'primary' : 'success'"
         >
           {{ item.initialCharge ? '海外户' : '国内户' }}
+        </v-chip>
+      </template>
+
+      <template #[`item.accountStatus`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          :color="
+            ['warning', 'success', 'error'][
+              accountStatus.findIndex((s) => s == item.accountStatus)
+            ]
+          "
+          v-if="item.accountStatus"
+        >
+          {{ item.accountStatus }}
         </v-chip>
       </template>
 
@@ -644,7 +671,7 @@
                           clearable
                           hide-details
                           label="开户状态"
-                          :items="['开户中', '已开户', '驳回']"
+                          :items="accountStatus"
                           v-model="listItem.accountStatus"
                         />
                       </v-col>
@@ -763,6 +790,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    accountStatus: ['开户中', '已开户', '驳回'],
     e1: 1,
     createPixelCode: true,
     adAgency: false,

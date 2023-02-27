@@ -77,6 +77,22 @@
         </v-chip>
       </template>
 
+      <template #[`item.accountStatus`]="{ item }">
+        <v-chip
+          label
+          small
+          text-color="white"
+          :color="
+            ['warning', 'success', 'error'][
+              accountStatus.findIndex((s) => s == item.accountStatus)
+            ]
+          "
+          v-if="item.accountStatus"
+        >
+          {{ item.accountStatus }}
+        </v-chip>
+      </template>
+
       <template #[`item.createdAt`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
@@ -780,6 +796,7 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    accountStatus: ['开户中', '已开户', '驳回'],
     e1: 1,
     createPixelCode: true,
     adAgency: false,
