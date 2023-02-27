@@ -27,7 +27,7 @@
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                <v-icon left> mdi-plus </v-icon>提交信息
+                <v-icon left> mdi-plus </v-icon>提交评测
               </v-btn>
             </template>
             <v-card>
@@ -836,7 +836,9 @@ export default {
             platform: item['平台'],
             currency: item['币种'],
             totalOrders: item['总单数'],
-            mainImage: item['主图'],
+            mainImage: this.isUrl(item['主图'])
+              ? item['主图']
+              : 'https://placehold.co/600x400',
             keywords: item['关键词'],
             listing: item['Listing链接'],
             reviewType: item['评价类型'],

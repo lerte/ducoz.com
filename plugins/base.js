@@ -33,6 +33,11 @@ Vue.mixin({
         })
       }
     },
+    isUrl(str) {
+      return /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\*\+,;=.]+$/.test(
+        str
+      )
+    },
     developTips() {
       this.$notifier.showMessage({
         color: 'error',
