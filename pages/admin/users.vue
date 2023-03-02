@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <v-data-table
-      show-select
       :items="list"
       item-key="_id"
       :headers="headers"
@@ -18,9 +17,9 @@
           <v-btn color="secondary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
-          <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
+          <!-- <v-btn color="error" dark class="mr-2" @click="deleteItem(selected)">
             <v-icon left> mdi-delete </v-icon>删除
-          </v-btn>
+          </v-btn> -->
           <v-dialog persistent v-model="dialog" max-width="720" scrollable>
             <template #activator="{ on, attrs }">
               <v-btn color="primary" dark v-bind="attrs" v-on="on">
@@ -99,6 +98,16 @@
                           hide-details
                           label="是否是管理员"
                           v-model="listItem.isAdmin"
+                        />
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          dense
+                          outlined
+                          clearable
+                          hide-details
+                          label="备注"
+                          v-model="listItem.remark"
                         />
                       </v-col>
                     </v-row>
@@ -214,7 +223,7 @@
         >
           <v-icon small> mdi-pencil </v-icon>
         </v-btn>
-        <v-btn
+        <!-- <v-btn
           fab
           x-small
           min-width="0"
@@ -222,7 +231,7 @@
           @click.stop="deleteItem(item)"
         >
           <v-icon small> mdi-delete </v-icon>
-        </v-btn>
+        </v-btn> -->
       </template>
     </v-data-table>
   </v-container>
@@ -260,6 +269,12 @@ export default {
       {
         text: '用户名',
         value: 'name',
+        sortable: false,
+        searchable: true
+      },
+      {
+        text: '备注',
+        value: 'remark',
         sortable: false,
         searchable: true
       },
@@ -457,7 +472,8 @@ export default {
         _id: data._id,
         isAdmin: data.isAdmin,
         password: data.password,
-        emailVerified: data.emailVerified
+        emailVerified: data.emailVerified,
+        remark: data.remark
       })
       const { errors } = await this.$altogic.db
         .model('users')
