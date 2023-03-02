@@ -334,6 +334,10 @@
         </span>
       </template>
 
+      <template #[`item.country`]="{ item }">
+        <Country :country="item.country" />
+      </template>
+
       <template #[`item.mainImage`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
@@ -388,7 +392,7 @@
         </v-chip>
       </template>
 
-      <template #[`item.reviewProgress`]="{ item }">
+      <template #[`item.orders`]="{ item }">
         <v-chip
           label
           small
@@ -396,7 +400,7 @@
           color="success"
           @click.stop="viewOrders(item)"
         >
-          {{ item.orders?.length }} / {{ item.totalOrders }}
+          {{ item.orders?.length }}
         </v-chip>
       </template>
 
@@ -571,8 +575,8 @@ export default {
         sortable: false
       },
       {
-        text: '任务进度',
-        value: 'reviewProgress',
+        text: '订单数',
+        value: 'orders',
         sortable: false
       },
       // ------------------------ 反馈信息 ------------------------------

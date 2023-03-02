@@ -1,6 +1,14 @@
 <template>
   <v-container fluid>
+    <v-file-input
+      class="d-none"
+      :accept="accept"
+      ref="uploadFile"
+      v-model="file"
+      @change="fileChange"
+    />
     <v-data-table
+      show-select
       :items="list"
       item-key="_id"
       :headers="headers"
@@ -38,13 +46,6 @@
               <v-card-text>
                 <v-container>
                   <v-form ref="form" v-model="valid">
-                    <v-file-input
-                      v-model="file"
-                      class="d-none"
-                      ref="uploadFile"
-                      accept="image/*"
-                      @change="fileChange"
-                    />
                     <v-row>
                       <v-col cols="12">
                         <v-text-field
@@ -184,6 +185,12 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <v-btn color="success" dark class="mr-2" @click="exportExcel">
+            <v-icon left> mdi-export </v-icon> 导出数据
+          </v-btn>
+          <v-btn color="success" dark @click="importExcel">
+            <v-icon left> mdi-import </v-icon> 导入价格
+          </v-btn>
           <Search
             ref="search"
             @doSearch="doSearch"
@@ -333,6 +340,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { utils, read, writeFileXLSX } from 'xlsx'
 
 export default {
   name: 'order',
@@ -420,6 +428,7 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     file: null,
+    accept: 'image/*',
     list: [],
     dialog: false,
     dialogDelete: false,
@@ -618,6 +627,14 @@ export default {
     },
     uploadFile() {
       this.file = null
+      this.accept = 'image/*'
+      this.$nextTick(() => {
+        this.$refs.uploadFile.$refs.input.click()
+      })
+    },
+    importExcel() {
+      this.file = null
+      this.accept = '.xls,.xlsx'
       this.$nextTick(() => {
         this.$refs.uploadFile.$refs.input.click()
       })
@@ -631,9 +648,77 @@ export default {
         content: '文件上传中...',
         color: 'secondary'
       })
-      const { publicPath } = await this.$uploadFile(this.file, 'order')
-      this.$set(this.listItem, 'reviewImage', publicPath)
+      if (/^image\//.test(this.file.type)) {
+        // 上传评价截图
+        const { publicPath } = await this.$uploadFile(this.file, 'order')
+        this.$set(this.listItem, 'reviewImage', publicPath)
+      } else {
+        // 批量导入
+        const ab = await this.readFile()
+        // parse workbook
+        const wb = read(ab)
+        // update data
+        const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+        const params = items.map((item) =>
+          this.getPureData({
+            _id: item['Id'],
+            price: item['后台价格']
+          })
+        )
+        for (let data of params) {
+          const { errors } = await this.$altogic.db
+            .model('users.review.orders')
+            .object(data._id)
+            .update(data)
+          if (errors) {
+            this.$notifier.showMessage({
+              content: errors,
+              color: 'error'
+            })
+          }
+        }
+        this.$notifier.showMessage({
+          color: 'success',
+          content: '导入成功，我们的工作人员会处理的'
+        })
+        await this.getList()
+      }
       this.uploading = false
+    },
+    readFile() {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = reject
+        reader.readAsArrayBuffer(this.file)
+      })
+    },
+    exportExcel() {
+      if (this.selected.length) {
+        const data = this.selected.map((item) => ({
+          Id: item['_id'],
+          订单号: item['orderId'],
+          评价链接: item['reviewUrl'],
+          评价截图: item['reviewImage'],
+          后台价格: item['price']
+        }))
+        const ws = utils.json_to_sheet(data)
+        const wb = utils.book_new()
+        utils.book_append_sheet(wb, ws, '多泽跨境-测评订单')
+        const now = Date.now()
+        writeFileXLSX(wb, `多泽跨境-测评订单-${now}.xlsx`)
+        this.$notifier.showMessage({
+          color: 'success',
+          content: '导出成功'
+        })
+      } else {
+        this.$notifier.showMessage({
+          color: 'error',
+          content: '请选择要导出的条目'
+        })
+      }
     }
   }
 }
