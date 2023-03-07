@@ -1,6 +1,11 @@
 <template>
   <main>
     <v-btn @click="login"> 授权登录 </v-btn>
+    <v-card>
+      <v-card-text>
+        {{ info }}
+      </v-card-text>
+    </v-card>
   </main>
 </template>
 
@@ -17,6 +22,9 @@ export default {
       ]
     }
   },
+  data: () => ({
+    info: ''
+  }),
   mounted() {
     this.init()
   },
@@ -33,8 +41,8 @@ export default {
       FB.login(function (response) {
         if (response.authResponse) {
           console.log('Welcome!  Fetching your information.... ')
-          FB.api('/me', function (response) {
-            console.log('Good to see you, ' + response.name + '.')
+          FB.api('/me', (response) => {
+            this.info = '欢迎你: ' + response.name
           })
         } else {
           console.log('User cancelled login or did not fully authorize.')
