@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  layout: 'user',
+  layout: 'admin',
   name: 'meta-smart-service',
   head() {
     return {

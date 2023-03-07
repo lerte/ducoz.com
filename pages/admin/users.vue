@@ -470,6 +470,7 @@ export default {
       const data = Object.assign({}, this.listItem)
       const params = this.getPureData({
         _id: data._id,
+        email: data.email,
         isAdmin: data.isAdmin,
         password: data.password,
         emailVerified: data.emailVerified,

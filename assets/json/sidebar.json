@@ -37,6 +37,11 @@
         "icon": "mdi-facebook",
         "title": "Facebook广告开户",
         "to": "/admin/facebook-ad-account"
+      },
+      {
+        "icon": "mdi-face-agent",
+        "title": "智能客服",
+        "to": "/admin/meta-smart-service"
       }
     ]
   }
