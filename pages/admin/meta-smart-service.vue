@@ -1,11 +1,11 @@
 <template>
   <main>
-    <v-btn @click="login"> 授权登录 </v-btn>
-    <v-card>
-      <v-card-text>
-        {{ info }}
-      </v-card-text>
-    </v-card>
+    <v-btn @click="login" v-if="facebookSdkReady" color="primary" dark>
+      授权登录
+    </v-btn>
+    <span>
+      {{ info }}
+    </span>
   </main>
 </template>
 
@@ -23,6 +23,7 @@ export default {
     }
   },
   data: () => ({
+    facebookSdkReady: false,
     info: ''
   }),
   mounted() {
@@ -30,15 +31,19 @@ export default {
   },
   methods: {
     init() {
-      FB.init({
-        appId: '518242687131507',
-        autoLogAppEvents: true,
-        xfbml: true,
-        version: 'v16.0'
-      })
+      window.fbAsyncInit = () => {
+        FB.init({
+          appId: '518242687131507',
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: 'v16.0'
+        })
+        FB.AppEvents.logPageView()
+        this.facebookSdkReady = true
+      }
     },
     login() {
-      FB.login(function (response) {
+      FB.login((response) => {
         if (response.authResponse) {
           console.log('Welcome!  Fetching your information.... ')
           FB.api('/me', (response) => {
