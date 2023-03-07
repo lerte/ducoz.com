@@ -26,7 +26,7 @@ export default {
         appId: '518242687131507',
         autoLogAppEvents: true,
         xfbml: true,
-        version: 'v11.0'
+        version: 'v16.0'
       })
     },
     login() {
