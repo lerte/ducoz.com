@@ -100,7 +100,7 @@ export default {
     menu: [
       { title: '首页', to: '/' },
       { title: '电商出海', to: '/sea' },
-      { title: '海外私域', to: 'https://iagnmft-nodejs.vercel.app/' },
+      { title: '海外私域', to: '/oversea' },
       { title: '跨境社区', to: '/community' },
       { title: '关于我们', to: '/about' },
       { title: '联系我们', to: '/contact' }
