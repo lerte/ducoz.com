@@ -15,9 +15,14 @@
     "to": "/admin/business"
   },
   {
-    "icon": "mdi-email",
+    "icon": "mdi-magnify",
     "title": "查邮管理",
     "to": "/admin/checkmail"
+  },
+  {
+    "icon": "mdi-email",
+    "title": "邮件系统",
+    "to": "/admin/mail-manage"
   },
   {
     "icon": "mdi-account-group",
