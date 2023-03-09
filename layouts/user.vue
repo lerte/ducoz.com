@@ -126,7 +126,8 @@ export default {
       } else if (this.user.remark) {
         // 如果有备注
         return this.sidebar.filter(
-          (item) => !item.remark || item.mark == this.user.remark
+          (item) =>
+            !item.remark || new RegExp(item.remark).test(this.user.remark)
         )
       } else {
         // 如果是普通用户
