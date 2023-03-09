@@ -361,6 +361,7 @@ export default {
         .filter(params)
         .limit(itemsPerPage)
         .page(page)
+        .omit('review', 'checkmail', 'facebook_ad_account')
         .get({ returnCountInfo: true })
 
       if (errors) {

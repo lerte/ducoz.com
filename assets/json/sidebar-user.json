@@ -12,6 +12,7 @@
   {
     "icon": "mdi-email",
     "title": "邮件系统",
+    "remark": "email",
     "to": "/user/mail-manage"
   },
   {

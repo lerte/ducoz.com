@@ -18,7 +18,9 @@
           >
             <template #activator>
               <v-list-item-content>
-                <v-list-item-title v-text="item.title"></v-list-item-title>
+                <v-list-item-title>
+                  {{ item.title }}
+                </v-list-item-title>
               </v-list-item-content>
             </template>
 
@@ -29,13 +31,17 @@
               :active-class="`primary white--text`"
             >
               <v-list-item-icon v-if="child.icon">
-                <v-icon v-text="child.icon"></v-icon>
+                <v-icon>
+                  {{ child.icon }}
+                </v-icon>
               </v-list-item-icon>
               <v-list-item-icon v-if="child.svg">
                 <i class="icon" v-html="child.svg"></i>
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title v-text="child.title"></v-list-item-title>
+                <v-list-item-title>
+                  {{ child.title }}
+                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-group>
@@ -46,10 +52,14 @@
             :active-class="`primary white--text`"
           >
             <v-list-item-icon>
-              <v-icon v-text="item.icon"></v-icon>
+              <v-icon>
+                {{ item.icon }}
+              </v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title v-text="item.title"></v-list-item-title>
+              <v-list-item-title>
+                {{ item.title }}
+              </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -60,7 +70,9 @@
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
       </v-btn>
-      <v-toolbar-title v-text="title" />
+      <v-toolbar-title>
+        {{ title }}
+      </v-toolbar-title>
       <v-spacer />
       <NuxtLink to="/">
         <v-btn fab text>
@@ -90,6 +102,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'UserLayout',
   middleware: ['auth'],
@@ -102,7 +115,24 @@ export default {
     drawer: true,
     fixed: false,
     miniVariant: false,
-    items: require('@/assets/json/sidebar-user.json')
-  })
+    sidebar: require('@/assets/json/sidebar-user.json')
+  }),
+  computed: {
+    ...mapState(['user']),
+    items() {
+      if (this.user.isAdmin) {
+        // 如果是管理员
+        return this.sidebar
+      } else if (this.user.remark) {
+        // 如果有备注
+        return this.sidebar.filter(
+          (item) => !item.remark || item.mark == this.user.remark
+        )
+      } else {
+        // 如果是普通用户
+        return this.sidebar.filter((item) => !item.remark)
+      }
+    }
+  }
 }
 </script>
