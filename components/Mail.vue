@@ -12,6 +12,7 @@
         <MailInbox v-if="item.name == 'inbox'" />
         <MailOutbox v-if="item.name == 'outbox'" />
         <MailAnalytics v-if="item.name == 'analytics'" />
+        <MailSettings v-if="item.name == 'settings'" />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -42,6 +43,11 @@ export default {
         name: 'analytics',
         title: '邮件分析',
         icon: 'mdi-google-analytics'
+      },
+      {
+        name: 'settings',
+        title: '邮件设置',
+        icon: 'mdi-cog'
       }
     ]
   })
