@@ -128,6 +128,28 @@
       </v-toolbar>
       <v-divider />
     </template>
+
+    <template #[`item.createdAt`]="{ item }">
+      <v-tooltip right>
+        <template #activator="{ on, attrs }">
+          <span v-on="on" v-bind="attrs">
+            {{ item.createdAt | format }}
+          </span>
+        </template>
+        <span>{{ item.createdAt | localTime }}</span>
+      </v-tooltip>
+    </template>
+    <template #[`item.updatedAt`]="{ item }">
+      <v-tooltip right>
+        <template #activator="{ on, attrs }">
+          <span v-on="on" v-bind="attrs">
+            {{ item.updatedAt | format }}
+          </span>
+        </template>
+        <span>{{ item.updatedAt | localTime }}</span>
+      </v-tooltip>
+    </template>
+
     <template #[`item.actions`]="{ item }">
       <v-btn
         fab
