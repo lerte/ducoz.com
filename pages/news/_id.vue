@@ -1,14 +1,20 @@
 <template>
   <main
-    class="h-[calc(100vh_-_472px)] flex flex-col text-center items-center justify-center bg-gray-100"
+    class="h-min-[calc(100vh_-_104px)] flex flex-col text-center items-center justify-center bg-gray-100"
   >
-    <div v-if="loading" class="h-full flex items-center justify-center">
-      <Spinner />
+    <div
+      class="mt-16 bg-white container h-[calc(100vh_-_104px)] overflow-hidden overflow-y-auto"
+    >
+      <div v-if="loading" class="h-full flex items-center justify-center">
+        <Spinner />
+      </div>
+      <article v-else>
+        <p>{{ news.title }}</p>
+        <p class="text-left tiptap-vuetify-editor__content">
+          {{ news.content }}
+        </p>
+      </article>
     </div>
-    <article v-else>
-      <p>{{ news.title }}</p>
-      <p>{{ news.content }}</p>
-    </article>
   </main>
 </template>
 
