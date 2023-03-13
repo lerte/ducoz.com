@@ -10,9 +10,10 @@
       </div>
       <article v-else>
         <p>{{ news.title }}</p>
-        <p class="text-left tiptap-vuetify-editor__content">
-          {{ news.content }}
-        </p>
+        <p
+          class="text-left tiptap-vuetify-editor__content"
+          v-html="news.content"
+        ></p>
       </article>
     </div>
   </main>
