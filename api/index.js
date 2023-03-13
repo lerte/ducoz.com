@@ -5,6 +5,7 @@ import https from 'https'
 import express from 'express'
 import { createClient } from 'altogic'
 import cookieParser from 'cookie-parser'
+import mail from './mail'
 
 const app = express()
 const { ENV_URL, CLIENT_KEY, WEB_HOOK_KEY } = process.env
@@ -136,5 +137,8 @@ app.post('/sendMessage', async (req, res) => {
   await doRequest(options, req.body)
   return res.json('Talk is cheap. Show me your code.')
 })
+
+// 邮件相关
+app.use('/mail', mail)
 
 export default app
