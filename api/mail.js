@@ -70,8 +70,6 @@ router.get('/descAccountSummary', async (req, res) => {
   for (var param in params) {
     url += param + '=' + params[param] + '&'
   }
-
-  const requestUrl = url.substr(0, url.length - 1)
   request(requestUrl, (error, response, body) => {
     return res.end(body)
   })
