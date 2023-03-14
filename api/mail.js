@@ -12,6 +12,13 @@ import Urlencode from 'urlencode'
 const router = express.Router()
 const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
+router.get('/test', async (req, res) => {
+  res.json({
+    ACCESS_KEY_ID,
+    ACCESS_KEY_SECRET
+  })
+})
+
 router.get('/descAccountSummary', async (req, res) => {
   //获取timestamp
   const timeStamp = Moment(new Date().get).utcOffset(0).format()
