@@ -1,10 +1,5 @@
-// const express = require('express')
-// const router = express.Router()
-// const HmacSha1 = require('crypto-js/hmac-sha1')
-// const Base64 = require('crypto-js/enc-base64')
-// const Moment = require('moment')
-// const Uuid = require('uuid')
-// const Urlencode = require('urlencode')
+import dotenv from 'dotenv'
+dotenv.config()
 
 import request from 'request'
 import express from 'express'
@@ -15,11 +10,7 @@ import { v4 as uuidv4 } from 'uuid'
 import Urlencode from 'urlencode'
 
 const router = express.Router()
-
-// AccessKeyId
-const accessKeyId = 'LTAI5t6NJu93sUN5EFKjZjr3'
-//AccessKeySecret
-const accesskeysecret = 'idkaOlyYfeoELhJlY0sPlBbJzSbqWM' + '&'
+const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
 router.get('/descAccountSummary', async (req, res) => {
   //获取timestamp
@@ -35,7 +26,7 @@ router.get('/descAccountSummary', async (req, res) => {
     SignatureNonce: signatureNorce,
     SignatureVersion: '1.0',
     Version: '2017-06-22',
-    AccessKeyId: accessKeyId
+    AccessKeyId: ACCESS_KEY_ID
   }
   //对各个参数进行字典序升序排序
   function sortObjectKeys(obj) {
@@ -71,7 +62,9 @@ router.get('/descAccountSummary', async (req, res) => {
   strToSign = strToSign.substr(0, strToSign.length - 1)
   strToSign = 'GET&' + Urlencode('/') + '&' + Urlencode(strToSign)
   //计算签名
-  params['Signature'] = Base64.stringify(HmacSha1(strToSign, accesskeysecret))
+  params['Signature'] = Base64.stringify(
+    HmacSha1(strToSign, ACCESS_KEY_SECRET + '&')
+  )
 
   var url = 'http://dm.ap-southeast-1.aliyuncs.com?'
   for (var param in params) {
@@ -79,7 +72,6 @@ router.get('/descAccountSummary', async (req, res) => {
   }
 
   const requestUrl = url.substr(0, url.length - 1)
-
   request(requestUrl, (error, response, body) => {
     return res.end(body)
   })
