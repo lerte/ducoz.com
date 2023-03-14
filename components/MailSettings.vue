@@ -1,29 +1,63 @@
 <template>
-  <div>
-    <p>日额度: {{ descAccountSummary.DailyQuota }}</p>
-    <p>月额度: {{ descAccountSummary.MonthQuota }}</p>
-    <p>收件人数量: {{ descAccountSummary.Receivers }}</p>
-    <p>模板数量: {{ descAccountSummary.Templates }}</p>
-    <p>
-      用户状态:
-      {{ descAccountSummary.UserStatus }}
-      (用户状态：0表示正常，1表示冻结，2表示欠费，3表示限制外发。)
-    </p>
-    <p>域名数量: {{ descAccountSummary.Domains }}</p>
-    <p>信誉度等级: {{ descAccountSummary.QuotaLevel }}</p>
-    <p>最高等级: {{ descAccountSummary.MaxQuotaLevel }}</p>
-    <p>标签数量: {{ descAccountSummary.Tags }}</p>
-    <p>发信地址数量: {{ descAccountSummary.MailAddresses }}</p>
-    <!-- <p>生效时间: {{ descAccountSummary.EnableTimes }}</p> -->
-  </div>
+  <v-simple-table dense>
+    <template v-slot:default>
+      <thead>
+        <tr>
+          <th class="text-left">名称</th>
+          <th class="text-left">值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr :key="index" v-for="(item, index) in descAccountSummary">
+          <td>{{ translate[item[0]] }}</td>
+          <td v-if="item[0] == 'UserStatus'">
+            <v-chip
+              label
+              small
+              text-color="white"
+              :color="['success', 'secondary', 'warning', 'error'][item[1]]"
+            >
+              {{ item[1] | readable }}
+            </v-chip>
+          </td>
+          <td v-else>
+            {{ item[1] }}
+          </td>
+        </tr>
+      </tbody>
+    </template>
+  </v-simple-table>
 </template>
 
 <script>
 export default {
   name: 'mail-settings',
   data: () => ({
-    descAccountSummary: ''
+    descAccountSummary: [],
+    translate: {
+      SmsRecord: 'SmsRecord（该字段已弃用）',
+      SmsTemplates: 'SmsTemplates（该字段已弃用）',
+      SmsSign: 'SmsSign（该字段已弃用）',
+      RequestId: '请求ID',
+      DayuStatus: '指示是否已启用短信服务。（该字段已弃用）',
+      EnableTimes: '生效时间',
+      DailyQuota: '日额度',
+      MonthQuota: '月额度',
+      Domains: '域名数量',
+      Templates: '模板数量',
+      Tags: '标签数量',
+      MailAddresses: '发信地址数量',
+      Receivers: '收件人数量',
+      QuotaLevel: '信誉度等级',
+      MaxQuotaLevel: '最高等级',
+      UserStatus: '用户状态'
+    }
   }),
+  filters: {
+    readable(UserStatus) {
+      return ['正常', '冻结', '欠费', '限制外发'][UserStatus]
+    }
+  },
   async mounted() {
     const response = await fetch('/api/mail/descAccountSummary', {
       method: 'GET',
@@ -31,8 +65,8 @@ export default {
         'Content-Type': 'application/json'
       }
     })
-    const data = await response.json()
-    this.descAccountSummary = data
+    const obj = await response.json()
+    this.descAccountSummary = Object.entries(obj)
   }
 }
 </script>

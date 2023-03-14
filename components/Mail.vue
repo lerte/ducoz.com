@@ -46,8 +46,8 @@ export default {
       },
       {
         name: 'settings',
-        title: '邮件设置',
-        icon: 'mdi-cog'
+        title: '账户信息',
+        icon: 'mdi-information-outline'
       }
     ]
   })
