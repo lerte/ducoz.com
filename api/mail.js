@@ -13,7 +13,7 @@ const router = express.Router()
 const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
 router.get('/test', async (req, res) => {
-  res.json({
+  return res.json({
     ACCESS_KEY_ID,
     ACCESS_KEY_SECRET
   })

@@ -8,7 +8,8 @@ import cookieParser from 'cookie-parser'
 import mail from './mail'
 
 const app = express()
-const { ENV_URL, CLIENT_KEY, WEB_HOOK_KEY } = process.env
+const { ENV_URL, CLIENT_KEY, WEB_HOOK_KEY, ACCESS_KEY_ID, ACCESS_KEY_SECRET } =
+  process.env
 
 function doRequest(options, data) {
   return new Promise((resolve, reject) => {
@@ -39,7 +40,11 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.get('/', async (req, res) => {
-  return res.json('Talk is cheap. Show me your code.')
+  // return res.json('Talk is cheap. Show me your code.')
+  return res.json({
+    ACCESS_KEY_ID,
+    ACCESS_KEY_SECRET
+  })
 })
 
 // 邮箱登录
