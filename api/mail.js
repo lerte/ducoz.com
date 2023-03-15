@@ -5,7 +5,7 @@ import request from 'request'
 import express from 'express'
 import HmacSha1 from 'crypto-js/hmac-sha1'
 import Base64 from 'crypto-js/enc-base64'
-import Moment from 'Moment'
+import moment from 'moment'
 import { v4 as uuidv4 } from 'uuid'
 import Urlencode from 'urlencode'
 
@@ -14,7 +14,7 @@ const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
 router.get('/descAccountSummary', async (req, res) => {
   //获取timestamp
-  const timeStamp = Moment(new Date().get).utcOffset(0).format()
+  const timeStamp = moment(new Date().get).utcOffset(0).format()
   //获取signatureNorce
   const signatureNorce = uuidv4()
   var params = {
@@ -70,7 +70,6 @@ router.get('/descAccountSummary', async (req, res) => {
   for (var param in params) {
     url += param + '=' + params[param] + '&'
   }
-
   const requestUrl = url.substr(0, url.length - 1)
   request(requestUrl, (error, response, body) => {
     return res.end(body)
