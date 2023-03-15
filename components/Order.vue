@@ -56,7 +56,6 @@
                           type="number"
                           label="后台价格"
                           v-model="listItem.price"
-                          :disabled="$route.path.startsWith('/admin')"
                         />
                       </v-col>
                       <v-card
