@@ -11,8 +11,9 @@
         <MailList v-if="item.name == 'list'" />
         <MailInbox v-if="item.name == 'inbox'" />
         <MailOutbox v-if="item.name == 'outbox'" />
-        <MailAnalytics v-if="item.name == 'analytics'" />
+        <!-- <MailAnalytics v-if="item.name == 'analytics'" /> -->
         <MailSettings v-if="item.name == 'settings'" />
+        <MailAddress v-if="item.name == 'mail-address'" />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -39,15 +40,20 @@ export default {
         title: '发件箱',
         icon: 'mdi-email-arrow-right'
       },
-      {
-        name: 'analytics',
-        title: '邮件分析',
-        icon: 'mdi-google-analytics'
-      },
+      // {
+      //   name: 'analytics',
+      //   title: '邮件分析',
+      //   icon: 'mdi-google-analytics'
+      // },
       {
         name: 'settings',
         title: '账户信息',
         icon: 'mdi-information-outline'
+      },
+      {
+        name: 'mail-address',
+        title: '发信地址',
+        icon: 'mdi-card-account-mail'
       }
     ]
   })

@@ -12,21 +12,18 @@ import Urlencode from 'urlencode'
 const router = express.Router()
 const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
-router.get('/descAccountSummary', async (req, res) => {
-  //获取timestamp
-  const timeStamp = moment(new Date().get).utcOffset(0).format()
-  //获取signatureNorce
-  const signatureNorce = uuidv4()
+router.get('/:action', async (req, res) => {
   var params = {
-    Action: 'DescAccountSummary',
+    Action: req.params.action,
     Format: 'JSON',
     RegionId: 'ap-southeast-1',
     SignatureMethod: 'HMAC-SHA1',
-    Timestamp: timeStamp,
-    SignatureNonce: signatureNorce,
+    Timestamp: moment(new Date().get).utcOffset(0).format(),
+    SignatureNonce: uuidv4(),
     SignatureVersion: '1.0',
     Version: '2017-06-22',
-    AccessKeyId: ACCESS_KEY_ID
+    AccessKeyId: ACCESS_KEY_ID,
+    ...req.query
   }
   //对各个参数进行字典序升序排序
   function sortObjectKeys(obj) {

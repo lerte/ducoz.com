@@ -59,7 +59,7 @@ export default {
     }
   },
   async mounted() {
-    const response = await fetch('/api/mail/descAccountSummary', {
+    const response = await fetch('/api/mail/DescAccountSummary', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
