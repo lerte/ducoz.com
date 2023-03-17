@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="accounts"
+    :items="tags"
     :search="search"
     :loading="loading"
     class="elevation-1"
@@ -14,7 +14,7 @@
           <v-icon left> mdi-refresh </v-icon>刷新
         </v-btn>
         <v-btn dark class="mr-2" color="secondary" @click="addItem">
-          <v-icon left> mdi-plus </v-icon>添加发信地址
+          <v-icon left> mdi-plus </v-icon>添加标签
         </v-btn>
         <v-spacer />
         <v-text-field
@@ -46,20 +46,8 @@
                       clearable
                       single-line
                       hide-details
-                      label="发信地址"
-                      v-model="editedItem.AccountName"
-                    />
-                  </v-col>
-                  <v-col cols="12">
-                    <v-select
-                      label="发信类型"
-                      dense
-                      chips
-                      outlined
-                      clearable
-                      hide-details
-                      :items="sendtypeOptions"
-                      v-model="editedItem.Sendtype"
+                      label="标签"
+                      v-model="editedItem.TagName"
                     />
                   </v-col>
                 </v-row>
@@ -75,39 +63,6 @@
         </v-dialog>
       </v-toolbar>
       <v-divider />
-    </template>
-
-    <template #[`item.Sendtype`]="{ item }">
-      <v-chip
-        small
-        label
-        :color="item.Sendtype == 'batch' ? 'primary' : 'secondary'"
-      >
-        {{ sendtypeMap[item.Sendtype] }}
-      </v-chip>
-    </template>
-
-    <template #[`item.AccountStatus`]="{ item }">
-      <v-chip small label :color="item.AccountStatus ? 'error' : 'success'">
-        {{ item.AccountStatus ? '冻结' : '正常' }}
-      </v-chip>
-    </template>
-
-    <template #[`item.DomainStatus`]="{ item }">
-      <v-chip small label :color="item.DomainStatus ? 'error' : 'success'">
-        {{ item.DomainStatus ? '异常' : '正常' }}
-      </v-chip>
-    </template>
-
-    <template #[`item.CreateTime`]="{ item }">
-      <v-tooltip right>
-        <template #activator="{ on, attrs }">
-          <span v-on="on" v-bind="attrs">
-            {{ item.CreateTime | format }}
-          </span>
-        </template>
-        <span>{{ item.CreateTime | localTime }}</span>
-      </v-tooltip>
     </template>
 
     <template #[`item.actions`]="{ item }">
@@ -137,9 +92,7 @@
           </v-btn>
         </template>
         <v-card>
-          <v-card-title class="text-h5">
-            你确定要删除这个发信地址吗?
-          </v-card-title>
+          <v-card-title class="text-h5"> 你确定要删除这个标签吗? </v-card-title>
           <v-card-actions>
             <v-spacer />
             <v-btn color="secondary" @click="dialogDelete = false">
@@ -153,14 +106,14 @@
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="addItem">添加发信地址</v-btn>
+      <v-btn color="primary" @click="addItem">添加标签</v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
 export default {
-  name: 'mail-address',
+  name: 'tag',
   data: () => ({
     loading: false,
     options: {
@@ -168,39 +121,16 @@ export default {
       itemsPerPage: 10
     },
     headers: [
-      // { text: '发信地址ID', value: 'mailAddressId' },
-      { text: '发信地址', value: 'AccountName' },
-      { text: '回信地址', value: 'ReplyAddress' },
-      { text: '发信类型', value: 'Sendtype' },
-      { text: '账号状态', value: 'AccountStatus' },
-      { text: '域名状态', value: 'DomainStatus' },
-      { text: '日额度', value: 'DailyReqCount' },
-      { text: '月额度', value: 'MonthReqCount' },
-      // { text: '日额度限额', value: 'DailyCount' },
-      // { text: '月额度限额', value: 'MonthCount' },
-      { text: '创建时间', value: 'CreateTime' },
+      // { text: '标签ID', value: 'TagId' },
+      { text: '标签', value: 'TagName' },
       { text: '操作', value: 'actions', sortable: false }
     ],
-    accounts: [],
+    tags: [],
     search: '',
     dialog: false,
     dialogDelete: false,
-    formTitle: '添加发信地址',
-    editedItem: {},
-    sendtypeMap: {
-      batch: '批量邮件',
-      trigger: '触发邮件'
-    },
-    sendtypeOptions: [
-      {
-        text: '批量邮件',
-        value: 'batch'
-      },
-      {
-        text: '触发邮件',
-        value: 'trigger'
-      }
-    ]
+    formTitle: '添加标签',
+    editedItem: {}
   }),
   watch: {
     options: {
@@ -212,11 +142,11 @@ export default {
   },
   methods: {
     addItem() {
-      this.formTitle = '添加发信地址'
+      this.formTitle = '添加标签'
       this.dialog = true
     },
     editItem(item) {
-      this.formTitle = '修改回信地址'
+      this.formTitle = '修改标签'
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
@@ -225,39 +155,36 @@ export default {
       this.dialogDelete = true
     },
     async deleteItemConfirm() {
-      const { MailAddressId } = this.editedItem
+      const { TagId } = this.editedItem
       this.loading = true
-      await fetch(
-        `/api/mail/DeleteMailAddress?MailAddressId=${MailAddressId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
+      await fetch(`/api/mail/DeleteTag?TagId=${TagId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
-      )
+      })
       await this.getList()
       this.loading = false
       this.dialogDelete = false
     },
     async save() {
       this.loading = true
-      if (this.editedItem.MailAddressId) {
-        // 修改回信地址
+      if (this.editedItem.TagId) {
+        // 修改标签名称
         const params = new URLSearchParams({
-          MailAddressId: this.editedItem.MailAddressId,
-          ReplyAddress: this.editedItem.AccountName
+          TagId: this.editedItem.TagId,
+          TagName: this.editedItem.TagName
         })
-        await fetch(`/api/mail/ModifyMailAddress?${params}`, {
+        await fetch(`/api/mail/ModifyTag?${params}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         })
       } else {
-        // 添加发信地址
+        // 添加标签
         const params = new URLSearchParams(this.editedItem)
-        await fetch(`/api/mail/CreateMailAddress?${params}`, {
+        await fetch(`/api/mail/CreateTag?${params}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -276,15 +203,15 @@ export default {
     },
     async getList() {
       this.loading = true
-      const response = await fetch('/api/mail/QueryMailAddressByParam', {
+      const response = await fetch('/api/mail/QueryTagByParam', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.mailAddress) {
-        this.accounts = data.mailAddress
+      if (data && data.tag) {
+        this.tags = data.tag
       } else {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,

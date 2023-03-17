@@ -1,6 +1,14 @@
 <template>
   <v-simple-table dense>
-    <template v-slot:default>
+    <template #top>
+      <v-toolbar flat dense>
+        <v-btn color="primary" dark class="mr-2" @click="getSummary">
+          <v-icon left> mdi-refresh </v-icon>刷新
+        </v-btn>
+      </v-toolbar>
+      <v-divider />
+    </template>
+    <template #default>
       <thead>
         <tr>
           <th class="text-left">名称</th>
@@ -47,7 +55,7 @@ export default {
       Templates: '模板数量',
       Tags: '标签数量',
       MailAddresses: '发信地址数量',
-      Receivers: '收件人数量',
+      Receivers: '收件人列表数量',
       QuotaLevel: '信誉度等级',
       MaxQuotaLevel: '最高等级',
       UserStatus: '用户状态'
@@ -58,15 +66,20 @@ export default {
       return ['正常', '冻结', '欠费', '限制外发'][UserStatus]
     }
   },
-  async mounted() {
-    const response = await fetch('/api/mail/DescAccountSummary', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    const obj = await response.json()
-    this.descAccountSummary = Object.entries(obj)
+  mounted() {
+    this.getSummary()
+  },
+  methods: {
+    async getSummary() {
+      const response = await fetch('/api/mail/DescAccountSummary', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const obj = await response.json()
+      this.descAccountSummary = Object.entries(obj)
+    }
   }
 }
 </script>

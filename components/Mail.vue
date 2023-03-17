@@ -12,7 +12,9 @@
         <MailInbox v-if="item.name == 'inbox'" />
         <MailOutbox v-if="item.name == 'outbox'" />
         <!-- <MailAnalytics v-if="item.name == 'analytics'" /> -->
-        <MailSettings v-if="item.name == 'settings'" />
+        <AccountSummary v-if="item.name == 'account-summary'" />
+        <Domain v-if="item.name == 'domain'" />
+        <Tag v-if="item.name == 'tag'" />
         <MailAddress v-if="item.name == 'mail-address'" />
       </v-tab-item>
     </v-tabs-items>
@@ -46,9 +48,19 @@ export default {
       //   icon: 'mdi-google-analytics'
       // },
       {
-        name: 'settings',
+        name: 'account-summary',
         title: '账户信息',
         icon: 'mdi-information-outline'
+      },
+      {
+        name: 'domain',
+        title: '域名',
+        icon: 'mdi-domain'
+      },
+      {
+        name: 'tag',
+        title: '标签',
+        icon: 'mdi-tag'
       },
       {
         name: 'mail-address',

@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="accounts"
+    :items="domains"
     :search="search"
     :loading="loading"
     class="elevation-1"
@@ -14,7 +14,7 @@
           <v-icon left> mdi-refresh </v-icon>刷新
         </v-btn>
         <v-btn dark class="mr-2" color="secondary" @click="addItem">
-          <v-icon left> mdi-plus </v-icon>添加发信地址
+          <v-icon left> mdi-plus </v-icon>添加域名
         </v-btn>
         <v-spacer />
         <v-text-field
@@ -46,20 +46,20 @@
                       clearable
                       single-line
                       hide-details
-                      label="发信地址"
-                      v-model="editedItem.AccountName"
+                      label="域名"
+                      v-model="editedItem.DomainName"
                     />
                   </v-col>
-                  <v-col cols="12">
-                    <v-select
-                      label="发信类型"
+                  <v-col cols="12" v-if="formTitle == '设置域名的SMTP的密码'">
+                    <v-text-field
                       dense
                       chips
                       outlined
                       clearable
+                      single-line
                       hide-details
-                      :items="sendtypeOptions"
-                      v-model="editedItem.Sendtype"
+                      label="设置域名的SMTP的密码"
+                      v-model="editedItem.Password"
                     />
                   </v-col>
                 </v-row>
@@ -77,25 +77,9 @@
       <v-divider />
     </template>
 
-    <template #[`item.Sendtype`]="{ item }">
-      <v-chip
-        small
-        label
-        :color="item.Sendtype == 'batch' ? 'primary' : 'secondary'"
-      >
-        {{ sendtypeMap[item.Sendtype] }}
-      </v-chip>
-    </template>
-
-    <template #[`item.AccountStatus`]="{ item }">
-      <v-chip small label :color="item.AccountStatus ? 'error' : 'success'">
-        {{ item.AccountStatus ? '冻结' : '正常' }}
-      </v-chip>
-    </template>
-
     <template #[`item.DomainStatus`]="{ item }">
       <v-chip small label :color="item.DomainStatus ? 'error' : 'success'">
-        {{ item.DomainStatus ? '异常' : '正常' }}
+        {{ DomainStatus[item.DomainStatus] }}
       </v-chip>
     </template>
 
@@ -116,51 +100,33 @@
         x-small
         class="mr-2"
         min-width="0"
+        color="warning"
+        v-if="item.DomainStatus"
+        @click.stop="checkItem(item)"
+      >
+        <v-icon small> mdi-check </v-icon>
+      </v-btn>
+      <v-btn
+        fab
+        x-small
+        class="mr-2"
+        min-width="0"
         color="primary"
         @click.stop="editItem(item)"
       >
         <v-icon small> mdi-pencil </v-icon>
       </v-btn>
-
-      <v-dialog v-model="dialogDelete" width="auto">
-        <template #activator="{ on, attrs }">
-          <v-btn
-            fab
-            v-on="on"
-            v-bind="attrs"
-            x-small
-            min-width="0"
-            color="error"
-            @click.stop="deleteItem(item)"
-          >
-            <v-icon small> mdi-delete </v-icon>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title class="text-h5">
-            你确定要删除这个发信地址吗?
-          </v-card-title>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="secondary" @click="dialogDelete = false">
-              取消
-            </v-btn>
-            <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </template>
 
     <template #no-data>
-      <v-btn color="primary" @click="addItem">添加发信地址</v-btn>
+      <v-btn color="primary" @click="addItem">添加域名</v-btn>
     </template>
   </v-data-table>
 </template>
 
 <script>
 export default {
-  name: 'mail-address',
+  name: 'domain',
   data: () => ({
     loading: false,
     options: {
@@ -168,39 +134,24 @@ export default {
       itemsPerPage: 10
     },
     headers: [
-      // { text: '发信地址ID', value: 'mailAddressId' },
-      { text: '发信地址', value: 'AccountName' },
-      { text: '回信地址', value: 'ReplyAddress' },
-      { text: '发信类型', value: 'Sendtype' },
-      { text: '账号状态', value: 'AccountStatus' },
+      // { text: '域名ID', value: 'DomainId' },
+      { text: '域名', value: 'DomainName' },
       { text: '域名状态', value: 'DomainStatus' },
-      { text: '日额度', value: 'DailyReqCount' },
-      { text: '月额度', value: 'MonthReqCount' },
-      // { text: '日额度限额', value: 'DailyCount' },
-      // { text: '月额度限额', value: 'MonthCount' },
       { text: '创建时间', value: 'CreateTime' },
       { text: '操作', value: 'actions', sortable: false }
     ],
-    accounts: [],
+    domains: [],
+    DomainStatus: [
+      '可用，已验证通过',
+      '不可用，验证未通过',
+      '可使用，未做cname，未备案',
+      '可使用，未备案',
+      '可使用，未做cname'
+    ],
     search: '',
     dialog: false,
-    dialogDelete: false,
-    formTitle: '添加发信地址',
-    editedItem: {},
-    sendtypeMap: {
-      batch: '批量邮件',
-      trigger: '触发邮件'
-    },
-    sendtypeOptions: [
-      {
-        text: '批量邮件',
-        value: 'batch'
-      },
-      {
-        text: '触发邮件',
-        value: 'trigger'
-      }
-    ]
+    formTitle: '添加域名',
+    editedItem: {}
   }),
   watch: {
     options: {
@@ -212,52 +163,62 @@ export default {
   },
   methods: {
     addItem() {
-      this.formTitle = '添加发信地址'
+      this.formTitle = '添加域名'
       this.dialog = true
     },
     editItem(item) {
-      this.formTitle = '修改回信地址'
+      this.formTitle = '设置域名的SMTP的密码'
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
-    deleteItem(item) {
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-    async deleteItemConfirm() {
-      const { MailAddressId } = this.editedItem
-      this.loading = true
-      await fetch(
-        `/api/mail/DeleteMailAddress?MailAddressId=${MailAddressId}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      )
-      await this.getList()
-      this.loading = false
-      this.dialogDelete = false
-    },
     async save() {
       this.loading = true
-      if (this.editedItem.MailAddressId) {
-        // 修改回信地址
+      if (this.editedItem.DomainName) {
+        // 设置域名的SMTP的密码
         const params = new URLSearchParams({
-          MailAddressId: this.editedItem.MailAddressId,
-          ReplyAddress: this.editedItem.AccountName
+          DomainName: this.editedItem.DomainName,
+          Password: this.editedItem.Password
         })
-        await fetch(`/api/mail/ModifyMailAddress?${params}`, {
+        const response = await fetch(`/api/mail/ModifyPWByDomain?${params}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
           }
         })
+        const { Code } = await response.json()
+        let message = ''
+        switch (Code) {
+          case 'InvalidDomainPassword.Malformed':
+            message = '密码格式错误'
+            break
+          case 'InvalidDomainPassword.equalcurrent':
+            message = '域名格式错误'
+            break
+          case 'InvalidDomainName.Malformed':
+            message = '不能与当前密码重复'
+            break
+          case 'InvalidDomain.NotFound':
+            message = '域名不存在'
+            break
+          case 'InvalidDomainStatus.Malformed':
+            message = '域名状态非法'
+            break
+          case 'InvalidDomainId.Malformed':
+            message = '域名ID错误'
+            break
+          default:
+            break
+        }
+        this.$notifier.showMessage({
+          content: message,
+          color: 'error'
+        })
       } else {
-        // 添加发信地址
-        const params = new URLSearchParams(this.editedItem)
-        await fetch(`/api/mail/CreateMailAddress?${params}`, {
+        // 添加域名
+        const params = new URLSearchParams({
+          DomainName: this.editedItem.DomainName
+        })
+        await fetch(`/api/mail/CreateDomain?${params}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -276,15 +237,15 @@ export default {
     },
     async getList() {
       this.loading = true
-      const response = await fetch('/api/mail/QueryMailAddressByParam', {
+      const response = await fetch('/api/mail/QueryDomainByParam', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.mailAddress) {
-        this.accounts = data.mailAddress
+      if (data && data.domain) {
+        this.domains = data.domain
       } else {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
@@ -292,6 +253,22 @@ export default {
         })
       }
       this.loading = false
+    },
+    async checkItem(item) {
+      const response = await fetch(
+        `/api/mail/CheckDomain?DomainId=${item.DomainId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      const { Code, DomainStatus } = await response.json()
+      this.$notifier.showMessage({
+        content: DomainStatus ? this.DomainStatus[DomainStatus] : Code,
+        color: 'error'
+      })
     }
   }
 }
