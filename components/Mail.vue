@@ -16,6 +16,7 @@
         <Domain v-if="item.name == 'domain'" />
         <Tag v-if="item.name == 'tag'" />
         <MailAddress v-if="item.name == 'mail-address'" />
+        <Receiver v-if="item.name == 'receiver'" />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -66,6 +67,11 @@ export default {
         name: 'mail-address',
         title: '发信地址',
         icon: 'mdi-card-account-mail'
+      },
+      {
+        name: 'receiver',
+        title: '收件人列表',
+        icon: 'mdi-card-account-mail-outline'
       }
     ]
   })
