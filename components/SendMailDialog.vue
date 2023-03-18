@@ -51,10 +51,9 @@
                   dense
                   chips
                   outlined
-                  disabled
                   hide-details
                   label="收信地址"
-                  :value="user.email"
+                  v-model="sendItem.ToAddress"
                 />
               </v-col>
               <v-col cols="12">
@@ -134,6 +133,17 @@ export default {
   model: {
     prop: 'dialog'
   },
+  watch: {
+    dialog: {
+      handler(val) {
+        if (val) {
+          this.$set(this.sendItem, 'ToAddress', this.user.email)
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   data: () => ({
     accountNames: [],
     emails: [],
@@ -175,7 +185,6 @@ export default {
     },
     async sendMail() {
       const params = Object.assign({}, this.sendItem)
-      params['ToAddress'] = this.user.email
       const response = await fetch(
         `/api/mail/${this.sendType}SendMail?${new URLSearchParams(params)}`,
         {
