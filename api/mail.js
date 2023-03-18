@@ -3,9 +3,9 @@ dotenv.config()
 
 import http from 'http'
 import dayjs from 'dayjs'
-import crypto from 'crypto'
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
+import computeSignature from './computeSignature.js'
 
 function get(url) {
   return new Promise((resolve, reject) => {
@@ -41,23 +41,8 @@ router.get('/:action', async (req, res) => {
     Version: '2017-06-22',
     ...req.query
   }
-  // 将参数按字典序排序
-  const sortedParams = {}
-  Object.keys(params)
-    .sort()
-    .forEach((key) => {
-      sortedParams[key] = params[key]
-    })
-  // 将参数格式化为字符串
-  const paramString = new URLSearchParams(sortedParams).toString()
-
-  //计算签名
-  const stringToSign = 'GET&%2F&' + encodeURIComponent(paramString)
-  const Signature = crypto
-    .createHmac('sha1', ACCESS_KEY_SECRET + '&')
-    .update(stringToSign)
-    .digest('base64')
-
+  // 计算签名
+  const Signature = computeSignature(params, ACCESS_KEY_SECRET)
   params['Signature'] = Signature
 
   let url = 'http://dm.ap-southeast-1.aliyuncs.com?'

@@ -2,9 +2,9 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 import http from 'http'
-import crypto from 'crypto'
 import dayjs from 'dayjs'
 import { v4 as uuidv4 } from 'uuid'
+import computeSignature from './computeSignature.js'
 
 function get(url) {
   return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ const { ACCESS_KEY_ID, ACCESS_KEY_SECRET } = process.env
 
 const params = {
   Format: 'JSON',
-  Action: DescAccountSummary,
+  Action: 'DescAccountSummary',
   AccessKeyId: ACCESS_KEY_ID,
   RegionId: 'ap-southeast-1',
   SignatureMethod: 'HMAC-SHA1',
@@ -38,31 +38,13 @@ const params = {
   Version: '2017-06-22'
 }
 
-// 将参数按字典序排序
-const sortedParams = {}
-Object.keys(params)
-  .sort()
-  .forEach((key) => {
-    sortedParams[key] = params[key]
-  })
-
-// 将参数格式化为字符串
-
-const paramString = new URLSearchParams(sortedParams).toString()
-
 // 计算签名
-const stringToSign = 'GET&%2F&' + encodeURIComponent(paramString)
-const Signature = crypto
-  .createHmac('sha1', ACCESS_KEY_SECRET + '&')
-  .update(stringToSign)
-  .digest('base64')
-
+const Signature = computeSignature(params, ACCESS_KEY_SECRET)
 params['Signature'] = Signature
 let url = 'http://dm.ap-southeast-1.aliyuncs.com?'
 for (let param in params) {
   url += param + '=' + params[param] + '&'
 }
-
 console.log(url)
 // 发送请求
 ;(async () => {
