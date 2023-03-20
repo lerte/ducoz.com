@@ -1,199 +1,218 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="receivers"
-    :search="search"
-    :loading="loading"
-    class="elevation-1"
-    :options.sync="options"
-    :footer-props="require('@/assets/json/footer-props.json')"
-  >
-    <template #top>
-      <v-toolbar flat dense>
-        <v-btn color="primary" dark class="mr-2" @click="getList">
-          <v-icon left> mdi-refresh </v-icon>刷新
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="receivers"
+      :search="search"
+      :loading="loading"
+      class="elevation-1"
+      :options.sync="options"
+      :footer-props="require('@/assets/json/footer-props.json')"
+    >
+      <template #top>
+        <v-toolbar flat dense>
+          <v-btn color="primary" dark class="mr-2" @click="getList">
+            <v-icon left> mdi-refresh </v-icon>刷新
+          </v-btn>
+          <v-btn dark class="mr-2" color="secondary" @click="addItem">
+            <v-icon left> mdi-plus </v-icon>创建收件人列表
+          </v-btn>
+          <v-spacer />
+          <v-text-field
+            dense
+            chips
+            outlined
+            clearable
+            single-line
+            hide-details
+            label="搜索"
+            v-model="search"
+            append-icon="mdi-magnify"
+          />
+          <v-dialog v-model="dialog" max-width="500px" persistent scrollable>
+            <v-card>
+              <v-toolbar dense>
+                <span class="headline"> {{ formTitle }} </span>
+                <v-spacer />
+                <v-icon @click="close">mdi-close</v-icon>
+              </v-toolbar>
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        dense
+                        chips
+                        outlined
+                        clearable
+                        single-line
+                        hide-details
+                        label="列表名称"
+                        v-model="editedItem.ReceiversName"
+                      />
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        dense
+                        chips
+                        outlined
+                        clearable
+                        single-line
+                        hide-details
+                        label="列表别称"
+                        v-model="editedItem.ReceiversAlias"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-divider />
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="secondary" @click="close"> 取消 </v-btn>
+                <v-btn color="primary" @click="save">确定</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+        <v-divider />
+      </template>
+
+      <template #[`item.ReceiversStatus`]="{ item }">
+        <v-chip small label :color="item.ReceiversStatus ? 'error' : 'success'">
+          {{ ReceiversStatus[item.ReceiversStatus] }}
+        </v-chip>
+      </template>
+
+      <template #[`item.CreateTime`]="{ item }">
+        <v-tooltip right>
+          <template #activator="{ on, attrs }">
+            <span v-on="on" v-bind="attrs">
+              {{ item.CreateTime | format }}
+            </span>
+          </template>
+          <span>{{ item.CreateTime | localTime }}</span>
+        </v-tooltip>
+      </template>
+
+      <template #[`item.actions`]="{ item }">
+        <v-btn
+          fab
+          x-small
+          min-width="0"
+          color="success"
+          class="mr-2"
+          @click.stop="sendMail(item)"
+        >
+          <v-icon small> mdi-send </v-icon>
         </v-btn>
-        <v-btn dark class="mr-2" color="secondary" @click="addItem">
-          <v-icon left> mdi-plus </v-icon>创建收件人列表
-        </v-btn>
-        <v-spacer />
-        <v-text-field
-          dense
-          chips
-          outlined
-          clearable
-          single-line
-          hide-details
-          label="搜索"
-          v-model="search"
-          append-icon="mdi-magnify"
-        />
-        <v-dialog v-model="dialog" max-width="500px" persistent scrollable>
+        <v-dialog scrollable persistent v-model="dialogView" width="auto">
+          <template #activator="{ on, attrs }">
+            <v-btn
+              fab
+              x-small
+              v-on="on"
+              v-bind="attrs"
+              min-width="0"
+              color="primary"
+              class="mr-2"
+              @click.stop="viewItem(item)"
+            >
+              <v-icon small> mdi-list-box </v-icon>
+            </v-btn>
+          </template>
           <v-card>
             <v-toolbar dense>
-              <span class="headline"> {{ formTitle }} </span>
+              <span class="headline">列表详情</span>
               <v-spacer />
-              <v-icon @click="close">mdi-close</v-icon>
+              <v-icon @click="dialogView = false">mdi-close</v-icon>
             </v-toolbar>
             <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field
-                      dense
-                      chips
-                      outlined
-                      clearable
-                      single-line
-                      hide-details
-                      label="列表名称"
-                      v-model="editedItem.ReceiversName"
-                    />
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      dense
-                      chips
-                      outlined
-                      clearable
-                      single-line
-                      hide-details
-                      label="列表别称"
-                      v-model="editedItem.ReceiversAlias"
-                    />
-                  </v-col>
-                </v-row>
-              </v-container>
+              <v-simple-table dense>
+                <template #default>
+                  <thead>
+                    <tr>
+                      <th class="text-left">邮箱</th>
+                      <th class="text-left">信息({{ DataSchema }})</th>
+                      <th class="text-left">创建日期</th>
+                      <th class="text-left">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr :key="index" v-for="(detail, index) in details">
+                      <td>{{ detail.Email }}</td>
+                      <td>{{ detail.Data }}</td>
+                      <td>{{ detail.CreateTime | localTime }}</td>
+                      <td>
+                        <v-btn
+                          fab
+                          x-small
+                          color="error"
+                          @click.stop="deleteReceiverDetail(detail)"
+                        >
+                          <v-icon small> mdi-delete </v-icon>
+                        </v-btn>
+                      </td>
+                    </tr>
+                  </tbody>
+                </template>
+              </v-simple-table>
             </v-card-text>
             <v-divider />
             <v-card-actions>
+              <v-btn color="success" dark class="mr-2" @click="getDetail">
+                <v-icon left> mdi-refresh </v-icon>刷新
+              </v-btn>
               <v-spacer />
-              <v-btn color="secondary" @click="close"> 取消 </v-btn>
-              <v-btn color="primary" @click="save">确定</v-btn>
+              <v-btn color="primary" @click="dialogView = false"> 关闭 </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
-      </v-toolbar>
-      <v-divider />
-    </template>
-
-    <template #[`item.ReceiversStatus`]="{ item }">
-      <v-chip small label :color="item.ReceiversStatus ? 'error' : 'success'">
-        {{ ReceiversStatus[item.ReceiversStatus] }}
-      </v-chip>
-    </template>
-
-    <template #[`item.CreateTime`]="{ item }">
-      <v-tooltip right>
-        <template #activator="{ on, attrs }">
-          <span v-on="on" v-bind="attrs">
-            {{ item.CreateTime | format }}
-          </span>
-        </template>
-        <span>{{ item.CreateTime | localTime }}</span>
-      </v-tooltip>
-    </template>
-
-    <template #[`item.actions`]="{ item }">
-      <v-dialog scrollable persistent v-model="dialogView" width="auto">
-        <template #activator="{ on, attrs }">
-          <v-btn
-            fab
-            x-small
-            v-on="on"
-            v-bind="attrs"
-            min-width="0"
-            color="primary"
-            class="mr-2"
-            @click.stop="viewItem(item)"
-          >
-            <v-icon small> mdi-list-box </v-icon>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-toolbar dense>
-            <span class="headline">列表详情</span>
-            <v-spacer />
-            <v-icon @click="dialogView = false">mdi-close</v-icon>
-          </v-toolbar>
-          <v-card-text>
-            <v-simple-table dense>
-              <template #default>
-                <thead>
-                  <tr>
-                    <th class="text-left">邮箱</th>
-                    <th class="text-left">信息({{ DataSchema }})</th>
-                    <th class="text-left">创建日期</th>
-                    <th class="text-left">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr :key="index" v-for="(detail, index) in details">
-                    <td>{{ detail.Email }}</td>
-                    <td>{{ detail.Data }}</td>
-                    <td>{{ detail.CreateTime | localTime }}</td>
-                    <td>
-                      <v-btn
-                        fab
-                        x-small
-                        color="error"
-                        @click.stop="deleteReceiverDetail(detail)"
-                      >
-                        <v-icon small> mdi-delete </v-icon>
-                      </v-btn>
-                    </td>
-                  </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
-          </v-card-text>
-          <v-divider />
-          <v-card-actions>
-            <v-btn color="success" dark class="mr-2" @click="getDetail">
-              <v-icon left> mdi-refresh </v-icon>刷新
+        <v-dialog v-model="dialogDelete" width="auto">
+          <template #activator="{ on, attrs }">
+            <v-btn
+              fab
+              v-on="on"
+              v-bind="attrs"
+              x-small
+              min-width="0"
+              color="error"
+              @click.stop="deleteItem(item)"
+            >
+              <v-icon small> mdi-delete </v-icon>
             </v-btn>
-            <v-spacer />
-            <v-btn color="primary" @click="dialogView = false"> 关闭 </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+          </template>
+          <v-card>
+            <v-card-title class="text-h5">
+              你确定要删除这个收件人列表吗?
+            </v-card-title>
+            <v-cart-text class="pa-2">
+              注意：收信人列表需要在触发任务之后至少10分钟后再删除，否则容易引起发信失败
+            </v-cart-text>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="secondary" @click="dialogDelete = false">
+                取消
+              </v-btn>
+              <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
+              <v-spacer />
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </template>
 
-      <v-dialog v-model="dialogDelete" width="auto">
-        <template #activator="{ on, attrs }">
-          <v-btn
-            fab
-            v-on="on"
-            v-bind="attrs"
-            x-small
-            min-width="0"
-            color="error"
-            @click.stop="deleteItem(item)"
-          >
-            <v-icon small> mdi-delete </v-icon>
-          </v-btn>
-        </template>
-        <v-card>
-          <v-card-title class="text-h5">
-            你确定要删除这个收件人列表吗?
-          </v-card-title>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="secondary" @click="dialogDelete = false">
-              取消
-            </v-btn>
-            <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
-            <v-spacer />
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </template>
-
-    <template #no-data>
-      <v-alert type="warning">
-        可以先创建收件人列表，让后把要群发的人添加到列表
-      </v-alert>
-    </template>
-  </v-data-table>
+      <template #no-data>
+        <v-alert type="warning">
+          可以先创建收件人列表，让后把要群发的人添加到列表
+        </v-alert>
+      </template>
+    </v-data-table>
+    <SendMailDialog
+      sendType="Batch"
+      v-model="sendDialog"
+      :listItem="editedItem"
+    />
+  </div>
 </template>
 
 <script>
@@ -221,6 +240,7 @@ export default {
     ReceiversStatus: ['正在上传', '上传完成'],
     search: '',
     dialog: false,
+    sendDialog: false,
     dialogView: false,
     dialogDelete: false,
     formTitle: '创建收件人列表',
@@ -350,6 +370,10 @@ export default {
         await this.getDetail()
       }
       this.loading = false
+    },
+    sendMail(item) {
+      this.editedItem = Object.assign({}, item)
+      this.sendDialog = true
     }
   }
 }

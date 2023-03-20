@@ -17,6 +17,9 @@
           <v-btn color="primary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
+          <v-btn color="secondary" dark class="mr-2" @click="editItem({})">
+            <v-icon left> mdi-plus </v-icon>添加邮箱
+          </v-btn>
           <v-dialog
             persistent
             scrollable
@@ -108,14 +111,14 @@
         <v-divider />
       </template>
 
-      <template #[`item.createdAt`]="{ item }">
+      <template #[`item.birthday`]="{ item }">
         <v-tooltip right>
           <template #activator="{ on, attrs }">
             <span v-on="on" v-bind="attrs">
-              {{ item.createdAt | format }}
+              {{ item.birthday | format }}
             </span>
           </template>
-          <span>{{ item.createdAt | localTime }}</span>
+          <span>{{ item.birthday | localTime }}</span>
         </v-tooltip>
       </template>
       <template #[`item.updatedAt`]="{ item }">
@@ -161,7 +164,25 @@
         </v-btn>
       </template>
     </v-data-table>
-    <SendMailDialog v-model="sendDialog" :user="listItem" />
+    <MailUserDialog
+      v-model="editDialog"
+      :listItem="listItem"
+      @updateList="getList"
+    />
+    <SendMailDialog v-model="sendDialog" :listItem="listItem" />
+    <v-dialog v-model="dialogDelete" width="auto">
+      <v-card>
+        <v-card-title class="text-h5">
+          {{ `你确定要删除这${listItem.length || ''}个邮箱吗?` }}
+        </v-card-title>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="secondary" @click="dialogDelete = false"> 取消 </v-btn>
+          <v-btn color="primary" @click="deleteItemConfirm">确定</v-btn>
+          <v-spacer />
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -184,21 +205,64 @@ export default {
         value: 'email'
       },
       {
+        text: '国家',
+        align: 'start',
+        sortable: false,
+        value: 'country'
+      },
+      {
+        text: '品牌',
+        align: 'start',
+        sortable: false,
+        value: 'brand'
+      },
+      {
+        text: '平台',
+        align: 'start',
+        sortable: false,
+        value: 'platform'
+      },
+      {
+        text: '来源',
+        align: 'start',
+        sortable: false,
+        value: 'from'
+      },
+      {
         text: '名字',
         align: 'start',
         sortable: false,
         value: 'name'
       },
       {
+        text: '昵称',
+        align: 'start',
+        sortable: false,
+        value: 'nickname'
+      },
+      {
+        text: '性别',
+        align: 'start',
+        sortable: false,
+        value: 'gender'
+      },
+      {
+        text: '生日',
+        align: 'start',
+        sortable: false,
+        value: 'birthday'
+      },
+      {
+        text: '手机号',
+        align: 'start',
+        sortable: false,
+        value: 'mobile'
+      },
+      {
         text: '标签',
         align: 'start',
         sortable: false,
         value: 'tags'
-      },
-      {
-        text: '创建时间',
-        value: 'createdAt',
-        sortable: false
       },
       {
         text: '更新时间',
@@ -214,7 +278,9 @@ export default {
       required: (value) => (value != null && value != undefined) || '必填项.'
     },
     listItem: {},
+    dialogDelete: false,
     addDialog: false,
+    editDialog: false,
     sendDialog: false
   }),
   watch: {
@@ -234,11 +300,35 @@ export default {
     closeAdd() {
       this.addDialog = false
     },
-    editItem() {
-      this.developTips()
+    editItem(item) {
+      this.listItem = Object.assign({}, item)
+      this.editDialog = true
     },
-    deleteItem() {
-      this.developTips()
+    deleteItem(item) {
+      this.listItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+    async deleteItemConfirm() {
+      this.loading = true
+      const { errors } = await this.$altogic.db
+        .model('mails')
+        .object(this.listItem._id)
+        .delete()
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        this.$notifier.showMessage({
+          content: '删除成功',
+          color: 'success'
+        })
+        await this.getList()
+      }
+
+      this.loading = false
+      this.dialogDelete = false
     },
     async getList() {
       this.loading = true

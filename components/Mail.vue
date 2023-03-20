@@ -28,7 +28,7 @@ export default {
     items: [
       {
         name: 'list',
-        title: '用户列表',
+        title: '邮箱列表',
         icon: 'mdi-list-box'
       },
       {

@@ -48,12 +48,24 @@
               </v-col>
               <v-col cols="12">
                 <v-text-field
+                  v-if="sendType == 'Single'"
                   dense
                   chips
                   outlined
                   hide-details
                   label="收信地址"
+                  :rules="[rules.email]"
                   v-model="sendItem.ToAddress"
+                />
+                <v-text-field
+                  v-if="sendType == 'Batch'"
+                  dense
+                  chips
+                  outlined
+                  hide-details
+                  label="收件人地址列表名称"
+                  :rules="[rules.required]"
+                  v-model="sendItem.ReceiversName"
                 />
               </v-col>
               <v-col cols="12">
@@ -84,6 +96,18 @@
                   label="邮件主题"
                   :rules="[rules.required]"
                   v-model="sendItem.Subject"
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  dense
+                  chips
+                  outlined
+                  clearable
+                  hide-details
+                  label="邮件模板名称"
+                  :rules="[rules.required]"
+                  v-model="sendItem.TemplateName"
                 />
               </v-col>
               <v-col cols="12">
@@ -125,7 +149,7 @@ export default {
       default: 'Single',
       validator: (value) => ['Single', 'Batch'].includes(value)
     },
-    user: {
+    listItem: {
       type: Object,
       required: true
     }
@@ -137,10 +161,12 @@ export default {
     dialog: {
       handler(val) {
         if (val) {
-          this.$set(this.sendItem, 'ToAddress', this.user.email)
+          // 单发邮件，设置收信地址
+          this.$set(this.sendItem, 'ToAddress', this.listItem.email)
+          // 群发邮件，设置收件人列表
+          this.$set(this.sendItem, 'ReceiversName', this.listItem.ReceiversName)
         }
       },
-      deep: true,
       immediate: true
     }
   },
@@ -150,7 +176,18 @@ export default {
     sendItem: {},
     valid: false,
     rules: {
-      required: (value) => (value != null && value != undefined) || '必填项.'
+      required: (value) => (value != null && value != undefined) || '必填项.',
+      email: (v) => {
+        if (
+          v &&
+          v.length > 0 &&
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)
+        ) {
+          return true
+        } else {
+          return '邮箱地址不正确'
+        }
+      }
     }
   }),
   computed: {
@@ -184,7 +221,8 @@ export default {
       this.loading = false
     },
     async sendMail() {
-      const params = Object.assign({}, this.sendItem)
+      const data = Object.assign({}, this.sendItem)
+      const params = this.getPureData(data)
       const response = await fetch(
         `/api/mail/${this.sendType}SendMail?${new URLSearchParams(params)}`,
         {
