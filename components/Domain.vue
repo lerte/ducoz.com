@@ -100,12 +100,131 @@
         x-small
         class="mr-2"
         min-width="0"
-        color="warning"
-        v-if="item.DomainStatus"
+        :color="item.DomainStatus ? 'warning' : 'success'"
         @click.stop="checkItem(item)"
       >
         <v-icon small> mdi-check </v-icon>
       </v-btn>
+
+      <v-dialog scrollable persistent v-model="dialogView" width="auto">
+        <template #activator="{ on, attrs }">
+          <v-btn
+            fab
+            x-small
+            v-on="on"
+            v-bind="attrs"
+            class="mr-2"
+            min-width="0"
+            color="secondary"
+            @click.stop="viewItem(item)"
+          >
+            <v-icon small> mdi-tune </v-icon>
+          </v-btn>
+        </template>
+        <v-card>
+          <v-toolbar dense>
+            <span class="headline">配置域名信息</span>
+            <v-spacer />
+            <v-icon @click="closeDesc">mdi-close</v-icon>
+          </v-toolbar>
+          <v-card-text>
+            <v-row>
+              <v-col cols="4">
+                <span class="caption">邮件推送控制台提供的CNAME记录值</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.TracefRecord }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">CNAME主机记录自定义部分</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.CnameRecord }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">CNAME验证标志</span>
+                <span class="caption font-weight-bold">
+                  <v-chip
+                    small
+                    label
+                    :color="descDomain.CnameAuthStatus ? 'error' : 'success'"
+                  >
+                    {{ descDomain.CnameAuthStatus ? '失败' : '成功' }}
+                  </v-chip>
+                </span>
+              </v-col>
+              <v-col cols="12">
+                <span class="caption">是否改动了CNAME的主机记录</span>
+                <span class="caption font-weight-bold">
+                  <v-chip
+                    small
+                    label
+                    :color="descDomain.CnameConfirmStatus ? 'error' : 'success'"
+                  >
+                    {{ descDomain.CnameConfirmStatus ? '已改动' : '未改动' }}
+                  </v-chip>
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">邮件推送控制台提供的MX记录值</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.MxRecord }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">通过公网域名解析到的MX记录值</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.DnsMx }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">mx验证标志</span>
+                <span class="caption font-weight-bold">
+                  <v-chip
+                    small
+                    label
+                    :color="descDomain.MxAuthStatus ? 'error' : 'success'"
+                  >
+                    {{ descDomain.MxAuthStatus ? '失败' : '成功' }}
+                  </v-chip>
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">邮件推送控制台提供的spf记录值</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.SpfRecord }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">通过公网域名解析到的spf记录值</span>
+                <span class="caption font-weight-bold">
+                  {{ descDomain.DnsSpf }}
+                </span>
+              </v-col>
+              <v-col cols="4">
+                <span class="caption">spf验证标志</span>
+                <span class="caption font-weight-bold">
+                  <v-chip
+                    small
+                    label
+                    :color="descDomain.SpfAuthStatus ? 'error' : 'success'"
+                  >
+                    {{ descDomain.SpfAuthStatus ? '失败' : '成功' }}
+                  </v-chip>
+                </span>
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-divider />
+          <v-card-actions>
+            <v-btn color="success" dark class="mr-2" @click="descItem">
+              <v-icon left> mdi-refresh </v-icon>刷新
+            </v-btn>
+            <v-spacer />
+            <v-btn color="primary" @click="closeDesc"> 关闭 </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
       <v-btn
         fab
         x-small
@@ -150,6 +269,8 @@ export default {
     ],
     search: '',
     dialog: false,
+    dialogView: false,
+    descDomain: {},
     formTitle: '添加域名',
     editedItem: {}
   }),
@@ -265,10 +386,50 @@ export default {
         }
       )
       const { Code, DomainStatus } = await response.json()
-      this.$notifier.showMessage({
-        content: DomainStatus ? this.DomainStatus[DomainStatus] : Code,
-        color: 'error'
-      })
+      if (Code) {
+        this.$notifier.showMessage({
+          content: '[签名不匹配]-请重试',
+          color: 'error'
+        })
+      } else {
+        this.$notifier.showMessage({
+          content: this.DomainStatus[DomainStatus],
+          color: DomainStatus ? 'error' : 'success'
+        })
+      }
+    },
+    closeDesc() {
+      this.dialogView = false
+      this.descDomain = {}
+    },
+    async viewItem(item) {
+      this.editedItem = Object.assign({}, item)
+      await this.descItem()
+      this.dialogView = true
+    },
+    async descItem() {
+      const { DomainId } = this.editedItem
+      this.loading = true
+      const response = await fetch(
+        `/api/mail/DescDomain?DomainId=${DomainId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      const data = await response.json()
+      if (data.Code) {
+        this.$notifier.showMessage({
+          content: '[签名不匹配]-请重试',
+          color: 'error'
+        })
+      } else {
+        this.descDomain = data
+        this.dialogView = true
+      }
+      this.loading = false
     }
   }
 }

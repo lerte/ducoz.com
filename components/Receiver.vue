@@ -261,7 +261,7 @@ export default {
     },
     async viewItem(item) {
       this.editedItem = Object.assign({}, item)
-      this.getDetail()
+      await this.getDetail()
       this.dialogView = true
     },
     deleteItem(item) {
