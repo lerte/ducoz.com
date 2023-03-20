@@ -270,13 +270,13 @@ export default {
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.receiver) {
-        this.receivers = data.receiver
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.receivers = data.receiver
       }
       this.loading = false
     },

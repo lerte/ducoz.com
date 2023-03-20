@@ -27,6 +27,7 @@
           @change="change"
           locale="zh-cn"
           :min="min"
+          :max="max"
         />
       </v-menu>
     </template>

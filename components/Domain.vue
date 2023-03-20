@@ -244,13 +244,13 @@ export default {
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.domain) {
-        this.domains = data.domain
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.domains = data.domain
       }
       this.loading = false
     },

@@ -9,14 +9,12 @@
     <v-tabs-items v-model="tab" class="elevation-1">
       <v-tab-item v-for="item in items" :key="item.name">
         <MailList v-if="item.name == 'list'" />
-        <MailInbox v-if="item.name == 'inbox'" />
-        <MailOutbox v-if="item.name == 'outbox'" />
-        <!-- <MailAnalytics v-if="item.name == 'analytics'" /> -->
         <AccountSummary v-if="item.name == 'account-summary'" />
         <Domain v-if="item.name == 'domain'" />
         <Tag v-if="item.name == 'tag'" />
         <MailAddress v-if="item.name == 'mail-address'" />
         <Receiver v-if="item.name == 'receiver'" />
+        <SenderStatistics v-if="item.name == 'sender-statistics'" />
       </v-tab-item>
     </v-tabs-items>
   </v-container>
@@ -33,21 +31,6 @@ export default {
         title: '用户列表',
         icon: 'mdi-list-box'
       },
-      {
-        name: 'inbox',
-        title: '收件箱',
-        icon: 'mdi-inbox'
-      },
-      {
-        name: 'outbox',
-        title: '发件箱',
-        icon: 'mdi-email-arrow-right'
-      },
-      // {
-      //   name: 'analytics',
-      //   title: '邮件分析',
-      //   icon: 'mdi-google-analytics'
-      // },
       {
         name: 'account-summary',
         title: '账户信息',
@@ -72,6 +55,11 @@ export default {
         name: 'receiver',
         title: '收件人列表',
         icon: 'mdi-card-account-mail-outline'
+      },
+      {
+        name: 'sender-statistics',
+        title: '发送数据',
+        icon: 'mdi-email-arrow-right'
       }
     ]
   })

@@ -210,13 +210,13 @@ export default {
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.tag) {
-        this.tags = data.tag
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.tags = data.tag
       }
       this.loading = false
     }

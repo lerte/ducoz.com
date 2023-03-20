@@ -173,13 +173,13 @@ export default {
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.mailAddress) {
-        this.accountNames = data.mailAddress
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.accountNames = data.mailAddress
       }
       this.loading = false
     },

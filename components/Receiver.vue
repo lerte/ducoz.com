@@ -289,13 +289,13 @@ export default {
         }
       })
       const { data, Code } = await response.json()
-      if (data && data.receiver) {
-        this.receivers = data.receiver
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.receivers = data.receiver
       }
       this.loading = false
     },
@@ -313,13 +313,13 @@ export default {
       )
       const { data, Code, DataSchema } = await response.json()
       this.DataSchema = DataSchema
-      if (data && data.detail) {
-        this.details = data.detail
-      } else {
+      if (Code) {
         this.$notifier.showMessage({
           content: `[${Code}]请重试`,
           color: 'error'
         })
+      } else {
+        this.details = data.detail
       }
       this.loading = false
     },
