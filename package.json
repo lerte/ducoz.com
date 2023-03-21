@@ -19,8 +19,6 @@
     "express": "^4.18.2",
     "nuxt": "^2.15.8",
     "nuxt-clipboard": "^0.0.7",
-    "nuxt-svg-loader": "^1.2.0",
-    "querystring": "^0.2.1",
     "three": "^0.149.0",
     "tiptap-vuetify": "^2.24.0",
     "uuid": "^9.0.0",
