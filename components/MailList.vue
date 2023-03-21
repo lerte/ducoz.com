@@ -20,6 +20,9 @@
           <v-btn color="secondary" dark class="mr-2" @click="editItem({})">
             <v-icon left> mdi-plus </v-icon>添加邮箱
           </v-btn>
+          <v-btn color="success" dark class="mr-2" @click="batchSendMail">
+            <v-icon left> mdi-send </v-icon>群发邮件
+          </v-btn>
           <v-dialog
             persistent
             scrollable
@@ -65,25 +68,7 @@
                         />
                       </v-col>
                       <v-col cols="12">
-                        <v-autocomplete
-                          dense
-                          chips
-                          outlined
-                          clearable
-                          cache-items
-                          hide-details
-                          deletable-chips
-                          label="收件人列表"
-                          :rules="[rules.required]"
-                          :items="
-                            receivers.map((receiver) => ({
-                              text: `${receiver.ReceiversName}-${receiver.ReceiversAlias}-${receiver.Count}`,
-                              value: receiver.ReceiverId
-                            }))
-                          "
-                          @focus="getReceivers"
-                          v-model="listItem.receiver"
-                        />
+                        <SelectReceiver v-model="listItem.receiver" />
                       </v-col>
                     </v-row>
                   </v-form>
@@ -139,7 +124,7 @@
           class="mr-2"
           min-width="0"
           color="success"
-          @click.stop="sendMail(item)"
+          @click.stop="singleSendMail(item)"
         >
           <v-icon small> mdi-send </v-icon>
         </v-btn>
@@ -169,7 +154,11 @@
       :listItem="listItem"
       @updateList="getList"
     />
-    <SendMailDialog v-model="sendDialog" :listItem="listItem" />
+    <SendMailDialog
+      :sendType="sendType"
+      v-model="sendDialog"
+      :listItem="listItem"
+    />
     <v-dialog v-model="dialogDelete" width="auto">
       <v-card>
         <v-card-title class="text-h5">
@@ -272,7 +261,6 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     list: [],
-    receivers: [],
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
@@ -281,7 +269,8 @@ export default {
     dialogDelete: false,
     addDialog: false,
     editDialog: false,
-    sendDialog: false
+    sendDialog: false,
+    sendType: 'Single'
   }),
   watch: {
     options: {
@@ -351,30 +340,11 @@ export default {
       }
       this.loading = false
     },
-    async getReceivers() {
-      this.loading = true
-      const response = await fetch('/api/mail/QueryReceiverByParam', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      const { data, Code } = await response.json()
-      if (Code) {
-        this.$notifier.showMessage({
-          content: `[${Code}]请重试`,
-          color: 'error'
-        })
-      } else {
-        this.receivers = data.receiver
-      }
-      this.loading = false
-    },
     async addToReceiverConfirm() {
       const { email, receiver } = this.listItem
       this.loading = true
       const params = new URLSearchParams({
-        ReceiverId: receiver,
+        ReceiverId: receiver.ReceiverId,
         Detail: JSON.stringify(
           email.map((item) => ({
             b: item.birthday,
@@ -407,8 +377,13 @@ export default {
       }
       this.loading = false
     },
-    sendMail(item) {
+    singleSendMail(item) {
+      this.sendType = 'Single'
       this.listItem = Object.assign({}, item)
+      this.sendDialog = true
+    },
+    batchSendMail() {
+      this.sendType = 'Batch'
       this.sendDialog = true
     }
   }
