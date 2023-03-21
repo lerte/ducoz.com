@@ -14,6 +14,5 @@ module.exports = {
         dark: '#130c0e'
       }
     }
-  },
-  plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')]
+  }
 }

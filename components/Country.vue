@@ -15,16 +15,20 @@ export default {
   props: ['country'],
   data: () => ({
     countries: {
-      美国: require('@/assets/svg/us.svg'),
-      日本: require('@/assets/svg/jp.svg'),
-      加拿大: require('@/assets/svg/ca.svg'),
-      英国: require('@/assets/svg/uk.svg'),
-      德国: require('@/assets/svg/de.svg'),
-      法国: require('@/assets/svg/fr.svg'),
-      西班牙: require('@/assets/svg/es.svg'),
-      意大利: require('@/assets/svg/it.svg'),
-      印度: require('@/assets/svg/in.svg'),
-      澳大利亚: require('@/assets/svg/au.svg')
+      美国: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce7213b5ac84ba5841',
+      日本: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce98a355627ef9b62a',
+      加拿大:
+        'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce98a355627ef9b628',
+      英国: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7cec1854bf9ae52c07c',
+      德国: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce7213b5ac84ba5843',
+      法国: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7cec1854bf9ae52c07b',
+      西班牙:
+        'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7cfc1854bf9ae52c07d',
+      意大利:
+        'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce98a355627ef9b629',
+      印度: 'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c7ce7213b5ac84ba5842',
+      澳大利亚:
+        'https://c1-asia-se.altogic.com/_storage/63d940c9a1ac9f2d382d6552/6419c641c1854bf9ae52c07a/6419c75898a355627ef9b627'
     }
   })
 }
