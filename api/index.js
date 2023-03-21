@@ -38,10 +38,6 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cookieParser())
 
-app.get('/', async (req, res) => {
-  return res.json('Talk is cheap. Show me your code.')
-})
-
 // 邮箱登录
 app.post('/login', async (req, res) => {
   const { email, password } = req.body
