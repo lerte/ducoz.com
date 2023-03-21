@@ -35,9 +35,6 @@
           <v-btn color="mr-2 success" dark @click="importExcel">
             <v-icon left> mdi-import </v-icon> 批量导入
           </v-btn>
-          <v-btn color="success" dark class="mr-2" @click="batchSendMail">
-            <v-icon left> mdi-send </v-icon>群发邮件
-          </v-btn>
           <v-dialog
             persistent
             scrollable
