@@ -13,7 +13,18 @@
     "icon": "mdi-email",
     "title": "邮件系统",
     "remark": "email",
-    "to": "/user/mail-manage"
+    "children": [
+      {
+        "icon": "mdi-list-box",
+        "title": "邮箱列表",
+        "to": "/user/mail-list"
+      },
+      {
+        "icon": "mdi-send",
+        "title": "邮件推送",
+        "to": "/user/mail-send"
+      }
+    ]
   },
   {
     "icon": "mdi-account-group",

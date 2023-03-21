@@ -8,7 +8,6 @@
     </v-tabs>
     <v-tabs-items v-model="tab" class="elevation-1">
       <v-tab-item v-for="item in items" :key="item.name">
-        <MailList v-if="item.name == 'list'" />
         <AccountSummary v-if="item.name == 'account-summary'" />
         <Domain v-if="item.name == 'domain'" />
         <Tag v-if="item.name == 'tag'" />
@@ -26,11 +25,6 @@ export default {
   data: () => ({
     tab: 0,
     items: [
-      {
-        name: 'list',
-        title: '邮箱列表',
-        icon: 'mdi-list-box'
-      },
       {
         name: 'account-summary',
         title: '账户信息',

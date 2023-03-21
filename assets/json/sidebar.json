@@ -22,7 +22,18 @@
   {
     "icon": "mdi-email",
     "title": "邮件系统",
-    "to": "/admin/mail-manage"
+    "children": [
+      {
+        "icon": "mdi-list-box",
+        "title": "邮箱列表",
+        "to": "/admin/mail-list"
+      },
+      {
+        "icon": "mdi-send",
+        "title": "邮件推送",
+        "to": "/admin/mail-send"
+      }
+    ]
   },
   {
     "icon": "mdi-account-group",

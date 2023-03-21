@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-file-input
       class="d-none"
       accept=".xls,.xlsx"
@@ -187,7 +187,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
+  </v-container>
 </template>
 
 <script>
