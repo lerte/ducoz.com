@@ -1,5 +1,12 @@
 <template>
   <div>
+    <v-file-input
+      class="d-none"
+      accept=".xls,.xlsx"
+      ref="uploadFile"
+      v-model="file"
+      @change="fileChange"
+    />
     <v-data-table
       show-select
       :items="list"
@@ -14,11 +21,19 @@
     >
       <template #top>
         <v-toolbar flat dense>
-          <v-btn color="primary" dark class="mr-2" @click="getList">
+          <v-btn color="secondary" dark class="mr-2" @click="getList">
             <v-icon left> mdi-refresh </v-icon>刷新
           </v-btn>
-          <v-btn color="secondary" dark class="mr-2" @click="editItem({})">
+          <v-btn color="primary" dark class="mr-2" @click="editItem({})">
             <v-icon left> mdi-plus </v-icon>添加邮箱
+          </v-btn>
+          <a href="/ducoz-email.xlsx" target="_blank">
+            <v-btn color="mr-2 danger" dark>
+              <v-icon left> mdi-download </v-icon> 下载导入模板
+            </v-btn>
+          </a>
+          <v-btn color="mr-2 success" dark @click="importExcel">
+            <v-icon left> mdi-import </v-icon> 批量导入
           </v-btn>
           <v-btn color="success" dark class="mr-2" @click="batchSendMail">
             <v-icon left> mdi-send </v-icon>群发邮件
@@ -176,6 +191,7 @@
 </template>
 
 <script>
+import { read, utils } from 'xlsx'
 export default {
   name: 'mail-list',
   data: () => ({
@@ -261,6 +277,7 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     list: [],
+    file: null,
     valid: false,
     rules: {
       required: (value) => (value != null && value != undefined) || '必填项.'
@@ -281,6 +298,74 @@ export default {
     }
   },
   methods: {
+    importExcel() {
+      this.file = null
+      this.$nextTick(() => {
+        this.$refs.uploadFile.$refs.input.click()
+      })
+    },
+    uploadFile() {
+      this.file = null
+      this.$nextTick(() => {
+        this.$refs.uploadFile.$refs.input.click()
+      })
+    },
+    async fileChange() {
+      if (!this.file) {
+        return
+      }
+      this.uploading = true
+      this.$notifier.showMessage({
+        content: '文件上传中...',
+        color: 'secondary'
+      })
+
+      // 批量导入
+      const ab = await this.readFile()
+      // parse workbook
+      const wb = read(ab)
+      // update data
+      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      const params = items.map((item) =>
+        this.getPureData({
+          email: item['邮箱'],
+          country: item['国家'],
+          brand: item['品牌'],
+          platform: item['平台'],
+          from: item['来源'],
+          name: item['名字'],
+          nickname: item['昵称'],
+          gender: item['性别'],
+          birthday: item['生日'],
+          mobile: item['手机号'],
+          tags: item['标签']
+        })
+      )
+      const { errors } = await this.$altogic.db.model('mails').create(params)
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        this.$notifier.showMessage({
+          color: 'success',
+          content: '导入成功!'
+        })
+      }
+      await this.getList()
+      this.uploading = false
+    },
+    readFile() {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+        reader.onload = () => {
+          resolve(reader.result)
+        }
+        reader.onerror = reject
+        reader.readAsArrayBuffer(this.file)
+      })
+    },
     addToReceiver() {
       this.listItem.email = Object.assign([], this.selected)
       this.listItem.emails = Object.assign([], this.selected)
