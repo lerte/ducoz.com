@@ -4,6 +4,9 @@
     {
       "src": "nuxt.config.js",
       "use": "@nuxtjs/vercel-builder",
+      "env": {
+        "NODE_OPTIONS": "--openssl-legacy-provider"
+      },
       "config": {
         "serverFiles": ["api/**"]
       }
