@@ -1,6 +1,10 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
+  sourcemap: {
+    server: false,
+    client: false
+  },
   env: {
     ENV_URL: process.env.ENV_URL,
     CLIENT_KEY: process.env.CLIENT_KEY
