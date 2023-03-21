@@ -304,12 +304,6 @@ export default {
         this.$refs.uploadFile.$refs.input.click()
       })
     },
-    uploadFile() {
-      this.file = null
-      this.$nextTick(() => {
-        this.$refs.uploadFile.$refs.input.click()
-      })
-    },
     async fileChange() {
       if (!this.file) {
         return
