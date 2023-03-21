@@ -430,7 +430,10 @@
                               label="时区选择"
                               :rules="[rules.required]"
                               v-model="listItem.timezone"
-                              :items="require('@/assets/json/timezones.json')"
+                              :items="timezones"
+                              @focus="getTimezones"
+                              :loading="loading"
+                              cache-items
                             />
                           </v-col>
                           <v-col cols="12">
@@ -644,7 +647,10 @@
                     label="时区选择"
                     :rules="[rules.required]"
                     v-model="listItem.timezone"
-                    :items="require('@/assets/json/timezones.json')"
+                    :items="timezones"
+                    @focus="getTimezones"
+                    :loading="loading"
+                    cache-items
                   />
                 </v-col>
                 <v-col cols="12">
@@ -791,6 +797,7 @@ export default {
       { text: '操作', value: 'actions', sortable: false }
     ],
     accountStatus: ['开户中', '已开户', '驳回'],
+    timezones: [],
     e1: 1,
     createPixelCode: true,
     adAgency: false,
@@ -852,6 +859,23 @@ export default {
     }
   },
   methods: {
+    async getTimezones() {
+      this.loading = true
+      const { data, errors } = await this.$altogic.db
+        .model('timezones')
+        .limit(500)
+        .get()
+
+      if (errors) {
+        this.$notifier.showMessage({
+          content: errors,
+          color: 'error'
+        })
+      } else {
+        this.timezones = data.map((item) => item.timezone)
+      }
+      this.loading = false
+    },
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options
