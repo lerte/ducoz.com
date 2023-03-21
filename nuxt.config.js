@@ -72,7 +72,7 @@ export default {
     '@nuxt/http',
     'nuxt-clipboard'
   ],
-  // serverMiddleware: [{ path: '/api', handler: '~/api/index.js' }],
+  serverMiddleware: [{ path: '/api', handler: '~/api/index.js' }],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
