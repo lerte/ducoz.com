@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import { createHmac } from 'crypto'
 
 function percentEncode(str) {
   let result = encodeURIComponent(str)
@@ -18,8 +18,7 @@ export default function computeSignature(parameters, accessKeySecret) {
   }
   canonicalizedQueryString = canonicalizedQueryString.slice(1)
   const stringToSign = 'GET&%2F&' + percentEncode(canonicalizedQueryString)
-  const signature = crypto
-    .createHmac('sha1', accessKeySecret + '&')
+  const signature = createHmac('sha1', accessKeySecret + '&')
     .update(stringToSign)
     .digest('base64')
   return signature
