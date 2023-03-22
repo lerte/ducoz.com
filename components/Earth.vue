@@ -4,15 +4,7 @@
 
 <script>
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
-import {
-  Scene,
-  WebGLRenderer,
-  PMREMGenerator,
-  PerspectiveCamera,
-  AmbientLight
-} from 'three'
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment'
+import { Scene, WebGLRenderer, PerspectiveCamera, AmbientLight } from 'three'
 
 export default {
   name: 'Earth',
@@ -23,7 +15,6 @@ export default {
     scene: null,
     camera: null,
     renderer: null,
-    // controls: null,
     mesh: null
   }),
   mounted() {
@@ -63,16 +54,6 @@ export default {
       this.renderer.setSize(this.width, this.height)
       this.renderer.shadowMap.enabled = true
       this.container.appendChild(this.renderer.domElement)
-
-      const pmremGenerator = new PMREMGenerator(this.renderer)
-      pmremGenerator.compileEquirectangularShader()
-      this.scene.environment = pmremGenerator.fromScene(
-        new RoomEnvironment(),
-        0.04
-      ).texture
-
-      // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-      // this.controls.enablePan = false
 
       window.addEventListener('resize', this.onWindowResize, false)
     },

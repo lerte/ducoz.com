@@ -6,7 +6,7 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "analyze": "nuxt build --analyze"
   },
   "dependencies": {
     "@nuxt/http": "^0.6.4",

@@ -84,5 +84,15 @@ export default {
     babel: {
       compact: true
     }
+  },
+  // Stopping nuxt.js from rebuilding on changes of irrelevant files
+  // (Possibly caused by https://github.com/nuxt-community/tailwindcss-module/issues/359)
+  watchers: {
+    webpack: {
+      ignored: [
+        '**/*.{md,log,prettierignore,prettierrc,stylelintignore,npmrc,gitignore',
+        '**/.git/**'
+      ]
+    }
   }
 }
