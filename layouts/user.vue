@@ -74,6 +74,8 @@
         {{ title }}
       </v-toolbar-title>
       <v-spacer />
+      <strong>多泽跨境&reg;</strong>
+      <v-spacer />
       <NuxtLink to="/">
         <v-btn fab text>
           <v-icon>mdi-home</v-icon>
@@ -93,9 +95,11 @@
     <v-main>
       <Nuxt />
     </v-main>
-    <v-footer :absolute="!fixed" app>
-      <span> {{ new Date().getFullYear() }}&copy;</span>
-      <strong>多泽跨境&reg;</strong>
+    <v-footer :absolute="fixed" app>
+      <marquee behavior="alternate">
+        有任何问题添加微信
+        <strong> idzads </strong>
+      </marquee>
     </v-footer>
     <Snackbar />
   </v-app>
