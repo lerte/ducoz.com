@@ -65,7 +65,7 @@ export default {
     },
     async updateProfilePicture(file) {
       const { data, errors } = await this.$altogic.storage
-        .bucket('root')
+        .bucket('avatar')
         .upload(`user_${this.user._id}`, file)
       if (errors) throw new Error("Couldn't upload file")
       return data
