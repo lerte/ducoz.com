@@ -188,7 +188,6 @@
 </template>
 
 <script>
-import { read, utils } from 'xlsx'
 export default {
   name: 'mail-list',
   data: () => ({
@@ -314,9 +313,9 @@ export default {
       // 批量导入
       const ab = await this.readFile()
       // parse workbook
-      const wb = read(ab)
+      const wb = XLSX.read(ab)
       // update data
-      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      const items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
       const params = items.map((item) =>
         this.getPureData({
           email: item['邮箱'],

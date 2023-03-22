@@ -339,7 +339,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { utils, read, writeFileXLSX } from 'xlsx'
 
 export default {
   name: 'order',
@@ -655,9 +654,9 @@ export default {
         // 批量导入
         const ab = await this.readFile()
         // parse workbook
-        const wb = read(ab)
+        const wb = XLSX.read(ab)
         // update data
-        const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+        const items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
         const params = items.map((item) =>
           this.getPureData({
             _id: item['Id'],
@@ -703,11 +702,11 @@ export default {
           评价截图: item['reviewImage'],
           后台价格: item['price']
         }))
-        const ws = utils.json_to_sheet(data)
-        const wb = utils.book_new()
-        utils.book_append_sheet(wb, ws, '多泽跨境-测评订单')
+        const ws = XLSX.utils.json_to_sheet(data)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, ws, '多泽跨境-测评订单')
         const now = Date.now()
-        writeFileXLSX(wb, `多泽跨境-测评订单-${now}.xlsx`)
+        XLSX.writeFileXLSX(wb, `多泽跨境-测评订单-${now}.xlsx`)
         this.$notifier.showMessage({
           color: 'success',
           content: '导出成功'

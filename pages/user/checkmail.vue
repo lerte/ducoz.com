@@ -242,10 +242,20 @@
 
 <script>
 import { mapState } from 'vuex'
-import { read, utils, writeFileXLSX } from 'xlsx'
 export default {
   name: 'checkmail',
   layout: 'user',
+  head() {
+    return {
+      script: [
+        {
+          hid: 'xlsx',
+          src: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
+          defer: true
+        }
+      ]
+    }
+  },
   data: () => ({
     loading: true,
     totalCount: 0,
@@ -508,9 +518,9 @@ export default {
       }
       const ab = await this.readFile()
       // parse workbook
-      const wb = read(ab)
+      const wb = XLSX.read(ab)
       // update data
-      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      const items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
       this.amount = items.length * 100 + '元'
       this.dialogTips = true
     },
@@ -519,7 +529,7 @@ export default {
       // parse workbook
       const wb = read(ab)
       // update data
-      const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+      const items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
       const params = items.map((item) =>
         this.getPureData({
           country: item['国家'],
@@ -566,11 +576,11 @@ export default {
           邮箱: item['email'],
           订单Id: item['orderId']
         }))
-        const ws = utils.json_to_sheet(data)
-        const wb = utils.book_new()
-        utils.book_append_sheet(wb, ws, '多泽跨境-查邮模板')
+        const ws = XLSX.utils.json_to_sheet(data)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, ws, '多泽跨境-查邮模板')
         const now = Date.now()
-        writeFileXLSX(wb, `多泽跨境-查邮-${now}.xlsx`)
+        XLSX.writeFileXLSX(wb, `多泽跨境-查邮-${now}.xlsx`)
         this.$notifier.showMessage({
           color: 'success',
           content: '导出成功'

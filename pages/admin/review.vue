@@ -534,10 +534,20 @@
 
 <script>
 import { mapState } from 'vuex'
-import { read, utils, writeFileXLSX } from 'xlsx'
 export default {
   name: 'review',
   layout: 'admin',
+  head() {
+    return {
+      script: [
+        {
+          hid: 'xlsx',
+          src: 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
+          defer: true
+        }
+      ]
+    }
+  },
   data: () => ({
     loading: true,
     uploading: false,
@@ -872,9 +882,9 @@ export default {
         // 批量导入
         const ab = await this.readFile()
         // parse workbook
-        const wb = read(ab)
+        const wb = XLSX.read(ab)
         // update data
-        const items = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
+        const items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]])
         const params = items.map((item) =>
           this.getPureData({
             asin: item['ASIN'],
@@ -951,11 +961,11 @@ export default {
           汇率: item['exchangeRate'],
           待退款金额: item['refund']
         }))
-        const ws = utils.json_to_sheet(data)
-        const wb = utils.book_new()
-        utils.book_append_sheet(wb, ws, '多泽跨境-测评模板')
+        const ws = XLSX.utils.json_to_sheet(data)
+        const wb = XLSX.utils.book_new()
+        XLSX.utils.book_append_sheet(wb, ws, '多泽跨境-测评模板')
         const now = Date.now()
-        writeFileXLSX(wb, `多泽跨境-测评-${now}.xlsx`)
+        XLSX.writeFileXLSX(wb, `多泽跨境-测评-${now}.xlsx`)
         this.$notifier.showMessage({
           color: 'success',
           content: '导出成功'
