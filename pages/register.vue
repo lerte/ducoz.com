@@ -16,14 +16,26 @@
         </p>
       </div>
 
-      <input v-model="email" type="email" placeholder="输入您的邮箱" required />
-      <input v-model="name" type="text" placeholder="输入您的名称" required />
       <input
-        v-model="password"
-        type="password"
-        autocomplete="new-password"
-        placeholder="输入您的密码"
         required
+        type="email"
+        v-model="email"
+        placeholder="输入您的邮箱"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+      <input
+        required
+        type="text"
+        v-model="name"
+        placeholder="输入您的名称"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      />
+      <input
+        required
+        type="password"
+        v-model="password"
+        placeholder="输入您的密码"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
       <div class="flex items-center justify-between">
         <NuxtLink class="text-white" to="/login"> 已有账号，点击登录 </NuxtLink>

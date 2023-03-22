@@ -24,6 +24,7 @@
         type="email"
         v-model="email"
         placeholder="请输入您的邮箱"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
       <div class="flex items-start justify-between pt-4">
         <NuxtLink class="text-white" to="/login"> 返回登录 </NuxtLink>
