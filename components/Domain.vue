@@ -106,7 +106,7 @@
         <v-icon small> mdi-check </v-icon>
       </v-btn>
 
-      <v-dialog scrollable persistent v-model="dialogView" width="auto">
+      <v-dialog scrollable persistent v-model="dialogView" width="960">
         <template #activator="{ on, attrs }">
           <v-btn
             fab
@@ -123,97 +123,88 @@
         </template>
         <v-card>
           <v-toolbar dense>
-            <span class="headline">配置域名信息</span>
+            <span class="headline">域名配置</span>
             <v-spacer />
             <v-icon @click="closeDesc">mdi-close</v-icon>
           </v-toolbar>
           <v-card-text>
-            <v-row>
-              <v-col cols="4">
-                <span class="caption">邮件推送控制台提供的CNAME记录值</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.TracefRecord }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">CNAME主机记录自定义部分</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.CnameRecord }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">CNAME验证标志</span>
-                <span class="caption font-weight-bold">
-                  <v-chip
-                    small
-                    label
-                    :color="descDomain.CnameAuthStatus ? 'error' : 'success'"
-                  >
-                    {{ descDomain.CnameAuthStatus ? '失败' : '成功' }}
-                  </v-chip>
-                </span>
-              </v-col>
-              <v-col cols="12">
-                <span class="caption">是否改动了CNAME的主机记录</span>
-                <span class="caption font-weight-bold">
-                  <v-chip
-                    small
-                    label
-                    :color="descDomain.CnameConfirmStatus ? 'error' : 'success'"
-                  >
-                    {{ descDomain.CnameConfirmStatus ? '已改动' : '未改动' }}
-                  </v-chip>
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">邮件推送控制台提供的MX记录值</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.MxRecord }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">通过公网域名解析到的MX记录值</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.DnsMx }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">mx验证标志</span>
-                <span class="caption font-weight-bold">
-                  <v-chip
-                    small
-                    label
-                    :color="descDomain.MxAuthStatus ? 'error' : 'success'"
-                  >
-                    {{ descDomain.MxAuthStatus ? '失败' : '成功' }}
-                  </v-chip>
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">邮件推送控制台提供的spf记录值</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.SpfRecord }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">通过公网域名解析到的spf记录值</span>
-                <span class="caption font-weight-bold">
-                  {{ descDomain.DnsSpf }}
-                </span>
-              </v-col>
-              <v-col cols="4">
-                <span class="caption">spf验证标志</span>
-                <span class="caption font-weight-bold">
-                  <v-chip
-                    small
-                    label
-                    :color="descDomain.SpfAuthStatus ? 'error' : 'success'"
-                  >
-                    {{ descDomain.SpfAuthStatus ? '失败' : '成功' }}
-                  </v-chip>
-                </span>
-              </v-col>
-            </v-row>
+            <v-simple-table dense>
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left">类型</th>
+                    <th class="text-left">主机记录</th>
+                    <th class="text-left">主域名</th>
+                    <th class="text-left">记录值</th>
+                    <th class="text-left">状态</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>TXT</td>
+                    <td>aliyundm</td>
+                    <td>{{ descDomain.DomainName }}</td>
+                    <td>{{ descDomain.DomainType }}</td>
+                    <td>
+                      <v-chip
+                        small
+                        label
+                        :color="descDomain.DomainStatus ? 'error' : 'success'"
+                      >
+                        {{ descDomain.DomainStatus ? '待验证' : '验证通过' }}
+                      </v-chip>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>TXT</td>
+                    <td>@</td>
+                    <td>{{ descDomain.DomainName }}</td>
+                    <td>{{ descDomain.DnsSpf }}</td>
+                    <td>
+                      <v-chip
+                        small
+                        label
+                        :color="descDomain.SpfAuthStatus ? 'error' : 'success'"
+                      >
+                        {{ descDomain.SpfAuthStatus ? '待验证' : '验证通过' }}
+                      </v-chip>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>MX</td>
+                    <td>@</td>
+                    <td>{{ descDomain.DomainName }}</td>
+                    <td>{{ descDomain.MxRecord }}</td>
+                    <td>
+                      <v-chip
+                        small
+                        label
+                        :color="descDomain.MxAuthStatus ? 'error' : 'success'"
+                      >
+                        {{ descDomain.MxAuthStatus ? '待验证' : '验证通过' }}
+                      </v-chip>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>CNAME</td>
+                    <td>{{ descDomain.CnameRecord }}</td>
+                    <td>{{ descDomain.DomainName }}</td>
+                    <td>{{ descDomain.TracefRecord }}</td>
+                    <td>
+                      <v-chip
+                        small
+                        label
+                        :color="
+                          descDomain.CnameAuthStatus ? 'error' : 'success'
+                        "
+                      >
+                        {{ descDomain.CnameAuthStatus ? '待验证' : '验证通过' }}
+                      </v-chip>
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
           </v-card-text>
           <v-divider />
           <v-card-actions>
