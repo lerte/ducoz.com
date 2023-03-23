@@ -422,18 +422,9 @@
                             />
                           </v-col>
                           <v-col cols="6">
-                            <v-autocomplete
-                              dense
-                              outlined
-                              clearable
-                              hide-details
-                              label="时区选择"
+                            <SelectTimezone
                               :rules="[rules.required]"
                               v-model="listItem.timezone"
-                              :items="timezones"
-                              @focus="getTimezones"
-                              :loading="loading"
-                              cache-items
                             />
                           </v-col>
                           <v-col cols="12">
@@ -639,18 +630,9 @@
                   />
                 </v-col>
                 <v-col cols="12">
-                  <v-autocomplete
-                    dense
-                    outlined
-                    clearable
-                    hide-details
-                    label="时区选择"
+                  <SelectTimezone
                     :rules="[rules.required]"
                     v-model="listItem.timezone"
-                    :items="timezones"
-                    @focus="getTimezones"
-                    :loading="loading"
-                    cache-items
                   />
                 </v-col>
                 <v-col cols="12">
@@ -859,23 +841,6 @@ export default {
     }
   },
   methods: {
-    async getTimezones() {
-      this.loading = true
-      const { data, errors } = await this.$altogic.db
-        .model('timezones')
-        .limit(500)
-        .get()
-
-      if (errors) {
-        this.$notifier.showMessage({
-          content: errors,
-          color: 'error'
-        })
-      } else {
-        this.timezones = data.map((item) => item.timezone)
-      }
-      this.loading = false
-    },
     async getList() {
       this.loading = true
       const { page, itemsPerPage } = this.options

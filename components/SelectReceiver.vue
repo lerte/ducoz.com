@@ -9,7 +9,7 @@
     deletable-chips
     label="收件人列表名称"
     :loading="loading"
-    :rules="[rules.required]"
+    :rules="rules"
     :items="receivers"
     item-text="ReceiversName"
     return-object
@@ -22,15 +22,12 @@
 <script>
 export default {
   name: 'select-receiver',
-  props: ['receiver'],
+  props: ['receiver', 'rules'],
   model: {
     prop: 'receiver'
   },
   data: () => ({
     loading: false,
-    rules: {
-      required: (value) => (value != null && value != undefined) || '必填项.'
-    },
     receivers: []
   }),
   methods: {

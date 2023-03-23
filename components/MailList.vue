@@ -80,7 +80,10 @@
                         />
                       </v-col>
                       <v-col cols="12">
-                        <SelectReceiver v-model="listItem.receiver" />
+                        <SelectReceiver
+                          v-model="listItem.receiver"
+                          :rules="[rules.required]"
+                        />
                       </v-col>
                     </v-row>
                   </v-form>

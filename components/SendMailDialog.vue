@@ -57,7 +57,11 @@
                   :rules="[rules.email]"
                   v-model="sendItem.ToAddress"
                 />
-                <SelectReceiver v-else v-model="sendItem.receiver" />
+                <SelectReceiver
+                  v-else
+                  v-model="sendItem.receiver"
+                  :rules="[rules.required]"
+                />
               </v-col>
               <v-col cols="12">
                 <v-autocomplete
