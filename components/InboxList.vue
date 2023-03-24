@@ -129,7 +129,10 @@ export default {
   methods: {
     async getList() {
       this.loading = true
-      const config = JSON.parse(this.user.config)
+      let config = {}
+      if (this.user.config) {
+        config = JSON.parse(this.user.config)
+      }
       const params = new URLSearchParams({ ...config })
       const response = await fetch(`/api/imap/getEmails?${params}`, {
         method: 'GET',
