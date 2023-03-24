@@ -32,6 +32,11 @@
         "icon": "mdi-send",
         "title": "邮件推送",
         "to": "/admin/mail-send"
+      },
+      {
+        "icon": "mdi-inbox",
+        "title": "收件箱",
+        "to": "/admin/mail-inbox"
       }
     ]
   },

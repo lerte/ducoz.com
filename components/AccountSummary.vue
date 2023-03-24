@@ -2,7 +2,13 @@
   <v-simple-table dense>
     <template #top>
       <v-toolbar flat dense>
-        <v-btn color="primary" dark class="mr-2" @click="getSummary">
+        <v-btn
+          dark
+          class="mr-2"
+          color="primary"
+          @click="getSummary"
+          :loading="loading"
+        >
           <v-icon left> mdi-refresh </v-icon>刷新
         </v-btn>
       </v-toolbar>
@@ -41,6 +47,7 @@
 export default {
   name: 'mail-settings',
   data: () => ({
+    loading: false,
     descAccountSummary: [],
     translate: {
       SmsRecord: 'SmsRecord（该字段已弃用）',
@@ -71,6 +78,7 @@ export default {
   },
   methods: {
     async getSummary() {
+      this.loading = true
       const response = await fetch('/api/mail/DescAccountSummary', {
         method: 'GET',
         headers: {
@@ -79,6 +87,7 @@ export default {
       })
       const obj = await response.json()
       this.descAccountSummary = Object.entries(obj)
+      this.loading = false
     }
   }
 }

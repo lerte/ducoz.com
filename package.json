@@ -16,6 +16,7 @@
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "imap-emails": "^1.0.4",
     "nuxt": "^2.15.8",
     "nuxt-clipboard": "^0.0.7",
     "three": "^0.149.0",

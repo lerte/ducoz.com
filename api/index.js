@@ -6,6 +6,7 @@ import express from 'express'
 import { createClient } from 'altogic'
 import cookieParser from 'cookie-parser'
 import mail from './mail'
+import imap from './imap'
 
 const app = express()
 const { ENV_URL, CLIENT_KEY, WEB_HOOK_KEY } = process.env
@@ -30,9 +31,7 @@ function doRequest(options, data) {
   })
 }
 
-const altogic = createClient(ENV_URL, CLIENT_KEY, {
-  signInRedirect: '/login'
-})
+const altogic = createClient(ENV_URL, CLIENT_KEY)
 
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
@@ -136,5 +135,6 @@ app.post('/sendMessage', async (req, res) => {
 
 // 邮件相关
 app.use('/mail', mail)
+app.use('/imap', imap)
 
 export default app

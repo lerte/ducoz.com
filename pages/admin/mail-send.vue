@@ -1,5 +1,5 @@
 <template>
-  <Mail />
+  <MailSend />
 </template>
 
 <script>

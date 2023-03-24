@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: 'mail',
+  name: 'mail-send',
   data: () => ({
     tab: 0,
     items: [

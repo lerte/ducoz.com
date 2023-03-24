@@ -1,10 +1,10 @@
 <template>
-  <MailSend />
+  <MailInbox />
 </template>
 
 <script>
 export default {
-  name: 'mail-manage',
+  name: 'mail-inbox',
   layout: 'user'
 }
 </script>
