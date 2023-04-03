@@ -94,13 +94,7 @@
                 />
               </v-col>
               <v-col cols="12" v-if="sendType == 'Batch'">
-                <v-text-field
-                  dense
-                  chips
-                  outlined
-                  clearable
-                  hide-details
-                  label="邮件模板名称"
+                <SelectTemplate
                   :rules="[rules.required]"
                   v-model="sendItem.TemplateName"
                 />
