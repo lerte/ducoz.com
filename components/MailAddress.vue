@@ -90,9 +90,14 @@
     </template>
 
     <template #[`item.ReplyAddress`]="{ item }">
-      <span v-if="item.ReplyAddress">
+      <v-chip
+        small
+        label
+        v-if="item.ReplyAddress"
+        :color="item.ReplyStatus ? 'error' : 'warning'"
+      >
         {{ `${item.ReplyAddress}(${item.ReplyStatus ? '未通过' : '通过'})` }}
-      </span>
+      </v-chip>
     </template>
 
     <template #[`item.Sendtype`]="{ item }">
@@ -129,7 +134,12 @@
     </template>
 
     <template #[`item.actions`]="{ item }">
-      <v-chip small color="warning" @click="CheckReplyToMailAddress(item)">
+      <v-chip
+        small
+        color="warning"
+        v-if="item.ReplyStatus == 1"
+        @click="CheckReplyToMailAddress(item)"
+      >
         验证回信地址
       </v-chip>
       <v-btn
