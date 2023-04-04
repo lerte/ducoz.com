@@ -62,6 +62,18 @@
                       v-model="editedItem.Sendtype"
                     />
                   </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      dense
+                      chips
+                      outlined
+                      clearable
+                      single-line
+                      hide-details
+                      label="回信地址"
+                      v-model="editedItem.ReplyAddress"
+                    />
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -75,6 +87,12 @@
         </v-dialog>
       </v-toolbar>
       <v-divider />
+    </template>
+
+    <template #[`item.ReplyAddress`]="{ item }">
+      <span v-if="item.ReplyAddress">
+        {{ `${item.ReplyAddress}(${item.ReplyStatus ? '未通过' : '通过'})` }}
+      </span>
     </template>
 
     <template #[`item.Sendtype`]="{ item }">
@@ -111,6 +129,9 @@
     </template>
 
     <template #[`item.actions`]="{ item }">
+      <v-chip small color="warning" @click="CheckReplyToMailAddress(item)">
+        验证回信地址
+      </v-chip>
       <v-btn
         fab
         x-small
@@ -170,7 +191,7 @@ export default {
     headers: [
       // { text: '发信地址ID', value: 'mailAddressId' },
       { text: '发信地址', value: 'AccountName' },
-      { text: '回信地址', value: 'ReplyAddress' },
+      { text: '回信地址（状态）', value: 'ReplyAddress' },
       { text: '发信类型', value: 'Sendtype' },
       { text: '账号状态', value: 'AccountStatus' },
       { text: '域名状态', value: 'DomainStatus' },
@@ -246,7 +267,7 @@ export default {
         // 修改回信地址
         const params = new URLSearchParams({
           MailAddressId: this.editedItem.MailAddressId,
-          ReplyAddress: this.editedItem.AccountName
+          ReplyAddress: this.editedItem.ReplyAddress
         })
         await fetch(`/api/mail/ModifyMailAddress?${params}`, {
           method: 'GET',
@@ -290,6 +311,30 @@ export default {
         })
       } else {
         this.accounts = data.mailAddress
+      }
+      this.loading = false
+    },
+    async CheckReplyToMailAddress(item) {
+      // 验证回信地址发送邮件。
+      this.loading = true
+      const params = new URLSearchParams({
+        MailAddressId: item.MailAddressId
+      })
+      const response = await fetch(
+        `/api/mail/CheckReplyToMailAddress?${params}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      const { Code } = await response.json()
+      if (Code) {
+        this.$notifier.showMessage({
+          content: `[${Code}]请重试`,
+          color: 'error'
+        })
       }
       this.loading = false
     }
