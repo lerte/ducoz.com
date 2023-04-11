@@ -35,6 +35,12 @@
           <v-btn color="mr-2 success" dark @click="importExcel">
             <v-icon left> mdi-import </v-icon> 批量导入
           </v-btn>
+          <Search
+            ref="search"
+            :headers="headers"
+            @doSearch="doSearch"
+            :dicts="{ country, brand, platform, from }"
+          />
           <v-dialog
             persistent
             scrollable
@@ -109,6 +115,10 @@
           </v-dialog>
         </v-toolbar>
         <v-divider />
+      </template>
+
+      <template #[`item.country`]="{ item }">
+        <Country :country="item.country" />
       </template>
 
       <template #[`item.birthday`]="{ item }">
@@ -206,49 +216,57 @@ export default {
         text: '邮箱',
         align: 'start',
         sortable: false,
-        value: 'email'
+        value: 'email',
+        searchable: true
       },
       {
         text: '国家',
         align: 'start',
         sortable: false,
-        value: 'country'
+        value: 'country',
+        searchable: true
       },
       {
         text: '品牌',
         align: 'start',
         sortable: false,
-        value: 'brand'
+        value: 'brand',
+        searchable: true
       },
       {
         text: '平台',
         align: 'start',
         sortable: false,
-        value: 'platform'
+        value: 'platform',
+        searchable: true
       },
       {
         text: '来源',
         align: 'start',
         sortable: false,
-        value: 'from'
+        value: 'from',
+        searchable: true
       },
       {
         text: '名字',
         align: 'start',
         sortable: false,
-        value: 'name'
+        value: 'name',
+        searchable: true
       },
       {
         text: '昵称',
         align: 'start',
         sortable: false,
-        value: 'nickname'
+        value: 'nickname',
+        searchable: true
       },
       {
         text: '性别',
         align: 'start',
         sortable: false,
-        value: 'gender'
+        value: 'gender',
+        searchable: true
       },
       {
         text: '生日',
@@ -260,13 +278,15 @@ export default {
         text: '手机号',
         align: 'start',
         sortable: false,
-        value: 'mobile'
+        value: 'mobile',
+        searchable: true
       },
       {
         text: '标签',
         align: 'start',
         sortable: false,
-        value: 'tags'
+        value: 'tags',
+        searchable: true
       },
       {
         text: '更新时间',
@@ -275,6 +295,10 @@ export default {
       },
       { text: '操作', value: 'actions', sortable: false }
     ],
+    country: require('@/assets/json/countries.json'),
+    brand: require('@/assets/json/brand.json'),
+    platform: require('@/assets/json/platform.json'),
+    from: require('@/assets/json/from.json'),
     list: [],
     file: null,
     valid: false,
@@ -286,7 +310,8 @@ export default {
     addDialog: false,
     editDialog: false,
     sendDialog: false,
-    sendType: 'Single'
+    sendType: 'Single',
+    searchParams: {}
   }),
   watch: {
     options: {
@@ -297,6 +322,27 @@ export default {
     }
   },
   methods: {
+    doSearch(params) {
+      this.searchParams = Object.assign({}, params)
+      if (this.options.page == 1) {
+        this.getList()
+      } else {
+        this.options.page = 1
+      }
+    },
+    getParams() {
+      const params = []
+      for (let param in this.searchParams) {
+        if (param == 'name' || param == 'email') {
+          params.push(
+            `INCLUDES(${param}, "${this.searchParams[param]}", false)`
+          )
+        } else {
+          params.push(`${param} == "${this.searchParams[param]}"`)
+        }
+      }
+      return params.join(' && ')
+    },
     importExcel() {
       this.file = null
       this.$nextTick(() => {
@@ -399,9 +445,11 @@ export default {
     },
     async getList() {
       this.loading = true
+      const params = this.getParams()
       const { page, itemsPerPage } = this.options
       const { data, errors } = await this.$altogic.db
         .model('mails')
+        .filter(params)
         .sort('updatedAt', 'desc')
         .limit(itemsPerPage)
         .page(page)

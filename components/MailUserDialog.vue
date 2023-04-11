@@ -28,23 +28,8 @@
                   outlined
                   hide-details
                   label="国家"
-                  :items="[
-                    '美国',
-                    '日本',
-                    '加拿大',
-                    '巴西',
-                    '墨西哥',
-                    '英国',
-                    '德国',
-                    '法国',
-                    '西班牙',
-                    '意大利',
-                    '荷兰',
-                    '印度',
-                    '澳大利亚',
-                    '土耳其'
-                  ]"
                   v-model="userItem.country"
+                  :items="require('@/assets/json/countries.json')"
                 />
               </v-col>
               <v-col cols="6">
@@ -54,21 +39,8 @@
                   outlined
                   hide-details
                   label="品牌"
-                  :items="[
-                    'KL',
-                    'MK',
-                    'YK',
-                    'EM',
-                    '工J',
-                    'J川',
-                    '机械',
-                    'XT',
-                    'XL',
-                    '未来品牌1',
-                    '未来品牌2',
-                    '未来品牌3'
-                  ]"
                   v-model="userItem.brand"
+                  :items="require('@/assets/json/brand.json')"
                 />
               </v-col>
               <v-col cols="6">
@@ -78,8 +50,8 @@
                   outlined
                   hide-details
                   label="平台"
-                  :items="['亚马逊', '独立站', '众筹']"
                   v-model="userItem.platform"
+                  :items="require('@/assets/json/platform.json')"
                 />
               </v-col>
               <v-col cols="6">
@@ -89,8 +61,8 @@
                   outlined
                   hide-details
                   label="来源"
-                  :items="['平台', '社媒', '数据购买']"
                   v-model="userItem.from"
+                  :items="require('@/assets/json/from.json')"
                 />
               </v-col>
               <v-col cols="12">
