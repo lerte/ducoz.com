@@ -81,7 +81,7 @@
                   v-model="sendItem.ReplyToAddress"
                 />
               </v-col>
-              <v-col cols="12">
+              <v-col cols="12" v-if="sendType == 'Single'">
                 <v-text-field
                   dense
                   chips
