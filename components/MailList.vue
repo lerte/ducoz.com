@@ -39,7 +39,7 @@
             ref="search"
             :headers="headers"
             @doSearch="doSearch"
-            :dicts="{ country, brand, platform, from }"
+            :dicts="{ country, brand, platform, from, gender }"
           />
           <v-dialog
             persistent
@@ -299,6 +299,7 @@ export default {
     brand: require('@/assets/json/brand.json'),
     platform: require('@/assets/json/platform.json'),
     from: require('@/assets/json/from.json'),
+    gender: ['男', '女'],
     list: [],
     file: null,
     valid: false,
