@@ -285,7 +285,7 @@ export default {
     },
     async save() {
       this.loading = true
-      if (this.editedItem.DomainName) {
+      if (this.formTitle == '设置域名的SMTP的密码') {
         // 设置域名的SMTP的密码
         const params = new URLSearchParams({
           DomainName: this.editedItem.DomainName,
