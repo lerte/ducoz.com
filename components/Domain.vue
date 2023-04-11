@@ -106,7 +106,13 @@
         <v-icon small> mdi-check </v-icon>
       </v-btn>
 
-      <v-dialog scrollable persistent v-model="dialogView" width="960">
+      <v-dialog
+        scrollable
+        persistent
+        width="960"
+        v-model="dialogView"
+        :retain-focus="false"
+      >
         <template #activator="{ on, attrs }">
           <v-btn
             fab

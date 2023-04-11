@@ -106,7 +106,13 @@
         >
           <v-icon small> mdi-send </v-icon>
         </v-btn>
-        <v-dialog scrollable persistent v-model="dialogView" width="auto">
+        <v-dialog
+          scrollable
+          persistent
+          width="auto"
+          v-model="dialogView"
+          :retain-focus="false"
+        >
           <template #activator="{ on, attrs }">
             <v-btn
               fab
