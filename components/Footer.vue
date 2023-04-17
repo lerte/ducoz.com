@@ -40,7 +40,9 @@
             <Dropdowns />
           </li>
           <li>服务条款</li>
-          <li>隐私策略</li>
+          <li>
+            <NuxtLink to="/legal/privacy"> 隐私策略 </NuxtLink>
+          </li>
           <li>网站地图</li>
         </ul>
         <ul class="flex space-x-6 sm:space-x-4 justify-center sm:justify-end">
