@@ -110,7 +110,7 @@ export default {
   name: 'AdminLayout',
   middleware: ['auth'],
   head: () => ({
-    title: '多泽跨境 | 管理后台'
+    title: '管理后台'
   }),
   data: () => ({
     title: '管理后台',

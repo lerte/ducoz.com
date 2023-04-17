@@ -111,7 +111,7 @@ export default {
   name: 'UserLayout',
   middleware: ['auth'],
   head: () => ({
-    title: '多泽跨境 | 工作台'
+    title: '工作台'
   }),
   data: () => ({
     title: '工作台',

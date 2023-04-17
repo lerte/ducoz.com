@@ -20,6 +20,11 @@
 export default {
   layout: 'home',
   middleware: ['guest'],
+  head() {
+    return {
+      title: '页面跳转中...'
+    }
+  },
   data: () => ({
     errors: null
   }),

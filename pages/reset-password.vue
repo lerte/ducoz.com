@@ -74,6 +74,11 @@ export default {
   name: 'reset-password',
   layout: 'home',
   middleware: ['guest'],
+  head() {
+    return {
+      title: '重设密码'
+    }
+  },
   data: () => ({
     errors: null,
     loading: false,

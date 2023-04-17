@@ -81,6 +81,11 @@ export default {
   name: 'register',
   layout: 'home',
   middleware: ['guest'],
+  head() {
+    return {
+      title: '注册'
+    }
+  },
   data: () => ({
     email: '',
     name: '',

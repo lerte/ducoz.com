@@ -15,3 +15,14 @@
     </article>
   </main>
 </template>
+
+<script>
+export default {
+  name: 'contact',
+  head() {
+    return {
+      title: '联系我们'
+    }
+  }
+}
+</script>

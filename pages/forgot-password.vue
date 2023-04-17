@@ -70,6 +70,11 @@ export default {
   name: 'forgot-password',
   layout: 'home',
   middleware: ['guest'],
+  head() {
+    return {
+      title: '忘记密码'
+    }
+  },
   data: () => ({
     email: '',
     errors: null,

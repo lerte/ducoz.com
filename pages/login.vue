@@ -78,6 +78,11 @@ export default {
   name: 'login',
   layout: 'home',
   middleware: ['guest'],
+  head() {
+    return {
+      title: '登录'
+    }
+  },
   data: () => ({
     email: '',
     name: '',

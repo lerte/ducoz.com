@@ -11,7 +11,8 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: '多泽跨境',
+    title: '首页',
+    titleTemplate: '多泽跨境 - %s',
     htmlAttrs: {
       lang: 'zh-CN'
     },

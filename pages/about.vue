@@ -47,3 +47,14 @@
     </article>
   </main>
 </template>
+
+<script>
+export default {
+  name: 'about',
+  head() {
+    return {
+      title: '关于我们'
+    }
+  }
+}
+</script>
