@@ -124,18 +124,22 @@ export default {
   computed: {
     ...mapState(['user']),
     items() {
+      const USER_MENU = JSON.parse(process.env.USER_MENU)
+      const sidebar = this.sidebar.filter((item) =>
+        USER_MENU.includes(item.title)
+      )
       if (this.user.isAdmin) {
         // 如果是管理员
-        return this.sidebar
+        return sidebar
       } else if (this.user.remark) {
         // 如果有备注
-        return this.sidebar.filter(
+        return sidebar.filter(
           (item) =>
             !item.remark || new RegExp(item.remark).test(this.user.remark)
         )
       } else {
         // 如果是普通用户
-        return this.sidebar.filter((item) => !item.remark)
+        return sidebar.filter((item) => !item.remark)
       }
     }
   }

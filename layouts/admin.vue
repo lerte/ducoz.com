@@ -118,7 +118,13 @@ export default {
     drawer: true,
     fixed: false,
     miniVariant: false,
-    items: require('@/assets/json/sidebar.json')
-  })
+    sidebar: require('@/assets/json/sidebar.json')
+  }),
+  computed: {
+    items() {
+      const ADMIN_MENU = JSON.parse(process.env.ADMIN_MENU)
+      return this.sidebar.filter((item) => ADMIN_MENU.includes(item.title))
+    }
+  }
 }
 </script>

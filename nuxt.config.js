@@ -7,7 +7,9 @@ export default {
   },
   env: {
     ENV_URL: process.env.ENV_URL,
-    CLIENT_KEY: process.env.CLIENT_KEY
+    CLIENT_KEY: process.env.CLIENT_KEY,
+    USER_MENU: process.env.ADMIN_MENU,
+    ADMIN_MENU: process.env.ADMIN_MENU
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
